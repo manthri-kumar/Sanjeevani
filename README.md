@@ -11,7 +11,7 @@ Sanjeevani is a full-stack healthcare web application designed to bring together
 
 👩‍⚕️ Role-based access for patients, doctors, and admins
 
-The project uses a React frontend, Node.js/Express backend, and a MongoDB/MySQL database, ensuring scalability, security, and accessibility.
+The project uses a React frontend, Node.js/Express backend, and a MySQL database, ensuring scalability, security, and accessibility.
 
 ✨ Features
 
@@ -32,8 +32,6 @@ Frontend
 
 React.js
 
-HTML5, CSS3 / Tailwind CSS
-
 React Router
 
 Backend
@@ -46,7 +44,7 @@ JWT for authentication
 
 Database
 
-MongoDB (Atlas) or MySQL
+ MySQL
 
 Tools & APIs
 

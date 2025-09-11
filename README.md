@@ -109,8 +109,4 @@ API keys (Google Maps, etc.)
 
 📅 Appointment Scheduling – Book and manage doctor appointments.
 
-🚨 Emergency Alerts – Quick SOS & ambulance services.
-
-🌐 Multi-Language Support – Enhance accessibility for diverse regions.
-
 ⚡ Sanjeevani isn’t just a web app—it’s a step toward smarter, more accessible healthcare for everyone.

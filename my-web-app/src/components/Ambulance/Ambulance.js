@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import './Ambulance.css'; // This path is now correct once the file is created
 
-const App = () => {
-  const [status, setStatus] = useState('loading'); // 'loading', 'success', 'error', 'booked'
+const Ambulance = () => {
+  const [status, setStatus] = useState('loading');
   const [location, setLocation] = useState(null);
   const [message, setMessage] = useState('Finding your location...');
   
@@ -46,7 +47,7 @@ const App = () => {
     };
 
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   const handleBookAmbulance = () => {
     setStatus('booked');
@@ -138,4 +139,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Ambulance;

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import "./home.css";
-import { 
-  offerimg, sanjeevaniImg, bannerimg, medicineimg, Docimg, doctorimg, 
-  labimg, healthimg, monitorimg, painimg, proteinimg, babyimg, 
-  ayurvedicimg, skincareimg, vitaminimg, Nutritiousimg ,ambulance
-} from "./assets";
+import {
+  offerimg, sanjeevaniImg, bannerimg, medicineimg, Docimg, doctorimg,
+  labimg, healthimg, monitorimg, painimg, proteinimg, babyimg,
+  ayurvedicimg, skincareimg, vitaminimg, Nutritiousimg, ambulance
+} from "../../assets"; // Corrected import path
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -12,6 +12,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Link } from "react-router-dom";
+import Login from "../Login/login"; // Import Login component
+
 
 function Home() {
   const images = [offerimg, bannerimg, sanjeevaniImg];
@@ -199,7 +201,7 @@ function Home() {
             <img src={labimg} className="service-icon" alt="" />
             <div>
               <div className="service-title">Lab Tests</div>
-              <div className="service-subtitle">AT HOME</div>
+            <div className="service-subtitle">AT HOME</div>
             </div>
             <i className="fa-solid fa-chevron-right"></i>
           </div>
@@ -216,7 +218,7 @@ function Home() {
         {/* Categories */}
         <h3 className="h3">Shop By Category </h3>
         <div className="category-grid">
-          <Link to="/medicines" className="category-card service-card light-green">
+          <Link to="/healthmonitor" className="category-card service-card light-green">
             <img src={monitorimg} alt="Health Monitors" />
             <p>Health Monitors</p>
           </Link>

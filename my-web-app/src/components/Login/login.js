@@ -19,10 +19,8 @@ function Login({ setShowLogin }) {
       return;
     }
     try {
-      // In a real application, replace this with a real API call.
-      // For this example, we'll simulate the process.
+      // Replace with real API call
       const response = { success: true };
-
       if (response.success) {
         setLoginStep(2);
         setTimer(60);
@@ -30,8 +28,7 @@ function Login({ setShowLogin }) {
       } else {
         alert("Failed to send OTP.");
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
       alert("Error sending OTP.");
     }
   };
@@ -42,15 +39,12 @@ function Login({ setShowLogin }) {
       return;
     }
     try {
-      // In a real application, replace this with a real API call.
-      // For this example, we'll simulate the process.
+      // Replace with real API call
       const response = { success: true, message: "Login successful." };
-
       if (response.success) {
         alert("✅ " + response.message);
         localStorage.setItem("isLoggedIn", "true");
         setShowLogin(false);
-        // Reset form state
         setLoginStep(1);
         setPhoneNumber("");
         setEmail("");
@@ -58,8 +52,7 @@ function Login({ setShowLogin }) {
       } else {
         alert("❌ " + response.message);
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
       alert("Error verifying OTP.");
     }
   };
@@ -89,15 +82,12 @@ function Login({ setShowLogin }) {
               <i
                 className="fa-solid fa-arrow-left back-btn"
                 onClick={() => setLoginStep(1)}
-              ></i>
+              />
             )}
             <h2>{loginStep === 1 ? "Sign In" : loginStep === 2 ? "OTP Sent" : "Enter OTP"}</h2>
-            <span className="close-btn" onClick={() => setShowLogin(false)}>
-              &times;
-            </span>
+            <span className="close-btn" onClick={() => setShowLogin(false)}>&times;</span>
           </div>
 
-          {/* Step 1: Phone and Email Input */}
           {loginStep === 1 && (
             <form onSubmit={(e) => { e.preventDefault(); sendOtp(); }}>
               <label>Phone Number</label>
@@ -112,6 +102,7 @@ function Login({ setShowLogin }) {
                   maxLength="10"
                 />
               </div>
+
               <label>Email</label>
               <div className="email-input-container">
                 <input
@@ -122,25 +113,19 @@ function Login({ setShowLogin }) {
                   required
                 />
               </div>
+
               <p className="otp-info">OTP will be sent to your email. Phone number will be saved.</p>
               <button type="submit" className="slider-btn">Continue</button>
             </form>
           )}
 
-          {/* Step 2: OTP Sent Confirmation */}
           {loginStep === 2 && (
             <div className="otp-alert-box">
               <p>✅ OTP has been sent to <strong>{email}</strong></p>
-              <button
-                className="slider-btn"
-                onClick={() => setLoginStep(3)}
-              >
-                Enter OTP
-              </button>
+              <button className="slider-btn" onClick={() => setLoginStep(3)}>Enter OTP</button>
             </div>
           )}
 
-          {/* Step 3: OTP Verification */}
           {loginStep === 3 && (
             <form onSubmit={(e) => { e.preventDefault(); verifyOtp(); }}>
               <p className="otp-message">Please enter the OTP sent to {email}</p>
@@ -157,13 +142,7 @@ function Login({ setShowLogin }) {
                 </span>
               </div>
               {showResend && (
-                <button
-                  type="button"
-                  className="resend-btn"
-                  onClick={handleResendOtp}
-                >
-                  RESEND OTP
-                </button>
+                <button type="button" className="resend-btn" onClick={handleResendOtp}>RESEND OTP</button>
               )}
               <button type="submit" className="slider-btn">Verify</button>
             </form>

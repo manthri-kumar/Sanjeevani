@@ -1,0 +1,38 @@
+.profile-left {
+  flex: 0 0 250px;        /* fixed sidebar width */
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  box-sizing: border-box;
+}
+
+.profile-left-title {
+  margin: 6px 0 18px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #207245;        /* green */
+}
+
+.profile-left-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #1f2937;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+
+.profile-btn:hover { background: #f3f7f5; }
+.profile-btn.active { background: #227c58; color: #fff; }
+.profile-btn { margin-top: 1.5rem; }

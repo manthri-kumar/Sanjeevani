@@ -1,0 +1,23 @@
+.profile-right {
+  flex: 1;                     /* take remaining width */
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  min-height: 70vh;            /* keep the card tall */
+  box-sizing: border-box;
+}
+
+.pr-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 4px 0 16px;
+}
+
+.pr-card {
+  background: #f8faf9;
+  border: 1px solid #e6ece9;
+  border-radius: 10px;
+  padding: 16px;
+}

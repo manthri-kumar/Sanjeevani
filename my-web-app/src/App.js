@@ -3,12 +3,11 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home/home';
 import Ambulance from './components/Ambulance/Ambulance';
-import Healthmonitor from './components/Healthmonitor/healthmonitor';
 import Medicines from './components/Medicines/Medicines';
-import Navbar from './components/Home/Navbar.js';
+import Navbar from './components/Home/Navbar';
 import Footer from './components/Home/Footer';
 import Login from './components/Login/login';
-import Profile from './components/Profile/Profile.js';
+import Profile from './components/Profile/Profile';
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -40,7 +39,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/medicines" element={<Medicines />} />
           <Route path="/ambulance" element={<Ambulance />} />
-          <Route path="/healthmonitor" element={<Healthmonitor />} />
+          <Route path="/medicines" element={<Medicines />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />

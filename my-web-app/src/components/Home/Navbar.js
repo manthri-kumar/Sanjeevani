@@ -22,7 +22,7 @@ function Navbar({ isLoggedIn, cartCount, onLoginClick, onLogoutClick }) {
       <nav className="nav-links">
         <a href="#">DOCTORS</a>
         <a href="#">HOSPITALS</a>
-        <a href="#">MEDICINES</a>
+        <Link to="/medicines">MEDICINES</Link>
         <Link to="/profile">PROFILE</Link>
       </nav>
       <div className="search">

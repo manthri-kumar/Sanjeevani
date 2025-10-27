@@ -1,309 +1,403 @@
-/* General body and container styles */
+/* healthmonitor.css */
+
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f2f7f9;
-  max-width: 100%;
-  overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: "Aptos", "Poppins", sans-serif;
+    background-color: #f5f5f5;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
-
+/* --------------------------------- Header Styling --------------------------------- */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 50px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-family: 'Poppins', sans-serif;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 10px 4%; 
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .logo img {
-  width: 70px;
-  height: auto;
+    width: 70px;
+    height: auto;
 }
 
 .nav-links {
-  display: flex;
-  gap: 7rem;
-  padding-right: 1rem;
+    margin-left: 2rem; 
+    flex-grow: 1; 
+    display: flex;
+    gap: 3rem; 
+    justify-content: center;
+    padding: 0;
+    align-items: center;
 }
 
 .nav-links a {
-  text-decoration: none;
-  color: black;
-  font-weight: normal;
-  padding: 10px;
-  border-radius: 20px;
-  transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    font-size: 0.95rem;
 }
 
 .nav-links a:hover {
-  background-color: #1e6d78;
-  color: white;
+    background-color: rgb(111, 145, 86);
+    color: white;
 }
 
 .search {
-  display: flex;
-  align-items: center;
+    margin-left: auto; 
+    margin-right: 1.5rem;
 }
 
 .search-box {
-  display: flex;
-  align-items: center;
-  background: #f0f0f0;
-  padding: 5px 10px;
-  border-radius: 25px;
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 5px 15px;
+    border-radius: 25px;
+    width: 250px;
+    border: 1px solid #ddd;
 }
 
 .search-box input {
-  border: none;
-  background: transparent;
-  outline: none;
-  padding: 5px;
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 5px 0;
+    flex-grow: 1;
 }
 
 .search-box button {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  padding-left: 5px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding-left: 10px;
+    color: #666;
+    font-size: 1rem;
 }
-
-/* Blur effect for modal background */
-.blur-bg {
-  filter: blur(5px);
-  pointer-events: none;
-}
-
-/* -------------------- Product Display Section -------------------- */
-.product-display {
-  padding: 20px;
-}
-
-.product-sort-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.sort-label {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.sort-dropdown {
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.product-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  text-align: center;
-  position: relative;
-  transition: transform 0.3s;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-}
-
-.badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.lowest-price {
-  background-color: #e0f2fe; /* Light blue */
-  color: #007bff;
-}
-
-.bestseller {
-  background-color: #e6f7e9; /* Light green */
-  color: #28a745;
-}
-
-.product-image {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-}
-
-.product-name {
-  font-weight: bold;
-  font-size: 16px;
-  color: #333;
-  min-height: 40px;
-}
-
-.price-details {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
-}
-
-.current-price {
-  font-size: 20px;
-  font-weight: bold;
-  color: #1e6d78;
-  margin-right: 10px;
-}
-
-.mrp-price {
-  color: #888;
-  font-size: 14px;
-}
-
-.discount {
-  color: #28a745;
-  font-weight: bold;
-  margin-left: 10px;
-}
-
-.add-to-cart-btn {
-  background-color: #1e6d78;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.add-to-cart-btn:hover {
-  background-color: #145058;
-}
-
-/* -------------------- Footer Styling -------------------- */
-.footer {
-  background-color: #ffffff;
-  color: #1e1e1e;
-  padding: 40px 20px;
-  text-align: center;
-  margin-top: 3rem;
-}
-
-.footer-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 2rem;
-}
-
-.footer-section {
-  flex: 1 1 200px;
-  text-align: left;
-}
-
-.footer-section h4 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 5px;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-section ul li {
-  margin-bottom: 8px;
-}
-
-.footer-section ul li a {
-  color: #474242;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.footer-section ul li a:hover {
-  color: #4bc34f;
-}
-
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.footer-brand .footer-logo {
-  height: 60px;
-  margin-bottom: 10px;
-}
-
-@media (max-width: 768px) {
-  .header {
-    padding: 10px 20px;
-  }
-  .nav-links {
-    display: none; /* Hide navigation links on small screens */
-  }
-  .product-grid {
-    grid-template-columns: 1fr; /* Single column on small screens */
-  }
-  .footer-container {
-    flex-direction: column;
-  }
-}
-
-
 
 .cart {
-  position: relative;
-  display: inline-block;
-}
-
-.cart button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  position: relative;
+    position: relative;
+    display: inline-block;
+    margin-right: 1.5rem; 
+    align-self: center;
 }
 
 .cart i {
-  font-size: 24px;
-  color: black;
+    font-size: 20px;
 }
 
 .cart-count {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: red;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 50%;
-  pointer-events: none;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 50%;
+    pointer-events: none;
 }
 
-/* -------------------- Swiper Styling -------------------- */
+/* --------------------------------- Sticky Banner Styling (Updated for Image) --------------------------------- */
+
+.sticky-banner-wrapper {
+    width: 92%;
+    max-width: 1280px;
+    margin: 0 auto 2rem;
+    position: relative;
+    border-radius: 10px; /* Apply border-radius here to contain the image */
+    overflow: hidden; /* Ensures the image respects the border-radius */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Keep shadow on the wrapper */
+    margin-top: 3rem;
+}
+
+.sticky-banner {
+    width: 100%;
+    height: 150px; /* Set a fixed height for the banner area */
+    display: flex; /* Use flex to center the image if it's smaller */
+    align-items: center;
+    justify-content: center;
+    background-color: #eaf6e9; /* Fallback background if image fails to load */
+}
+
+.full-banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This makes the image cover the entire banner area */
+    display: block; /* Remove any extra space below the image */
+}
+
+/* --------------------------------- Product Section Layout (Simplified) --------------------------------- */
+.product-page-content {
+    /* Removed flex properties and gap to allow full-width usage */
+    display: block; 
+    width: 92%;
+    max-width: 1280px;
+    margin: 0 auto 3rem;
+    position: relative; /* Essential for positioning the dropdown */
+}
+
+/* --------------------------------- Dropdown Sort Control (New Styles) --------------------------------- */
+.sort-dropdown-wrapper {
+    /* Positioned the wrapper near the top right of the content area */
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 50;
+    width: 220px; /* Width matching the dropdown box */
+}
+
+.sort-header-dropdown {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.sort-header-dropdown i {
+    font-size: 0.7rem;
+    color: #777;
+    margin-left: 10px;
+    transition: transform 0.2s;
+}
+
+.sort-header-dropdown.open {
+    border-color: #2D6A5A; /* Highlight border when open */
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.sort-header-dropdown.open i {
+    /* Rotate chevron up when open */
+    transform: rotate(180deg); 
+}
+
+.sort-options-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 60;
+    padding: 5px 0;
+}
+
+.radio-option-dropdown {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.radio-option-dropdown:hover {
+    background-color: #f5f5f5;
+}
+
+.radio-option-dropdown input[type="radio"] {
+    /* Base radio styling */
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.radio-option-dropdown input[type="radio"]:checked {
+    border-color: #2D6A5A;
+}
+
+.radio-option-dropdown input[type="radio"]:checked::before {
+    /* Inner dot */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 7px;
+    height: 7px;
+    background-color: #2D6A5A;
+    border-radius: 50%;
+}
+
+.radio-option-dropdown span {
+    flex-grow: 1; 
+}
+
+/* Highlight the active option row */
+.radio-option-dropdown:has(input[type="radio"]:checked) {
+    background-color: #eaf6e9; 
+    font-weight: 600; 
+    border-left-color: #2D6A5A;
+}
 
 
+/* --------------------------------- Product Grid and Cards --------------------------------- */
+.product-grid-container {
+    /* Added top margin to ensure grid starts below the sort control */
+    margin-top: 50px; 
+    flex-grow: 1; 
+}
+
+.product-category-title {
+    font-size: 1.2rem; 
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    padding-right: 55rem;
+}
+
+.product-grid {
+    display: grid;
+    /* Grid now spans the full width of the container */
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); 
+    gap: 20px;
+}
+
+.product-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s;
+    position: relative;
+}
+
+.product-image-box {
+    text-align: center;
+    height: 120px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.product-image-box img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.product-details {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.product-name {
+    font-size: 0.85rem; 
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 5px 0;
+    min-height: 30px; 
+    line-height: 1.1;
+}
+
+.offer-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    background-color: #e91e63;
+    padding: 2px 6px;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+.price-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 5px 0;
+}
+
+.current-price {
+    font-size: 1rem; 
+    font-weight: 700;
+    color: #333;
+}
+
+.mrp-price {
+    font-size: 0.7rem; 
+    color: #888;
+}
+
+.discount {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #4CAF50;
+    display: block;
+    margin-top: 5px;
+}
+
+.add-to-cart-btn {
+    background: #2D6A5A;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 100%;
+    margin-top: auto; 
+}
+
+.add-to-cart-btn:hover {
+    background: #245c41;
+}
+
+/* --------------------------------- Footer --------------------------------- */
+.footer {
+    background: #fff;
+    color: #7f7575;
+    padding: 3rem 4%;
+    text-align: center;
+    border-top: 1px solid #eee;
+    margin-top: 30px;
+}
+
+.footer-container {
+    max-width: 1280px; 
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.footer-section {
+    flex: 1 1 180px;
+    text-align: left;
+}

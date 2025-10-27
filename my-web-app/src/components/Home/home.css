@@ -97,7 +97,15 @@ body {
   overflow: hidden;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
 }
-
+/* Targets the actual image tag inside the Swiper container */
+.container .swiper-slide img {
+    height: 100%; /* Important: Tells the image to take the full height (285px) of the container */
+    width: 100%; /* This is already set inline, but good practice to reinforce */
+    
+    /* Crucial: Ensures the image covers the entire area. 
+       This prevents gaps and handles aspect ratio differences by slightly cropping if necessary. */
+    object-fit: cover; 
+}
 /* ----------- Service Cards Row ----------- */
 .service-row {
   width: 88%;
@@ -116,7 +124,6 @@ body {
   border-radius: 16px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   cursor: pointer;
-  /* Fix for the Link component styling */
   text-decoration: none;
   color: inherit;
   outline: none;
@@ -132,69 +139,132 @@ body {
   height: 42px;
 }
 
+/* ✅ Text content aligned properly */
+.service-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ensures both start from same point */
+  justify-content: center;
+  flex: 1;
+}
+
 .service-title {
   font-size: 0.9rem;
   font-weight: 600;
+  margin: 0; /* remove extra spacing */
 }
 
 .service-subtitle {
   font-size: 0.65rem;
   color: #777;
   text-transform: uppercase;
+  margin: 0; /* remove extra spacing */
 }
 
+/* Optional: if you have arrow icon at end */
 .service-card i {
   margin-left: auto;
   font-size: 1rem;
 }
 
+
+
 /* ----------- Shop By Category ----------- */
-.h3{
-  padding-left: 3rem;
-  font-family: Poppins;
+.Categories-h3 {
+    width: 90%; 
+        margin: 2rem auto 1rem;
+   
+    text-align: left; 
+    
+    font-family: Poppins;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    
 }
 
 .category-grid {
-  width: 90%;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); 
-  gap: 5rem;
-  padding-left: 11rem;
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Changed to 4 columns for better fit */
+    gap: 20px; /* Reduced gap */
+    padding-left: 0; /* Removed fixed padding */
 }
 
 .category-grid + .category-grid {
-  margin-top: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
 }
 
 .category-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  transition: 0.3s;
-  height: 9rem;
-  padding-top: 2rem;
-  cursor: pointer;
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    height: 9rem;
+    padding-top: 2rem;
+    cursor: pointer;
+    text-decoration: none; /* For Link components */
+    color: inherit; /* For Link components */
 }
 
 .category-card img {
-  width: 85%;
-  height: auto;
-  object-fit: contain;
-  border-radius: 8px;
-  height: 7rem;
+    width: 85%;
+    height: 7rem;
+    object-fit: contain;
+    border-radius: 8px;
 }
 
 .category-card p {
-  margin-top: 0.4rem;
-  font-weight: 500;
-  font-size: 0.78rem;
-  text-align: center;
+    margin-top: 0.4rem;
+    font-weight: 500;
+    font-size: 0.78rem;
+    text-align: center;
+}
+
+/* Health Banner */
+.health-banner {
+    width: 90%;
+    margin: 2rem auto;
+    height: 140px;
+    background: linear-gradient(90deg, #92a263 0%, #252323 100%);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2.5rem 3rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-content h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.banner-content p {
+    font-size: 1.05rem;
+    margin-bottom: 1.2rem;
+    margin-right: 0; /* Removed fixed margin */
+}
+
+.booking-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-right: 0; /* Removed fixed margin */
 }
 
 /* ============================ Footer Styles ============================ */
@@ -306,10 +376,11 @@ body {
 .banner-content p {
   font-size: 1.05rem;
   margin-bottom: 1.2rem;
+  margin-right: 20rem;
 }
 
 /* Book Button */
-.book-btn {
+.booking-btn {
   background: #000;
   color: #fff;
   border: none;
@@ -317,6 +388,7 @@ body {
   font-size: 1rem;
   border-radius: 15px;
   cursor: pointer;
+  margin-right:  35rem;
 }
 
 .book-btn:hover {
@@ -356,6 +428,7 @@ body {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+  margin-left: 3rem;
 }
 
 .login-nav-btn:hover {
@@ -738,6 +811,7 @@ body {
 .cart {
   position: relative;
   display: inline-block;
+  margin-left: 2rem;
 }
 
 .cart button {
@@ -763,4 +837,285 @@ body {
   padding: 2px 6px;
   border-radius: 50%;
   pointer-events: none;
+}
+
+/* --- NEW: CeraVe Product Carousel Styles --- */
+
+.product-carousel-section {
+    /* Ensures the section spans the main content width */
+    width: 90%;
+    max-width: 13000px;
+    margin: 3rem auto 3rem; 
+    padding: 0 10px; /* Slight padding to prevent content hugging the edge */
+    background: #fff; /* White background for the entire carousel block */
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.carousel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 5px;
+}
+
+.carousel-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.view-all-link {
+    text-decoration: none;
+    color: #2D6A5A; /* Green color for the link */
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.view-all-link:hover {
+    background-color: #f0f0f0;
+}
+
+.carousel-wrapper {
+    position: relative;
+    padding-bottom: 20px; /* Space below the carousel */
+}
+
+/* Swiper Card Styling */
+.carousel-product-card {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    padding: 15px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: auto;
+    min-height: 350px; /* Ensure a consistent minimum height for the card */
+    position: relative;
+}
+
+.card-top-badges {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.buy-get-badge, .bestseller-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.buy-get-badge {
+    background-color: #92a263; /* Greenish color for offer badge */
+}
+
+.bestseller-badge {
+    background-color: #f7b731; /* Yellowish color for bestseller */
+}
+
+.product-image-box {
+    position: relative;
+    height: 120px; 
+    width: 80%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-image-box img {
+    max-height: 100%;
+    max-width: 100%;
+    margin-top: 2rem;
+    object-fit: contain;
+}
+
+
+.carousel-product-name {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #555;
+    margin: 5px 0 10px 0;
+    min-height: 40px; /* Ensures space for product name wrap */
+    line-height: 1.2;
+    margin-top: 2rem;
+}
+
+.price-details-row {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 5px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.current-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.mrp-price {
+    font-size: 0.75rem;
+    color: #888;
+    white-space: nowrap;
+}
+
+.mrp-price del {
+    text-decoration: line-through;
+}
+
+.discount-percent {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #2D6A5A; /* Green for discount */
+    white-space: nowrap;
+}
+
+.add-to-cart-btn-carousel {
+    background: #2D6A5A;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.3s;
+    width: 80%;
+    margin-top: auto;
+}
+
+.add-to-cart-btn-carousel:hover {
+    background: #245c41;
+}
+
+/* Swiper Navigation Customization */
+.swiper-button-prev-cerave,
+.swiper-button-next-cerave {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #eee;
+    border-radius: 50%;
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #333;
+    transition: opacity 0.3s;
+    opacity: 0; /* Hidden by default */
+}
+
+.swiper-button-next-cerave {
+    right: 5px;
+}
+
+.swiper-button-prev-cerave {
+    left: 5px;
+}
+
+.carousel-wrapper:hover .swiper-button-prev-cerave,
+.carousel-wrapper:hover .swiper-button-next-cerave {
+    opacity: 1; /* Show on hover */
+}
+
+.swiper-button-prev-cerave i,
+.swiper-button-next-cerave i {
+    font-size: 0.8rem;
+}
+/* ========================================= */
+/* BABY CARE CAROUSEL SPECIFIC STYLES */
+/* (Uses the same card and section styling as CeraVe by default) */
+/* ========================================= */
+
+/* If you need to style the Baby Care swiper differently, use this: */
+.babycare-swiper {
+    /* Example: border-color: #ffc0cb; if you wanted a baby-specific look */
+}
+
+/* ------------------------------------------- */
+/* Custom Swiper Navigation for Baby Care Carousel */
+/* ------------------------------------------- */
+
+.swiper-button-prev-babycare,
+.swiper-button-next-babycare {
+    /* Inherits all common styles from .swiper-button-prev-cerave */
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #eee;
+    border-radius: 50%;
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #333;
+    transition: opacity 0.3s;
+    opacity: 0; /* Hidden by default */
+}
+
+.swiper-button-next-babycare {
+    right: 5px;
+}
+
+.swiper-button-prev-babycare {
+    left: 5px;
+}
+
+/* Show buttons for Baby Care on hover over the carousel wrapper */
+.carousel-wrapper:hover .swiper-button-prev-babycare,
+.carousel-wrapper:hover .swiper-button-next-babycare {
+    opacity: 1; /* Show on hover */
+}
+
+.swiper-button-prev-babycare i,
+.swiper-button-next-babycare i {
+    font-size: 0.8rem;
+}
+
+/* ------------------------------------------- */
+/* Universal Styling for both carousels: */
+/* ------------------------------------------- */
+
+/* NOTE: Since .product-carousel-section and .carousel-product-card 
+   are universal class names, they already apply to the Baby Care carousel, 
+   ensuring consistent sizing, shadows, and spacing. */
+
+/* Mobile adjustments (if you want the buttons to look different than the CeraVe mobile styles) */
+@media (max-width: 768px) {
+    .swiper-button-prev-babycare,
+    .swiper-button-next-babycare {
+        /* Keep these adjustments separate if your CeraVe ones were hidden/different on mobile */
+        opacity: 1; /* Always visible on mobile for easier swiping */
+        width: 30px;
+        height: 30px;
+    }
 }

@@ -1,110 +1,125 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const nodemailer = require("nodemailer");
 const mysql = require("mysql2");
 
 const app = express();
+
+// --- CORS Configuration ---
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
+
 app.use(bodyParser.json());
-app.use(cors());
 
-//msql connection
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "kumar2005",
-  database: "sanjeevani" // Corrected: database names are case-sensitive
+// --- Database Connection Pool ---
+const db = mysql.createPool({ 
+    host: "localhost",
+    user: "root",
+    password: "kumar2005",
+    database: "sanjeevani",
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-db.connect(err => {
-  if (err) {
-    console.error("MySQL connection error:", err);
-    throw err;
-  }
-  console.log("MySQL connected");
+db.getConnection((err, connection) => {
+    if (err) {
+        console.error("MySQL Pool connection error:", err.message);
+    } else {
+        console.log("MySQL connected (Pool established)");
+        connection.release(); 
+    }
 });
 
-// In-memory OTP store
-let otpStore = {};
+// ==========================================================
+// BLOOD BANK ROUTES (Finalized)
+// ==========================================================
 
-//Send OTP
-app.post("/send-otp", async (req, res) => {
-  const { phoneNumber, email } = req.body;
-  const otp = Math.floor(100000 + Math.random() * 900000);
-
-  otpStore[email] = { otp, phoneNumber, expiresAt: Date.now() + 5 * 60 * 1000 };
-
-  console.log("OTP generated and stored for", email, ":", otp);
-
-  try {
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "kumarmanthri28@gmail.com",
-        pass: "deapenqrepskfrxm" // Gmail App password
-      }
-    });
-
-    await transporter.sendMail({
-      from: "kumarmanthri28@gmail.com",
-      to: email,
-      subject: "Your Sanjeevani OTP Code",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-          <h2 style="color: #4CAF50;">Sanjeevani - OTP Verification</h2>
-          <p>Hello,</p>
-          <p>Your One-Time Password (OTP) to complete your login is:</p>
-          <h1 style="color: #333; letter-spacing: 5px;">${otp}</h1>
-          <p>This OTP is valid for 5 minutes. Do not share it with anyone.</p>
-          <hr style="border: none; border-top: 1px solid #ddd;">
-          <p style="font-size: 12px; color: #888;">Thank you,<br>The Sanjeevani Team</p>
-        </div>
-      `
-    });
-
-    res.json({ success: true, message: "OTP sent successfully!" });
-  } catch (error) {
-    console.error("Error sending OTP:", error);
-    res.status(500).json({ success: false, message: "Error sending OTP." });
-  }
+// GET /api/states - Retrieves the list of all states
+app.get("/api/states", (req, res) => {
+    db.query("SELECT state_id, state_name FROM states ORDER BY state_name", (err, results) => {
+        if(err) return res.status(500).json({success:false,message:"DB Error fetching states"});
+        res.json(results);
+    });
 });
 
-//  Verify OTP
-app.post("/verify-otp", (req, res) => {
-  const { email, otp } = req.body;
+// GET /api/districts/:stateId - Retrieves districts based on selected state
+app.get("/api/districts/:stateId", (req, res) => {
+    const { stateId } = req.params;
+    db.query("SELECT district_id, district_name FROM districts WHERE state_id=? ORDER BY district_name", [stateId], (err, results) => {
+        if(err) return res.status(500).json({success:false,message:"DB Error fetching districts"});
+        res.json(results);
+    });
+});
 
-  console.log("Verification request for:", email);
-  console.log("Received OTP:", otp, "Type:", typeof otp);
-  console.log("Stored OTP:", otpStore[email]?.otp, "Type:", typeof otpStore[email]?.otp);
+// POST /api/blood-banks/search - Executes the State/District search query
+app.post("/api/blood-banks/search", (req,res)=>{
+    const { districtId } = req.body;
+    if(!districtId) return res.status(400).json({success:false,message:"District ID required"});
+    
+    // Query remains the same for State/District search
+    const query = `
+        SELECT BB.bank_id AS id, BB.bank_name AS name, BB.address, BB.category,
+        BB.bank_type AS type, DATE_FORMAT(BB.last_updated,'%Y-%m-%d\\n%H:%i:%s') AS updated,
+        (SELECT GROUP_CONCAT(blood_group, ':', units_available) FROM availability WHERE bank_id=BB.bank_id) AS availability
+        FROM blood_banks BB WHERE BB.district_id=? ORDER BY BB.category DESC, BB.bank_name ASC
+    `;
+    
+    db.query(query,[districtId],(err,results)=>{
+        if(err) return res.status(500).json({success:false,message:"DB Error during search"});
+        res.json(results);
+    });
+});
 
-  if (!otpStore[email]) {
-    return res.status(400).json({ success: false, message: "OTP not found. Please request again." });
-  }
+// NEW ROUTE: POST /api/blood-banks/nearest - Finds blood banks closest to the user's coordinates
+app.post("/api/blood-banks/nearest", (req, res) => {
+    const { latitude, longitude, radius = 50 } = req.body; 
 
-  // Check expiry
-  if (Date.now() > otpStore[email].expiresAt) {
-    delete otpStore[email];
-    return res.status(400).json({ success: false, message: "OTP expired!" });
-  }
+    if (!latitude || !longitude) {
+        return res.status(400).json({ success: false, message: "Latitude and longitude are required." });
+    }
 
-  // Compare
-  if (String(otpStore[email].otp) === String(otp)) {
-    const phoneNumber = otpStore[email].phoneNumber;
+    // Haversine Formula for distance calculation in MySQL (6371 is Earth's radius in km)
+    // NOTE: This assumes your blood_banks table has 'latitude' and 'longitude' columns.
+    const query = `
+        SELECT
+            BB.bank_id AS id,
+            BB.bank_name AS name,
+            BB.address,
+            BB.category,
+            BB.bank_type AS type,
+            DATE_FORMAT(BB.last_updated, '%Y-%m-%d\\n%H:%i:%s') AS updated,
+            (6371 * acos(
+                cos(radians(?)) * cos(radians(BB.latitude)) * cos(radians(BB.longitude) - radians(?)) + 
+                sin(radians(?)) * sin(radians(BB.latitude))
+            )) AS distance_km,
+            (
+                SELECT GROUP_CONCAT(blood_group, ':', units_available)
+                FROM availability A
+                WHERE A.bank_id = BB.bank_id
+            ) AS availability
+        FROM
+            blood_banks BB
+        HAVING
+            distance_km < ?  
+        ORDER BY
+            distance_km ASC
+        LIMIT 10;
+    `;
 
-    const query =
-      "INSERT INTO users (phone_number, email) VALUES (?, ?) ON DUPLICATE KEY UPDATE phone_number = VALUES(phone_number), email = VALUES(email)";
+    // Parameters for the query: [userLat, userLon, userLat, radius]
+    const params = [latitude, longitude, latitude, radius];
 
-    db.query(query, [phoneNumber, email], (err) => {
-      if (err) {
-       console.error("DB error:", err.sqlMessage || err); // Added more detailed logging
-        return res.status(500).json({ success: false, message: "Database error." });
-      }
-      delete otpStore[email];
-      return res.json({ success: true, message: "OTP verified! Login successful." });
-    });
-  } else {
-    return res.status(400).json({ success: false, message: "Incorrect OTP!" });
-  }
+    db.query(query, params, (err, results) => {
+        if (err) {
+            console.error("Error during nearest blood bank search:", err.sqlMessage || err);
+            return res.status(500).json({ success: false, message: "Database error during radius search." });
+        }
+        
+        // Add distance to the result set before sending
+        res.json(results);
+    });
 });
 
 app.listen(5000, () => console.log("✅ Server running on port 5000"));

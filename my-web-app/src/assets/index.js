@@ -17,6 +17,7 @@ import Nutritiousimg from "./nutritious.jpg";
 import summerimg from "./summer.jpg"
 import Docimg from "./Doc.jpg"
 import ambulance from "./ambulance.jpg"
+import bloodbank from "./Bloodbank.jpg"
 
 
 
@@ -26,4 +27,4 @@ import ambulance from "./ambulance.jpg"
 
 
 
-export { sanjeevaniImg,offerimg,bannerimg,medicineimg,doctorimg,labimg,healthimg,monitorimg,babyimg,painimg,proteinimg,vitaminimg,skincareimg,ayurvedicimg,Nutritiousimg,summerimg,Docimg,ambulance};
+export { sanjeevaniImg,offerimg,bannerimg,medicineimg,doctorimg,labimg,healthimg,monitorimg,babyimg,painimg,proteinimg,vitaminimg,skincareimg,ayurvedicimg,Nutritiousimg,summerimg,Docimg,ambulance,bloodbank};

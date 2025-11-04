@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./Medicines.css";
 import MedicineCard from "./MedicinesCard";
+import NavbarWithDropdown from "./NavbarWithDropdown";
 
 function Medicines({ handleAddToCart }) {
   const [sortOption, setSortOption] = React.useState("relevance");
@@ -70,6 +71,7 @@ function Medicines({ handleAddToCart }) {
 
   return (
     <div>
+      <NavbarWithDropdown />
       {/* Banner/Slider */}
       <div className="container">
         <Swiper

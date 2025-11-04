@@ -2,12 +2,9 @@ import React from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./Navbar.css";
 import { sanjeevaniImg } from "../../assets";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
 
 function Navbar({ isLoggedIn, cartCount, onLoginClick, onLogoutClick }) {
-
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -33,12 +30,12 @@ function Navbar({ isLoggedIn, cartCount, onLoginClick, onLogoutClick }) {
           </button>
         </div>
       </div>
-      <div className="cart">
+      <Link to="/cart" className="cart">
         <button>
           <i className="fa-solid fa-cart-shopping"></i>
           <span className="cart-count">{cartCount}</span>
         </button>
-      </div>
+      </Link>
       {isLoggedIn ? (
         <button className="login-btn" onClick={onLogoutClick}>Logout</button>
       ) : (

@@ -1,38 +1,76 @@
-import React, { useState } from "react";
+import React from "react";
 import { sanjeevaniImg } from "../../assets";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./Medicines.css";
-import NavbarWithDropdown from "./NavbarWithDropdown";
+import MedicineCard from "./MedicinesCard";
 
-function Medicines() {
-  const [cart, setCart] = useState([]);
+function Medicines({ handleAddToCart }) {
+  const [sortOption, setSortOption] = React.useState("relevance");
+
   const products = [
-    { id: 1, price: 719.1, mrp: 799, discount: "10% off" },
-    { id: 2, price: 719.1, mrp: 799, discount: "10% off" },
-    { id: 3, price: 990.0, mrp: 1100, discount: "10% off" },
-    { id: 4, price: 1619.1, mrp: 1799, discount: "10% off" },
+    {
+      id: 1,
+      name: "Paracetamol",
+      image: sanjeevaniImg,
+      price: 719.1,
+      mrp: 799,
+      discount: "10% off",
+      description: "For fever and mild pain relief",
+      category: "Fever",
+    },
+    {
+      id: 2,
+      name: "Amoxicillin",
+      image: sanjeevaniImg,
+      price: 879.1,
+      mrp: 999,
+      discount: "12% off",
+      description: "Antibiotic for bacterial infections",
+      category: "Antibiotics",
+    },
+{
+      id: 3,
+      name: "Ibuprofen",
+      image: sanjeevaniImg,
+      price: 990.0,
+      mrp: 1100,
+      discount: "10% off",
+      description: "Painkiller and anti-inflammatory",
+      category: "Pain Relief",
+    },
+    {
+      id: 4,
+      name: "Cetirizine",
+      image: sanjeevaniImg,
+      price: 1619.1,
+      mrp: 1799,
+      discount: "10% off",
+      description: "For allergies and hay fever",
+      category: "Allergy",
+    }
   ];
 
   const images = [sanjeevaniImg, sanjeevaniImg, sanjeevaniImg];
 
-  const handleAddToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
-    alert("Product has been added to the cart!");
+  const getSortedProducts = () => {
+    if (sortOption === "price-low-to-high") {
+      return [...products].sort((a, b) => a.price - b.price);
+    }
+    if (sortOption === "price-high-to-low") {
+      return [...products].sort((a, b) => b.price - a.price);
+    }
+    return products;
   };
 
-  const cartCount = cart.length;
+  const sortedProducts = getSortedProducts();
 
   return (
     <div>
-      <NavbarWithDropdown />
-
-      {/* Header and Navigation can be imported or created similar to Navbar */}
-
+      {/* Banner/Slider */}
       <div className="container">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -50,31 +88,26 @@ function Medicines() {
           ))}
         </Swiper>
       </div>
-
       <section className="product-display">
         <div className="product-sort-container">
           <span className="sort-label">Sort By:</span>
-          <select className="sort-dropdown">
+          <select
+            className="sort-dropdown"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
             <option value="relevance">Relevance</option>
             <option value="price-low-to-high">Price: Low to High</option>
             <option value="price-high-to-low">Price: High to Low</option>
           </select>
         </div>
-
         <div className="product-grid">
-          {products.map((product) => (
-            <div key={product.id} className="product-card">
-              <div className="price-details">
-                <span className="current-price">₹{product.price.toFixed(2)}</span>
-                <span className="mrp-price">
-                  MRP <del>₹{product.mrp.toFixed(2)}</del>
-                </span>
-                <span className="discount">{product.discount}</span>
-              </div>
-              <button className="add-to-cart-btn" onClick={() => handleAddToCart(product)}>
-                Add
-              </button>
-            </div>
+          {sortedProducts.map((product) => (
+            <MedicineCard
+              key={product.id}
+              product={product}
+              onAddToCart={handleAddToCart}
+            />
           ))}
         </div>
       </section>

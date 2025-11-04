@@ -17,6 +17,7 @@ import Nutritiousimg from "./nutritious.jpg";
 import summerimg from "./summer.jpg"
 import Docimg from "./Doc.jpg"
 import ambulance from "./ambulance.jpg"
+import dolo650 from "./dolo650.jpg"
 
 
 

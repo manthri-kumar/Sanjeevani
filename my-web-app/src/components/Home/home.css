@@ -437,246 +437,172 @@ body {
 }
 
 /* The semi-transparent overlay that covers the page */
-/* Overlay background */
+/* ---------- MODERN LOGIN / SIGNUP POPUP ---------- */
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 999;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Slider (login modal) */
-.slider {
+.login-card {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: 100%;
-  max-width: 380px;
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  transform: translate(-50%, -50%) scale(0.95);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(25px);
+  border-radius: 22px;
+  width: 390px;
+  text-align: center;
+  padding: 30px 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   opacity: 0;
-  transition: all 0.3s ease-in-out;
+  animation: popIn 0.3s forwards;
+  transition: transform 0.3s ease;
 }
 
-.slider.active {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* Header */
-.slider-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.slider-header h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.slider-header .close-btn,
-.back-btn {
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 22px;
   cursor: pointer;
-  font-size: 1.2rem;
-  color: #333;
+  color: #555;
+  transition: color 0.3s ease;
+}
+.close-btn:hover {
+  color: #000;
 }
 
-/* Content */
-.slider-content {
-  padding: 1.5rem;
-}
-
-.slider-content label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 0.3rem;
-  color: #444;
-}
-
-.slider-content input {
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  outline: none;
-  transition: border 0.2s ease;
-}
-
-.slider-content input:focus {
-  border-color: #2d6a4f;
-  box-shadow: 0 0 0 2px rgba(45,106,79,0.2);
-}
-
-/* Phone input container */
-.phone-input-container {
+/* Tabs (Login / Signup) */
+.tab-buttons {
   display: flex;
-  align-items: center;
-  background: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  padding: 8px 10px;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
 }
-
-.phone-input-container span {
-  margin-right: 8px;
-  font-weight: 500;
+.tab-buttons button {
+  background: none;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 8px 20px;
+  border-radius: 25px;
+  transition: 0.3s;
   color: #555;
 }
-
-/* OTP input */
-.otp-input-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.tab-buttons .active {
+  background: linear-gradient(90deg, #ff8c00, #ff4e00);
+  color: white;
 }
 
-.otp-input-container input {
-  flex: 1;
-  text-align: center;
-  letter-spacing: 3px;
+/* Input field styling */
+label {
   font-weight: 600;
-  font-size: 1.2rem;
-}
-
-/* Timer */
-.timer {
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+  color: #333;
   font-size: 0.9rem;
-  color: #2d6a4f;
-  font-weight: 500;
 }
 
-/* Buttons */
-.slider-btn {
+.input-container {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 15px;
+}
+
+input {
+  width: 84%;
+  padding: 12px 15px 12px 40px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 14px;
+  outline: none;
+  color: #333;
+  transition: 0.2s;
+}
+input::placeholder {
+  color: #999;
+}
+input:focus {
+  border-color: #ff8c00;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255, 140, 0, 0.25);
+}
+
+/* Primary button */
+.primary-btn {
   width: 100%;
-  background: #2d6a4f;
-  color: #fff;
+  background: linear-gradient(90deg, #ff8c00, #ff4e00);
+  color: white;
   border: none;
   padding: 12px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(255, 102, 0, 0.3);
 }
 
-.slider-btn:hover {
-  background: #245c41;
-}
-
-.resend-btn {
-  background: transparent;
-  border: none;
-  color: #2d6a4f;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-/* Info text */
-.otp-info,
-.otp-message {
-  font-size: 0.85rem;
-  color: #555;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-  text-align: center;
-}
-/* Overlay background */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 999;
-}
-
-/* Slider (login modal) */
-.slider {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: 100%;
-  max-width: 380px;
+/* Google button */
+.google-btn {
+  margin-top: 15px;
   background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  z-index: 1000;
-  opacity: 0;
-  transition: all 0.3s ease-in-out;
-}
-
-.slider.active {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* Header */
-.slider-header {
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  width: 100%;
+  padding: 10px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.slider-header h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.slider-header .close-btn,
-.back-btn {
+  justify-content: center;
+  gap: 8px;
   cursor: pointer;
-  font-size: 1.2rem;
-  color: #333;
+  font-size: 14px;
+  transition: 0.3s;
+}
+.google-btn:hover {
+  background: #ff8c00;
+  color: white;
+  border-color: #ff8c00;
+}
+.google-btn i {
+  font-size: 16px;
 }
 
-/* Content */
-.slider-content {
-  padding: 1.5rem;
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-
-.slider-content label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 0.3rem;
-  color: #444;
-}
-
-.slider-content input {
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  outline: none;
-  transition: border 0.2s ease;
-}
-
-.slider-content input:focus {
-  border-color: #2d6a4f;
-  box-shadow: 0 0 0 2px rgba(45,106,79,0.2);
-  
+@keyframes popIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 /* Phone input container */

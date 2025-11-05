@@ -404,118 +404,92 @@ function Home() {
 
             {/* Login/Signup Slider kept outside blur */}
             {/* ... (Your login modal JSX remains here) ... */}
-            {showLogin && !isLoggedIn && (
-                <>
-                    <div className="overlay" onClick={() => setShowLogin(false)}></div>
-                    <div className={`slider ${showLogin ? "active" : ""}`}>
-                        <div className="slider-content">
-                            <div className="slider-header">
-                                {loginStep > 1 && (
-                                    <i
-                                        className="fa-solid fa-arrow-left back-btn"
-                                        onClick={() => setLoginStep(1)}
-                                    ></i>
-                                )}
-                                <h2>{loginStep === 1 ? "Sign In" : "Enter OTP"}</h2>
-                                <span className="close-btn" onClick={() => setShowLogin(false)}>
-                                    &times;
-                                </span>
-                            </div>
+           {showLogin && !isLoggedIn && (
+        <>
+          <div className="overlay" onClick={() => setShowLogin(false)}></div>
+          <div className="login-card">
+            <span className="close-btn" onClick={() => setShowLogin(false)}>
+              &times;
+            </span>
 
-                            {/* Step 1 */}
-                            {loginStep === 1 && (
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        sendOtp();
-                                    }}
-                                >
-                                    <label>Phone Number</label>
-                                    <div className="phone-input-container">
-                                        <span>+91 |</span>
-                                        <input
-                                            type="tel"
-                                            value={phoneNumber}
-                                            onChange={(e) => setPhoneNumber(e.target.value)}
-                                            placeholder="254567891"
-                                            required
-                                            maxLength="10"
-                                        />
-                                    </div>
+            <div className="tab-buttons">
+              <button
+                className={loginStep === 1 ? "active" : ""}
+                onClick={() => setLoginStep(1)}
+              >
+                Log In
+              </button>
+              <button
+                className={loginStep === 2 ? "active" : ""}
+                onClick={() => setLoginStep(2)}
+              >
+                Sign Up
+              </button>
+            </div>
 
-                                    <label>Email</label>
-                                    <div className="email-input-container">
-                                        <input
-                                            type="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="example@gmail.com"
-                                            required
-                                            maxLength="40"
-                                        />
-                                    </div>
+            {/* Log In Form */}
+            {loginStep === 1 && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  alert("Login successful!");
+                  localStorage.setItem("isLoggedIn", "true");
+                  setIsLoggedIn(true);
+                  setShowLogin(false);
+                }}
+              >
+                <label>Email</label>
+                <div className="input-container">
+                  <i className="fa-solid fa-envelope icon"></i>
+                  <input type="email" placeholder="Enter your E-mail" required />
+                </div>
 
-                                    <p className="otp-info">
-                                        OTP will be sent to your email. Phone number will be saved.
-                                    </p>
-                                    <button type="submit" className="slider-btn">
-                                        Continue
-                                    </button>
-                                </form>
-                            )}
+                <label>Password</label>
+                <div className="input-container">
+                  <i className="fa-solid fa-lock icon"></i>
+                  <input type="password" placeholder="Enter your password" required />
+                </div>
 
-                            {/* Step 2: OTP Sent Confirmation (Temporary) */}
-                            {loginStep === 2 && (
-                                <div className="otp-alert-box">
-                                    <p>✅ OTP has been sent to <strong>{email}</strong></p>
-                                    <button
-                                        className="slider-btn"
-                                        onClick={() => setLoginStep(3)} // Move to OTP entry screen
-                                    >
-                                        Enter OTP
-                                    </button>
-                                </div>
-                            )}
+                <button type="submit" className="primary-btn">Log In</button>
+              </form>
+            )}
 
-                            {/* Step 3: Enter OTP */}
-                            {loginStep === 3 && (
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        verifyOtp();
-                                    }}
-                                >
-                                    <p className="otp-message">Please enter the OTP sent to {email}</p>
-                                    <div className="otp-input-container">
-                                        <input
-                                            type="tel"
-                                            value={otp}
-                                            onChange={(e) => setOtp(e.target.value)}
-                                            required
-                                            maxLength="6"
-                                        />
-                                        <span className="timer">
-                                            {timer > 0
-                                                ? `00:${timer < 10 ? `0${timer}` : timer} Secs`
-                                                : ""}
-                                        </span>
-                                    </div>
-                                    {showResend && (
-                                        <button
-                                            type="button"
-                                            className="resend-btn"
-                                            onClick={handleResendOtp}
-                                        >
-                                            RESEND OTP
-                                        </button>
-                                    )}
-                                    <button type="submit" className="slider-btn">
-                                        Verify
-                                    </button>
-                                </form>
-                            )}
+            {/* Sign Up Form */}
+            {loginStep === 2 && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  alert("Signup successful!");
+                  setLoginStep(1);
+                }}
+              >
+                <label>Username</label>
+                <div className="input-container">
+                  <i className="fa-solid fa-user icon"></i>
+                  <input type="text" placeholder="Enter your username" required />
+                </div>
+
+                <label>Email</label>
+                <div className="input-container">
+                  <i className="fa-solid fa-envelope icon"></i>
+                  <input type="email" placeholder="Enter your E-mail" required />
+                </div>
+
+                <label>Password</label>
+                <div className="input-container">
+                  <i className="fa-solid fa-lock icon"></i>
+                  <input type="password" placeholder="Enter your password" required />
+                </div>
+
+                <button type="submit" className="primary-btn">Sign Up</button>
+              </form>
+            )}
+
+            <button className="google-btn">
+              <i className="fa-brands fa-google"></i> Sign in with Google
+            </button>
                         </div>
-                    </div>
+                    
                 </>
             )}
         </>

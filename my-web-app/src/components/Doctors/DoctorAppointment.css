@@ -1,11 +1,10 @@
-/* Page Wrapper */
 .appointment-page {
   background: #f5f7fa;
   min-height: 100vh;
   padding-bottom: 50px;
 }
 
-/* Header (same style as Home page) */
+/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -49,30 +48,59 @@
   margin: 30px 60px 10px;
 }
 
-/* Doctor Cards List */
-.doctor-row {
+/* SPECIALIZATION CARDS */
+.specialization-row {
   display: flex;
-  gap: 22px;
+  gap: 18px;
   padding: 0 60px;
-  margin-top: 15px;
+  margin-top: 10px;
   overflow-x: auto;
-  scrollbar-width: thin;
 }
 
-.doctor-row::-webkit-scrollbar {
+.specialization-row::-webkit-scrollbar {
   height: 7px;
 }
-.doctor-row::-webkit-scrollbar-thumb {
+.specialization-row::-webkit-scrollbar-thumb {
   background: #7ebc89;
   border-radius: 6px;
 }
 
-/* Doctor Card */
+.spec-card {
+  background: #ffffff;
+  border: 2px solid #2d6a4f;
+  color: #2d6a4f;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0px 4px 14px rgba(0,0,0,0.1);
+  transition: 0.25s;
+}
+
+.spec-card:hover,
+.spec-card.active {
+  background: #2d6a4f;
+  color: white;
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+}
+
+/* DOCTOR CARDS */
+.doctor-row {
+  display: flex;
+  flex-wrap: wrap;         /* allows next row */
+  gap: 22px;
+  padding: 0 60px;
+  margin-top: 15px;
+}
+
+
 .doctor-card {
   background: #fff;
   border-radius: 14px;
-  padding: 18px;
-  min-width: 260px;
+  padding: 22px;
+  min-width: 280px;
   box-shadow: 0px 4px 14px rgba(0,0,0,0.08);
   transition: 0.25s;
 }
@@ -86,35 +114,31 @@
   font-size: 18px;
   font-weight: 600;
   color: #222;
-  margin-bottom: 6px;
 }
 
 .doc-spec {
   font-size: 15px;
   color: #666;
-  margin-bottom: 12px;
+  margin: 6px 0;
 }
 
 .exp-chip {
   display: inline-block;
   background: #e4f3e6;
   color: #2d6a4f;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 8px;
   font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
-/* Book Button */
 .btn-book {
   background: #2d6a4f;
   color: white;
-  border: none;
   width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  font-size: 0.95rem;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
   font-weight: 600;
   transition: 0.3s;

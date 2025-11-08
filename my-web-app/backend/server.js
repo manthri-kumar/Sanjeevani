@@ -1,47 +1,62 @@
+// ==========================================================
+// IMPORTS
+// ==========================================================
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
 const bcrypt = require("bcryptjs");
 
+// ==========================================================
+// APP INITIALIZATION
+// ==========================================================
 const app = express();
 
-// ==========================================================
-// CONFIGURATION
-// ==========================================================
-app.use(cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    credentials: true
-}));
 app.use(express.json());
+
+// ==========================================================
+// CORS CONFIGURATION
+// ==========================================================
+// ✅ Allows both local dev & Render deployed frontend
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",             // local development
+      "https://sanjeevani.onrender.com",   // deployed frontend URL
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 
 // ==========================================================
 // DATABASE CONNECTION (POOL)
 // ==========================================================
+// ⚠️ NOTE: When deploying, localhost DB won't work.
+// You’ll need a cloud DB (e.g., Render PostgreSQL, Railway MySQL, etc.)
 const db = mysql.createPool({
-    host: "localhost",
-    user: "root",         // ⚙️ change to your MySQL username
-    password: "kumar2005", // ⚙️ change to your MySQL password
-    database: "sanjeevani",
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+  host: "localhost",
+  user: "root",          // ⚙️ Change when using cloud DB
+  password: "kumar2005", // ⚙️ Change when using cloud DB
+  database: "sanjeevani",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 db.getConnection((err, connection) => {
-    if (err) {
-        console.error("❌ MySQL Pool connection error:", err.message);
-    } else {
-        console.log("✅ MySQL connected (Pool established)");
-        connection.release();
-    }
+  if (err) {
+    console.error("❌ MySQL Pool connection error:", err.message);
+  } else {
+    console.log("✅ MySQL connected (Pool established)");
+    connection.release();
+  }
 });
 
 // ==========================================================
-// TEST ROUTE (to confirm backend is working)
+// TEST ROUTE
 // ==========================================================
 app.get("/", (req, res) => {
-    res.send("✅ Sanjeevani Backend is Running on Port 5000");
+  res.send("✅ Sanjeevani Backend is Running Successfully!");
 });
 
 // ==========================================================
@@ -50,71 +65,88 @@ app.get("/", (req, res) => {
 
 // 🟢 SIGNUP ROUTE
 app.post("/api/signup", async (req, res) => {
-    const { username, email, password } = req.body;
+  const { username, email, password } = req.body;
 
-    if (!username || !email || !password) {
-        return res.status(400).json({ success: false, message: "All fields are required" });
-    }
+  if (!username || !email || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
 
-    try {
-        // ✅ Check if user already exists
-        const checkQuery = "SELECT * FROM users WHERE email = ?";
-        db.query(checkQuery, [email], async (err, results) => {
-            if (err) {
-                console.error("❌ Error checking user:", err);
-                return res.status(500).json({ success: false, message: "Database error" });
-            }
+  try {
+    const checkQuery = "SELECT * FROM users WHERE email = ?";
+    db.query(checkQuery, [email], async (err, results) => {
+      if (err) {
+        console.error("❌ Error checking user:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Database error" });
+      }
 
-            if (results.length > 0) {
-                return res.status(400).json({ success: false, message: "User already exists" });
-            }
+      if (results.length > 0) {
+        return res
+          .status(400)
+          .json({ success: false, message: "User already exists" });
+      }
 
-            // ✅ Hash password and insert
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-            db.query(insertQuery, [username, email, hashedPassword], (err) => {
-                if (err) {
-                    console.error("❌ Signup Error:", err);
-                    return res.status(500).json({ success: false, message: "Error creating user" });
-                }
-                res.status(200).json({ success: true, message: "Signup successful" });
-            });
-        });
-    } catch (err) {
-        console.error("❌ Server Error (Signup):", err);
-        res.status(500).json({ success: false, message: "Server error during signup" });
-    }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const insertQuery =
+        "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+      db.query(insertQuery, [username, email, hashedPassword], (err) => {
+        if (err) {
+          console.error("❌ Signup Error:", err);
+          return res
+            .status(500)
+            .json({ success: false, message: "Error creating user" });
+        }
+        res.status(200).json({ success: true, message: "Signup successful" });
+      });
+    });
+  } catch (err) {
+    console.error("❌ Server Error (Signup):", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server error during signup" });
+  }
 });
 
 // 🔵 LOGIN ROUTE
 app.post("/api/login", (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!email || !password)
-        return res.status(400).json({ success: false, message: "Email and password are required" });
+  if (!email || !password)
+    return res
+      .status(400)
+      .json({ success: false, message: "Email and password are required" });
 
-    const query = "SELECT * FROM users WHERE email = ?";
-    db.query(query, [email], async (err, results) => {
-        if (err) {
-            console.error("❌ Login Error:", err);
-            return res.status(500).json({ success: false, message: "Database error during login" });
-        }
+  const query = "SELECT * FROM users WHERE email = ?";
+  db.query(query, [email], async (err, results) => {
+    if (err) {
+      console.error("❌ Login Error:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error during login" });
+    }
 
-        if (results.length === 0)
-            return res.status(401).json({ success: false, message: "User not found" });
+    if (results.length === 0)
+      return res
+        .status(401)
+        .json({ success: false, message: "User not found" });
 
-        const user = results[0];
-        const passwordMatch = await bcrypt.compare(password, user.password);
+    const user = results[0];
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-        if (!passwordMatch)
-            return res.status(401).json({ success: false, message: "Incorrect password" });
+    if (!passwordMatch)
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect password" });
 
-        res.status(200).json({
-            success: true,
-            message: "Login successful",
-            user: { id: user.id, username: user.username, email: user.email }
-        });
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: { id: user.id, username: user.username, email: user.email },
     });
+  });
 });
 
 // ==========================================================
@@ -123,37 +155,50 @@ app.post("/api/login", (req, res) => {
 
 // GET /api/states - Retrieves all states
 app.get("/api/states", (req, res) => {
-    db.query("SELECT state_id, state_name FROM states ORDER BY state_name", (err, results) => {
-        if (err) {
-            console.error("❌ Error fetching states:", err);
-            return res.status(500).json({ success: false, message: "Database error fetching states" });
-        }
-        res.json(results);
-    });
+  db.query(
+    "SELECT state_id, state_name FROM states ORDER BY state_name",
+    (err, results) => {
+      if (err) {
+        console.error("❌ Error fetching states:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Database error fetching states" });
+      }
+      res.json(results);
+    }
+  );
 });
 
 // GET /api/districts/:stateId - Retrieves districts of a state
 app.get("/api/districts/:stateId", (req, res) => {
-    const { stateId } = req.params;
-    db.query("SELECT district_id, district_name FROM districts WHERE state_id=? ORDER BY district_name",
-        [stateId],
-        (err, results) => {
-            if (err) {
-                console.error("❌ Error fetching districts:", err);
-                return res.status(500).json({ success: false, message: "Database error fetching districts" });
-            }
-            res.json(results);
-        }
-    );
+  const { stateId } = req.params;
+  db.query(
+    "SELECT district_id, district_name FROM districts WHERE state_id=? ORDER BY district_name",
+    [stateId],
+    (err, results) => {
+      if (err) {
+        console.error("❌ Error fetching districts:", err);
+        return res
+          .status(500)
+          .json({
+            success: false,
+            message: "Database error fetching districts",
+          });
+      }
+      res.json(results);
+    }
+  );
 });
 
 // POST /api/blood-banks/search - Search by district
 app.post("/api/blood-banks/search", (req, res) => {
-    const { districtId } = req.body;
-    if (!districtId)
-        return res.status(400).json({ success: false, message: "District ID required" });
+  const { districtId } = req.body;
+  if (!districtId)
+    return res
+      .status(400)
+      .json({ success: false, message: "District ID required" });
 
-    const query = `
+  const query = `
         SELECT BB.bank_id AS id, BB.bank_name AS name, BB.address, BB.category,
         BB.bank_type AS type, DATE_FORMAT(BB.last_updated,'%Y-%m-%d %H:%i:%s') AS updated,
         (SELECT GROUP_CONCAT(blood_group, ':', units_available)
@@ -162,23 +207,30 @@ app.post("/api/blood-banks/search", (req, res) => {
         ORDER BY BB.category DESC, BB.bank_name ASC
     `;
 
-    db.query(query, [districtId], (err, results) => {
-        if (err) {
-            console.error("❌ Error during blood bank search:", err);
-            return res.status(500).json({ success: false, message: "Database error during search" });
-        }
-        res.json(results);
-    });
+  db.query(query, [districtId], (err, results) => {
+    if (err) {
+      console.error("❌ Error during blood bank search:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error during search" });
+    }
+    res.json(results);
+  });
 });
 
 // POST /api/blood-banks/nearest - Find nearest blood banks
 app.post("/api/blood-banks/nearest", (req, res) => {
-    const { latitude, longitude, radius = 50 } = req.body;
+  const { latitude, longitude, radius = 50 } = req.body;
 
-    if (!latitude || !longitude)
-        return res.status(400).json({ success: false, message: "Latitude and longitude are required" });
+  if (!latitude || !longitude)
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: "Latitude and longitude are required",
+      });
 
-    const query = `
+  const query = `
         SELECT
             BB.bank_id AS id,
             BB.bank_name AS name,
@@ -202,18 +254,26 @@ app.post("/api/blood-banks/nearest", (req, res) => {
         LIMIT 10;
     `;
 
-    const params = [latitude, longitude, latitude, radius];
+  const params = [latitude, longitude, latitude, radius];
 
-    db.query(query, params, (err, results) => {
-        if (err) {
-            console.error("❌ Error during nearest blood bank search:", err);
-            return res.status(500).json({ success: false, message: "Database error during radius search" });
-        }
-        res.json(results);
-    });
+  db.query(query, params, (err, results) => {
+    if (err) {
+      console.error("❌ Error during nearest blood bank search:", err);
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Database error during radius search",
+        });
+    }
+    res.json(results);
+  });
 });
 
 // ==========================================================
-// START SERVER
+// START SERVER (Render + Local)
 // ==========================================================
-app.listen(5000, () => console.log("🚀 Server running on http://localhost:5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`🚀 Server running on port ${PORT}`)
+);

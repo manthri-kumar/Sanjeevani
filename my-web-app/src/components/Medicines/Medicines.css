@@ -1,0 +1,29 @@
+
+.product-display {
+  width: 90%;
+  margin: 2rem auto;
+}
+
+.product-sort-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sort-label {
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.sort-dropdown {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}

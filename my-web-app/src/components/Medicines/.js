@@ -1,32 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
+import { sanjeevaniImg } from "../../assets";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./Medicines.css";
-
+import MedicineCard from "./MedicineCardComponent";
 import NavbarWithDropdown from "./NavbarWithDropdown";
-import MedicineCardComponent from "./MedicineCardComponent";
-import sanjeevaniImg from "../../assets/sanjeevani.jpg"; // ✅ your actual image
 
-function Medicines() {
-  const [sortOption, setSortOption] = useState("relevance");
-  const [cartCount, setCartCount] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+function Medicines({ handleAddToCart }) {
+  const [sortOption, setSortOption] = React.useState("relevance");
 
-  const handleAddToCart = (product) => {
-    setCartCount((prev) => prev + 1);
-    alert(`${product.name} added to cart!`);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    alert("Logged out successfully!");
-  };
-
-  // ✅ Product list
   const products = [
     {
       id: 1,
@@ -48,7 +33,7 @@ function Medicines() {
       description: "Antibiotic for bacterial infections",
       category: "Antibiotics",
     },
-    {
+{
       id: 3,
       name: "Ibuprofen",
       image: sanjeevaniImg,
@@ -67,17 +52,18 @@ function Medicines() {
       discount: "10% off",
       description: "For allergies and hay fever",
       category: "Allergy",
-    },
+    }
   ];
 
   const images = [sanjeevaniImg, sanjeevaniImg, sanjeevaniImg];
 
-  // ✅ Sort function
   const getSortedProducts = () => {
-    if (sortOption === "price-low-to-high")
+    if (sortOption === "price-low-to-high") {
       return [...products].sort((a, b) => a.price - b.price);
-    if (sortOption === "price-high-to-low")
+    }
+    if (sortOption === "price-high-to-low") {
       return [...products].sort((a, b) => b.price - a.price);
+    }
     return products;
   };
 
@@ -85,50 +71,8 @@ function Medicines() {
 
   return (
     <div>
-      {/* ✅ Header Section */}
-      <header className="header">
-        <div className="logo">
-          <img src={sanjeevaniImg} alt="Sanjeevani Logo" />
-        </div>
-
-        <nav className="nav-links">
-          <a href="#">DOCTORS</a>
-          <a href="#">HOSPITALS</a>
-          <a href="#">MEDICINES</a>
-          <a href="#">PROFILE</a>
-        </nav>
-
-        <div className="search">
-          <div className="search-box">
-            <input type="text" placeholder="Search" />
-            <button>
-              <i className="fas fa-magnifying-glass"></i>
-            </button>
-          </div>
-        </div>
-
-        <div className="cart">
-          <button>
-            <i className="fa-solid fa-cart-shopping"></i>
-            <span className="cart-count">{cartCount}</span>
-          </button>
-        </div>
-
-        {isLoggedIn ? (
-          <button className="login-btn" onClick={handleLogout}>
-            Logout
-          </button>
-        ) : (
-          <button className="login-btn" onClick={() => setShowLogin(true)}>
-            Login / Sign Up
-          </button>
-        )}
-      </header>
-
-      {/* ✅ Dropdown Navbar */}
       <NavbarWithDropdown />
-
-      {/* ✅ Swiper Banner */}
+      {/* Banner/Slider */}
       <div className="container">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -141,17 +85,11 @@ function Medicines() {
         >
           {images.map((img, index) => (
             <SwiperSlide key={index}>
-              <img
-                src={img}
-                alt={`Slide ${index + 1}`}
-                style={{ width: "100%", borderRadius: "10px" }}
-              />
+              <img src={img} alt={`Slide ${index + 1}`} style={{ width: "100%" }} />
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
-
-      {/* ✅ Product Section */}
       <section className="product-display">
         <div className="product-sort-container">
           <span className="sort-label">Sort By:</span>
@@ -165,10 +103,9 @@ function Medicines() {
             <option value="price-high-to-low">Price: High to Low</option>
           </select>
         </div>
-
         <div className="product-grid">
           {sortedProducts.map((product) => (
-            <MedicineCardComponent
+            <MedicineCard
               key={product.id}
               product={product}
               onAddToCart={handleAddToCart}

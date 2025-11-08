@@ -1,0 +1,149 @@
+.appointment-page {
+  background: #f5f7fa;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 50px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.logo img {
+  width: 65px;
+  height: auto;
+}
+
+/* Navigation */
+.nav-links {
+  display: flex;
+  gap: 3.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 7px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: #2d6a4f;
+  color: #fff;
+}
+
+/* Page Title */
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2d6a4f;
+  margin: 30px 60px 10px;
+}
+
+/* SPECIALIZATION CARDS */
+.specialization-row {
+  display: flex;
+  gap: 18px;
+  padding: 0 60px;
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.specialization-row::-webkit-scrollbar {
+  height: 7px;
+}
+.specialization-row::-webkit-scrollbar-thumb {
+  background: #7ebc89;
+  border-radius: 6px;
+}
+
+.spec-card {
+  background: #ffffff;
+  border: 2px solid #2d6a4f;
+  color: #2d6a4f;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0px 4px 14px rgba(0,0,0,0.1);
+  transition: 0.25s;
+}
+
+.spec-card:hover,
+.spec-card.active {
+  background: #2d6a4f;
+  color: white;
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+}
+
+/* DOCTOR CARDS */
+.doctor-row {
+  display: flex;
+  flex-wrap: wrap;         /* allows next row */
+  gap: 22px;
+  padding: 0 60px;
+  margin-top: 15px;
+}
+
+
+.doctor-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  min-width: 280px;
+  box-shadow: 0px 4px 14px rgba(0,0,0,0.08);
+  transition: 0.25s;
+}
+
+.doctor-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.12);
+}
+
+.doc-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+.doc-spec {
+  font-size: 15px;
+  color: #666;
+  margin: 6px 0;
+}
+
+.exp-chip {
+  display: inline-block;
+  background: #e4f3e6;
+  color: #2d6a4f;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.btn-book {
+  background: #2d6a4f;
+  color: white;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-book:hover {
+  background: #24503c;
+}

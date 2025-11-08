@@ -502,7 +502,7 @@ body {
   color: #555;
 }
 .tab-buttons .active {
-  background: linear-gradient(90deg, #ff8c00, #ff4e00);
+  background: linear-gradient(90deg, #0f5f1b, #070707);
   color: white;
 }
 
@@ -545,7 +545,7 @@ input::placeholder {
   color: #999;
 }
 input:focus {
-  border-color: #ff8c00;
+  border-color: #75d258;
   background: #fff;
   box-shadow: 0 0 6px rgba(255, 140, 0, 0.25);
 }
@@ -553,7 +553,7 @@ input:focus {
 /* Primary button */
 .primary-btn {
   width: 100%;
-  background: linear-gradient(90deg, #ff8c00, #ff4e00);
+  background: linear-gradient(90deg, #1f972f, #313130);
   color: white;
   border: none;
   padding: 12px;
@@ -566,7 +566,7 @@ input:focus {
 }
 .primary-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 3px 10px rgba(255, 102, 0, 0.3);
+  box-shadow: 0 6px 10px rgba(68, 255, 0, 0.3);
 }
 
 /* Google button */
@@ -587,9 +587,9 @@ input:focus {
   transition: 0.3s;
 }
 .google-btn:hover {
-  background: #ff8c00;
+  background: #158546;
   color: white;
-  border-color: #ff8c00;
+  border-color: #277e09;
 }
 .google-btn i {
   font-size: 16px;
@@ -852,7 +852,7 @@ input:focus {
 }
 
 .bestseller-badge {
-    background-color: #f7b731; /* Yellowish color for bestseller */
+    background-color: #56cc28; /* Yellowish color for bestseller */
 }
 
 .product-image-box {

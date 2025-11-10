@@ -34,10 +34,11 @@ app.use(
 // ⚠️ NOTE: When deploying, localhost DB won't work.
 // You’ll need a cloud DB (e.g., Render PostgreSQL, Railway MySQL, etc.)
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",          // ⚙️ Change when using cloud DB
-  password: "kumar2005", // ⚙️ Change when using cloud DB
-  database: "sanjeevani",
+  host: process.env.MYSQLHOST || "localhost",
+  user: process.env.MYSQLUSER || "root",
+  password: process.env.MYSQLPASSWORD || "kumar2005",
+  database: process.env.MYSQLDATABASE || "sanjeevani",
+  port: process.env.MYSQLPORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -269,11 +270,35 @@ app.post("/api/blood-banks/nearest", (req, res) => {
     res.json(results);
   });
 });
+// GET user data (profile + cart + appointments)
+app.get("/api/user/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const [user] = await db.promise().query("SELECT * FROM users WHERE id = ?", [userId]);
+    const [cart] = await db.promise().query("SELECT * FROM cart_items WHERE user_id = ?", [userId]);
+    const [appointments] = await db.promise().query("SELECT * FROM appointments WHERE user_id = ?", [userId]);
+
+    res.json({
+      success: true,
+      user: user[0],
+      cart,
+      appointments,
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
 // ==========================================================
 // START SERVER (Render + Local)
 // ==========================================================
+// ==========================================================
+// START SERVER (Render + Local)
+// ==========================================================
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, "0.0.0.0", () =>
-  console.log(`🚀 Server running on port ${PORT}`)
-);
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});

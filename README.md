@@ -1,14 +1,26 @@
-Sanjeevani – Full-Stack Healthcare Web Application Setup Guide
+Sanjeevani – Meta File
 Project Overview
 
-Sanjeevani is a healthcare web platform developed using React (frontend) and Node.js with MySQL (backend).
-It integrates patients, doctors, pharmacies, and blood banks into a single system — allowing users to search for doctors, order medicines, locate nearby blood banks, and manage healthcare needs digitally.
+Sanjeevani is a full-stack healthcare web application developed using React.js, Node.js, and MySQL.
+It connects patients, pharmacies, and blood banks through a unified online platform, providing access to essential healthcare services anytime, anywhere.
 
-This guide provides step-by-step instructions to run the project locally for evaluation and demonstration.
+The system allows users to:
+
+Register and log in securely using a login form (username and password).
+
+Search for nearby ambulances using the Google Maps API.
+
+Order medicines online and manage a shopping cart.
+
+Locate nearby blood banks based on location and blood group.
+
+This document provides the instructions to run the software and lists all prerequisites and dependencies required to execute the project successfully.
 
 Prerequisites
 
-Before starting, ensure you have the following installed on your system:
+Before running the project, ensure the following are installed on your system:
+
+Software Requirements
 
 Node.js (version 16 or above)
 
@@ -18,16 +30,57 @@ MySQL Server (version 8.0 or above)
 
 Git
 
-Visual Studio Code (or any code editor)
+Visual Studio Code or any IDE
 
-Browser (Google Chrome recommended)
+Browser (Google Chrome or Edge recommended)
 
-Optional: The backend should be running at http://localhost:5000/
- for full functionality.
+Backend Dependencies
+
+Installed via npm install inside the backend folder:
+
+express – For building the web server and REST APIs
+
+mysql2 – For connecting Node.js to MySQL
+
+cors – For handling cross-origin requests
+
+dotenv – For managing environment variables securely
+
+body-parser – For handling JSON and form submissions
+
+bcryptjs – For password encryption and verification
+
+jsonwebtoken – For authentication tokens
+
+Frontend Dependencies
+
+Installed via npm install inside the main project folder:
+
+react
+
+react-dom
+
+react-router-dom – For routing between pages
+
+axios – For making API requests
+
+bootstrap or tailwindcss – For responsive design and styling
+
+External APIs and Tools
+
+Google Maps API – Used for locating and displaying ambulance services on the map.
+
+Postman – For API testing (optional).
+
+Database
+
+MySQL is used to store all users, medicines, ambulances, and blood bank details.
+
+Import the provided SQL file (sanjeevani.sql) to create all necessary tables.
 
 Folder Structure
 
-Your Sanjeevani project structure should look like this:
+Ensure your project follows this structure:
 
 my-web-app/
 ├── backend/                 # Node.js backend
@@ -37,10 +90,10 @@ my-web-app/
 │   ├── config/
 │   └── server.js
 │
-├── public/                  # Public assets for React
+├── public/                  # React public assets
 │
 ├── src/
-│   ├── assets/              # Images and static files
+│   ├── assets/              # Images and icons
 │   ├── components/
 │   │   ├── Ambulance/
 │   │   ├── AppointmentPage/
@@ -52,7 +105,6 @@ my-web-app/
 │   │   ├── Login/
 │   │   ├── Medicines/
 │   │   └── Profile/
-│   │
 │   ├── App.css
 │   ├── App.js
 │   └── index.js
@@ -62,29 +114,30 @@ my-web-app/
 ├── .gitignore
 └── README.md
 
+Instructions to Run the Software
 Step 1: Clone the Repository
-
-Open a terminal and run the following commands:
-
 git clone https://github.com/your-username/sanjeevani.git
 cd my-web-app
 
 Step 2: Database Setup
 
-Open MySQL Workbench or command prompt.
+Open MySQL Workbench or terminal.
 
-Create a new database named sanjeevani:
+Create a database named sanjeevani:
 
 CREATE DATABASE sanjeevani;
 
 
-Import your SQL file (if provided):
+Import your database schema:
 
 mysql -u root -p sanjeevani < backend/database/sanjeevani.sql
 
-Step 3: Configure Environment Variables
 
-In the backend/ folder, create a .env file and add the following lines:
+Ensure tables like users, ambulances, medicines, and bloodbanks exist.
+
+Step 3: Create Environment File
+
+Create a .env file inside the backend folder and add the following lines:
 
 DB_HOST=localhost
 DB_USER=root
@@ -92,152 +145,138 @@ DB_PASSWORD=yourpassword
 DB_NAME=sanjeevani
 PORT=5000
 
-# Email/OTP Configuration
-EMAIL_SERVICE=gmail
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-email-password
-
-# Google Maps API
 GOOGLE_MAPS_API_KEY=your_api_key
+JWT_SECRET=your_jwt_secret
 
 
 Explanation:
 
-Database credentials are used by the backend to connect to MySQL.
+Database credentials allow the backend to connect to MySQL.
 
-Email configuration enables OTP-based login and verification.
+JWT_SECRET is used for authentication token generation.
 
-Google Maps API is required for hospital and doctor search features.
+GOOGLE_MAPS_API_KEY is required to display nearby ambulance locations on the map.
 
 Step 4: Backend Setup
 
-Move to the backend directory and install dependencies:
+Navigate to the backend directory:
 
 cd backend
+
+
+Install all dependencies:
+
 npm install
+
+
+Start the backend server:
+
 npm start
 
 
-If successful, you’ll see:
+The backend will run at:
 
-Server is running on port 5000
-Database connected successfully
-
-
-Backend runs at http://localhost:5000/
+http://localhost:5000/
 
 Step 5: Frontend Setup
 
-Navigate to the frontend root folder (my-web-app/) and install dependencies:
+Open a new terminal at the project root (my-web-app/).
+
+Run:
 
 npm install
 npm start
 
 
-Once completed, the development server will start at:
-http://localhost:3000
+The frontend React server will start at:
 
-If both backend and frontend are running, the application should load successfully.
+http://localhost:3000/
 
-Step 6: Verify the Setup
+Step 6: Verify Application Functionality
 
-After launching, verify that:
+Once both servers are running, open http://localhost:3000
+ in your browser and verify:
 
-The Home Page loads successfully.
+Login and Registration:
+Users can create an account and log in using email and password.
+The backend verifies credentials and checks if the user exists in the database.
 
-The Login/Signup page allows OTP-based authentication.
+Home Page:
+The homepage provides navigation to all major sections — Ambulance, Medicines, Blood Bank, Health Monitor, and Profile.
 
-Medicines page supports “Add to Cart” and dynamic cart updates.
+Ambulance Module:
+Users can search for nearby ambulances using Google Maps API.
+Ambulance locations and contact details appear on an interactive map.
 
-Blood Bank and Doctor Search display results using Google Maps API.
+Pharmacy (Medicines):
+Users can browse medicines, add them to the cart, and place orders.
 
-Admin Dashboard provides management for users, hospitals, and medicines.
+Blood Bank:
+Users can search for nearby blood banks based on their location and required blood group.
 
-Common Errors & Fixes
-Issue	Cause	Fix
-Database connection failed	MySQL not running or invalid credentials	Check .env file and restart MySQL
-OTP not sending	Email service misconfigured	Verify email and password credentials
-Frontend blank page	Backend not started	Start backend before frontend
-Fetch failed	Wrong API URL	Ensure backend URL is correct (http://localhost:5000
-)
-Styles missing	Cache issue	Delete node_modules and run npm install again
-Step 7: Optional – Build for Production
+Profile Page:
+Users can view and update their personal information.
 
-To create an optimized build for deployment:
+Step 7: Common Errors & Solutions
+Issue	Cause	Solution
+Backend not starting	Dependencies not installed	Run npm install inside backend folder
+Database not connected	Incorrect credentials	Check .env file values
+Login not working	Missing backend connection	Ensure backend is running on port 5000
+Maps not loading	Invalid API key	Recheck Google Maps API key
+Data not fetching	Wrong API routes	Verify Axios URLs in frontend code
+Step 8: Optional – Build for Production
+
+To create an optimized production build:
 
 npm run build
 serve -s build
 
 
-Then open http://localhost:3000
- to preview the production-ready version.
+Then visit:
 
-Prerequisites and Dependencies
-Backend Dependencies
+http://localhost:3000
 
-Installed via npm install inside backend/:
+Execution Summary
 
-express
+To execute the project:
 
-mysql2
+Start MySQL Server.
 
-cors
+Run the backend:
 
-dotenv
+cd backend
+npm start
 
-nodemailer
 
-body-parser
+Run the frontend:
 
-bcryptjs
+npm start
 
-jsonwebtoken
 
-Frontend Dependencies
+Open http://localhost:3000
+ in your browser.
 
-Installed via npm install inside the main folder:
+Workflow Summary
 
-react
+User registers through a signup form.
 
-react-dom
+During login, the backend validates the entered credentials with the MySQL database.
 
-react-router-dom
+Upon successful login, the user is redirected to the homepage.
 
-axios
+Users can:
 
-bootstrap or tailwindcss
+View and locate nearby ambulances using Google Maps API.
 
-Tools and APIs
+Order medicines online through the pharmacy page.
 
-Google Maps API for doctor and hospital search
+Search for nearby blood banks.
 
-Twilio or SMTP for OTP services
+Manage profile details.
 
-Postman for API testing
+The admin monitors and manages all records related to system operations.
 
-Project Summary
+Conclusion
 
-Sanjeevani is a full-stack healthcare web solution that simplifies access to medical services.
-It enables users to:
-
-Search for doctors and hospitals by location and specialty
-
-Purchase medicines through a secure cart system
-
-Locate nearby blood banks
-
-Manage personal health information via their profiles
-
-Provide admins with control over all entities (doctors, users, medicines, etc.)
-
-Built with:
-
-React.js for frontend
-
-Node.js (Express) for backend
-
-MySQL for data storage
-
-In summary:
-Once the faculty runs npm install → npm start for both backend and frontend and opens http://localhost:3000
-, the Sanjeevani Healthcare System will be fully functional and ready for demonstration.
+Sanjeevani is a comprehensive healthcare web system that enables users to search for ambulances, order medicines, and locate blood banks efficiently.
+By following this setup guide, the project can be executed and demonstrated seamlessly on any local machine.

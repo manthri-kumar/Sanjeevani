@@ -1,5 +1,5 @@
 // src/components/Medicines/Medicines.js
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   sanjeevaniImg,
@@ -72,9 +72,7 @@ import {
   Zandu_Chyawanprash_Avaleha,
   HK_Vitals_Fish_Oil,
   Savlon_Antiseptic_Liquid,
-  DrReckeweg_Calendula_Q,
   Hansaplast_Regular_Bandage,
-  SBL_Bio_Combination_6,
   Vissco_Wrist_Brace,
   Travel_First_Aid_Pouch,
 } from "../../assets";
@@ -114,7 +112,6 @@ const genPrice = (catIdx, subIdx, n) => {
   };
 };
 
-/* --------- NAME → IMAGE map ---------- */
 const IMAGE_MAP = [
   { key: "optimum nutrition gold standard whey", img: Optimum_Nutrition_Gold_Standard_Whey },
   { key: "manforce", img: Mankind_Manforce_Condoms },
@@ -152,42 +149,6 @@ const IMAGE_MAP = [
   { key: "wheezal thuja occidentalis q", img: Wheezal_Thuja_Occidentalis_Q },
   { key: "wow apple cider vinegar conditioner", img: WOW_Apple_Cider_Vinegar_Conditioner },
   { key: "wow omega-3", img: WOW_Omega_3 },
-  { key: "cipladine povidone iodine", img: Cipladine_Providone_Iodine },
-  { key: "calcirol sachet vitamin d3", img: Calcirol_Sachet_Vitamine_D3 },
-  { key: "dabur chyawanprash", img: Dabur_Chyawanprash },
-  { key: "bigmuscles real mass", img: BigMuscles_Real_Mass },
-  { key: "dr reckeweg nux vomica 200", img: Dr_Reckeweg_Nux_Vomica_200 },
-  { key: "baidhyanath chyawanprash", img: Baidhyanath_Chyawanprash },
-  { key: "band-aid flexible fabric", img: BandAid_Flexible_Fabric },
-  { key: "bigmuscles micronized creatine", img: BigMuscles_Micronized_Creatine },
-  { key: "dettol antiseptic liquid", img: Dettol_Antiseptic_Liquid },
-  { key: "flamingo shoulder support", img: Flamingo_Shoulder_Support },
-  { key: "himalayan organics vitamin c", img: Himalayan_Organics_Vitamin_C },
-  { key: "parachute advanced aloe vera oil", img: Parachute_Adavanced_Aloe_Vera_Oil },
-  { key: "sbl belladonna 30", img: SBL_Belladonna_30 },
-  { key: "accusure knee cap", img: AccuSure_Knee_Cap },
-  { key: "sbl arnica montana q", img: SBL_Arnica_Montana_Q },
-  { key: "cipla vitamin d3", img: Cipla_Vitamine_D3 },
-  { key: "gnc pro performance creatine", img: GNC_Pro_Performance_Creatine },
-  { key: "indulekha bringha hair oil", img: Indulekha_Bringha_Hair_Oil },
-  { key: "kapiva shilajit gold", img: Kapiva_Shilajit_Gold },
-  { key: "mamaearth onion conditioner", img: Mamaearth_Onion_Conditioner },
-  { key: "muscleblaze mass gainer", img: MuscleBlaze_Mass_Gainer },
-  { key: "muscleblaze whey protein", img: MuscleBlaze_Whey_Protein },
-  { key: "revital h multivitamin", img: Revital_H_Multivitamin },
-  { key: "scalpe plus anti-dandruff shampoo", img: Scalpe_Plus_Anti_Dandruff_Shampoo },
-  { key: "skore cool lubricant", img: Skore_Cool_Lubricant },
-  { key: "skore timeless condoms", img: Skore_Timeless_Condoms },
-  { key: "tynor knee support", img: Tynor_Knee_Support },
-  { key: "tynor wrist wrap", img: Tynor_Wrist_Wrap },
-  { key: "vissco shoulder immobilizer", img: Vissco_Shoulder_Immobilizer },
-  { key: "vizylac probiotic", img: Vizylac_Probiotic },
-  { key: "zandu chyawanprash avaleha", img: Zandu_Chyawanprash_Avaleha },
-  { key: "hk vitals fish oil", img: HK_Vitals_Fish_Oil },
-  { key: "savlon antiseptic liquid", img: Savlon_Antiseptic_Liquid },
-  { key: "hansaplast regular bandage", img: Hansaplast_Regular_Bandage },
-  { key: "vissco wrist brace", img: Vissco_Wrist_Brace },
-  { key: "travel first aid pouch", img: Travel_First_Aid_Pouch },
 ];
 
 const getImageFor = (productName) => {
@@ -201,101 +162,17 @@ const CATALOG = [
   {
     category: "Hair Care",
     subs: {
-      Shampoos: [
-        "Scalpe Plus Anti-Dandruff Shampoo",
-        "Mamaearth Onion Shampoo",
-        "Dove Intense Repair Shampoo",
-      ],
-      Conditioners: [
-        "Mamaearth Onion Conditioner",
-        "Loreal Total Repair 5 Conditioner",
-        "WOW Apple Cider Vinegar Conditioner",
-      ],
-      "Hair Oils": [
-        "Indulekha Bringha Hair Oil",
-        "Parachute Advanced Aloe Vera Oil",
-        "Mamaearth Onion Hair Oil",
-      ],
+      Shampoos: ["Scalpe Plus Anti-Dandruff Shampoo", "Mamaearth Onion Shampoo", "Dove Intense Repair Shampoo"],
+      Conditioners: ["Mamaearth Onion Conditioner", "Loreal Total Repair 5 Conditioner", "WOW Apple Cider Vinegar Conditioner"],
+      "Hair Oils": ["Indulekha Bringha Hair Oil", "Parachute Advanced Aloe Vera Oil", "Mamaearth Onion Hair Oil"],
     },
   },
   {
     category: "Fitness & Health",
     subs: {
-      "Protein Supplements": [
-        "Optimum Nutrition Gold Standard Whey",
-        "MuscleBlaze Whey Protein",
-        "MyProtein Impact Whey",
-      ],
-      "Mass Gainers": [
-        "MuscleTech Mass Tech",
-        "MuscleBlaze Mass Gainer",
-        "BigMuscles Real Mass",
-      ],
-      Creatine: [
-        "MuscleTech Platinum Creatine",
-        "GNC Pro Performance Creatine",
-        "BigMuscles Micronized Creatine",
-      ],
-    },
-  },
-  {
-    category: "Sexual Wellness",
-    subs: {
-      Contraceptives: [
-        "Durex Air Condoms",
-        "Mankind Manforce Condoms",
-        "Skore Timeless Condoms",
-      ],
-      Lubricants: ["Durex Play Lubricant", "K-Y Jelly", "Skore Cool Lubricant"],
-      "Performance Support": ["Himalaya Tentex Royal", "Musli Power X-tra", "Kapiva Shilajit Gold"],
-    },
-  },
-  {
-    category: "Vitamins & Nutrition",
-    subs: {
-      "Vitamin C": [
-        "Himalayan Organics Vitamin C",
-        "HealthKart Vitamin C",
-        "Carbamide Forte Vitamin C",
-      ],
-      Multivitamins: [
-        "Revital H Multivitamin",
-        "HealthKart HK Vitals Multivitamin",
-        "Supradyn Daily",
-      ],
-      "Omega & Fish Oils": ["HK Vitals Fish Oil", "WOW Omega-3", "TrueBasics Omega-3"],
-    },
-  },
-  {
-    category: "Supports & Braces",
-    subs: {
-      "Knee Support": ["Tynor Knee Support", "AccuSure Knee Cap", "Vissco Knee Brace"],
-      "Wrist Support": ["Tynor Wrist Wrap", "Vissco Wrist Brace", "Flamingo Wrist Support"],
-      "Shoulder Support": ["Tynor Shoulder Support", "Vissco Shoulder Immobilizer", "Flamingo Shoulder Support"],
-    },
-  },
-  {
-    category: "Immunity Boosters",
-    subs: {
-      "Herbal Tonics": ["Dabur Chyawanprash", "Zandu Chyawanprash Avaleha", "Baidhyanath Chyawanprash"],
-      "Vitamin D": ["Calcirol Sachet Vitamin D3", "HealthKart Vitamin D3", "Cipla Vitamin D3"],
-      Probiotics: ["Sporlac Probiotic Capsules", "VSL#3 Probiotic", "Vizylac Probiotic"],
-    },
-  },
-  {
-    category: "Homeopathy",
-    subs: {
-      "Mother Tinctures": ["SBL Arnica Montana Q", "Wheezal Thuja Occidentalis Q"],
-      Dilutions: ["SBL Belladonna 30", "Dr Reckeweg Nux Vomica 200", "SBL Aconite Napellus 30"],
-      "Biochemic Tablets": ["Dr Reckeweg BC 16", "SBL Bio-Combination 28"],
-    },
-  },
-  {
-    category: "First Aid",
-    subs: {
-      Bandages: ["Hansaplast Regular Bandage", "Band-Aid Flexible Fabric", "Dynaplast Elastic Adhesive"],
-      Antiseptics: ["Savlon Antiseptic Liquid", "Dettol Antiseptic Liquid", "Cipladine Povidone Iodine"],
-      "Medical Kits": ["First Aid Compact Kit", "Travel First Aid Pouch", "Family First Aid Box"],
+      "Protein Supplements": ["Optimum Nutrition Gold Standard Whey", "MuscleBlaze Whey Protein", "MyProtein Impact Whey"],
+      "Mass Gainers": ["MuscleTech Mass Tech", "MuscleBlaze Mass Gainer", "BigMuscles Real Mass"],
+      Creatine: ["MuscleTech Platinum Creatine", "GNC Pro Performance Creatine", "BigMuscles Micronized Creatine"],
     },
   },
 ];
@@ -330,16 +207,44 @@ const PRODUCTS = (() => {
 })();
 
 /* ---------------- component ---------------- */
-function Medicines({ handleAddToCart }) {
-  const [sortOption, setSortOption] = React.useState("relevance");
-  const [cartCount, setCartCount] = React.useState(0); // ✅ added
+function Medicines() {
+  const [sortOption, setSortOption] = useState("relevance");
+  const [cartCount, setCartCount] = useState(0);
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate(); // ✅ added
+  const navigate = useNavigate();
 
   const cat = searchParams.get("cat") || "";
   const sub = searchParams.get("sub") || "";
 
-  const images = [sanjeevaniImg, sanjeevaniImg, sanjeevaniImg];
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const email = user?.email || "";
+
+  useEffect(() => {
+    if (email) {
+      const saved = JSON.parse(localStorage.getItem(`cartItems_${email}`)) || [];
+      setCartCount(saved.reduce((t, i) => t + i.qty, 0));
+    }
+  }, [email]);
+
+  const handleAddToCart = (product) => {
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) {
+      sessionStorage.setItem("triggerLogin", "true");
+      window.dispatchEvent(new Event("openLoginModal"));
+      setTimeout(() => navigate("/"), 100);
+      return;
+    }
+
+    const key = `cartItems_${email}`;
+    const existing = JSON.parse(localStorage.getItem(key)) || [];
+    const index = existing.findIndex((p) => p.name === product.name);
+    if (index > -1) existing[index].qty += 1;
+    else existing.push({ ...product, qty: 1 });
+
+    localStorage.setItem(key, JSON.stringify(existing));
+    setCartCount(existing.reduce((t, i) => t + i.qty, 0));
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
 
   const sortList = (list) => {
     if (sortOption === "price-low-to-high") return [...list].sort((a, b) => a.price - b.price);
@@ -347,36 +252,34 @@ function Medicines({ handleAddToCart }) {
     return list;
   };
 
-  const filtered = React.useMemo(() => {
-    return PRODUCTS.filter((p) => {
+  const filtered = useMemo(() =>
+    PRODUCTS.filter((p) => {
       const byCat = cat ? p.categorySlug === cat : true;
       const bySub = sub ? p.subSlug === sub : true;
       return byCat && bySub;
-    });
-  }, [cat, sub]);
+    }), [cat, sub]);
 
-  const sortedProducts = React.useMemo(() => sortList(filtered), [filtered, sortOption]);
+  const sortedProducts = useMemo(() => sortList(filtered), [filtered, sortOption]);
 
   const heading =
-    cat && sub ? `${humanize(cat)} • ${humanize(sub)}`
-              : cat ? humanize(cat)
-              : "All Medicines";
+    cat && sub ? `${humanize(cat)} • ${humanize(sub)}` :
+    cat ? humanize(cat) : "All Medicines";
+
+  const images = [sanjeevaniImg, sanjeevaniImg, sanjeevaniImg];
 
   return (
-     <div>
-      {/* ✅ Header */}
+    <div>
+      {/* Header */}
       <header className="header">
         <div className="logo">
           <img src={sanjeevaniImg} alt="Sanjeevani Logo" />
         </div>
-
         <nav className="nav-links">
           <a href="/doctor">DOCTORS</a>
           <a href="#">HOSPITALS</a>
           <a href="/Medicines">MEDICINES</a>
           <a href="/Profile">PROFILE</a>
         </nav>
-
         <div className="search">
           <div className="search-box">
             <input type="text" placeholder="Search" />
@@ -385,7 +288,6 @@ function Medicines({ handleAddToCart }) {
             </button>
           </div>
         </div>
-
         <div className="cart">
           <button onClick={() => navigate("/cart")}>
             <i className="fa-solid fa-cart-shopping"></i>
@@ -396,7 +298,7 @@ function Medicines({ handleAddToCart }) {
 
       <NavbarWithDropdown />
 
-      {/* Banner / Slider */}
+      {/* Banner */}
       <div className="container">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -415,7 +317,7 @@ function Medicines({ handleAddToCart }) {
         </Swiper>
       </div>
 
-      {/* Heading + Sort */}
+      {/* Product Section */}
       <section className="product-display">
         <div className="product-sort-container">
           <h2 className="category-heading">{heading}</h2>
@@ -434,7 +336,6 @@ function Medicines({ handleAddToCart }) {
           </div>
         </div>
 
-        {/* Product Grid */}
         <div className="product-grid">
           {sortedProducts.length === 0 ? (
             <div className="empty">No products found in this category.</div>
@@ -443,8 +344,7 @@ function Medicines({ handleAddToCart }) {
               <MedicineCard
                 key={product.id}
                 product={product}
-                // ✅ fixed: always pass a valid function
-                onAddToCart={() => handleAddToCart && handleAddToCart(product)}
+                onAddToCart={() => handleAddToCart(product)}
               />
             ))
           )}

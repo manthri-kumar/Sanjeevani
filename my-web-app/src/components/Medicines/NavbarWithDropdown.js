@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./NavbarWithDropdown.css";
 
 const menuItems = [
@@ -6,116 +7,152 @@ const menuItems = [
     title: "Hair Care",
     subItems: [
       { name: "Shampoos", info: "Gentle cleansers for all hair types" },
-      { name: "Conditioners", info: "Moisturizing treatments for smooth hair" },
-      { name: "Hair Oils", info: "Natural oils for nourishment and growth" },
+      { name: "Conditioners", info: "For smooth and hydrated hair" },
+      { name: "Hair Oils", info: "Nourishes scalp and promotes growth" },
     ],
   },
   {
     title: "Fitness & Health",
     subItems: [
-      { name: "Pre/Post Workout", info: "Supplements for before and after exercise" },
-      { name: "Mass Gainers", info: "High-calorie blends for weight gain" },
-      { name: "Plant Protein", info: "Proteins from natural plant sources" },
+      { name: "Pre/Post Workout", info: "Boost performance and recovery" },
+      { name: "Mass Gainers", info: "Helps in healthy weight gain" },
+      { name: "Plant Protein", info: "Protein from natural plant sources" },
       { name: "Creatine", info: "Supports strength and performance" },
-      { name: "Glutamine", info: "Amino acid for recovery" },
-      { name: "Protein Supplements", info: "Various protein powders for health" },
-      { name: "Knee Support", info: "Braces and wraps for knees" },
-      { name: "Smart Watches & Rings", info: "Wearable health and fitness trackers" },
+      { name: "Glutamine", info: "Amino acid to support recovery" },
+      { name: "Protein Supplements", info: "Protein for muscle growth" },
     ],
   },
   {
     title: "Sexual Wellness",
     subItems: [
-      { name: "Contraceptives", info: "Safe methods for birth control" },
-      { name: "Lubricants", info: "Personal lubricants for comfort" },
+      { name: "Contraceptives", info: "Safe birth control options" },
+      { name: "Lubricants", info: "Personal comfort products" },
     ],
   },
   {
     title: "Vitamins & Nutrition",
     subItems: [
-      { name: "Oats", info: "Healthful whole grains for breakfast" },
-      { name: "Muesli & Cereals", info: "Nutritious breakfast options" },
-      { name: "Quinoa", info: "Protein-rich superfood" },
-      { name: "Fat Burners", info: "Support healthy metabolism" },
-      { name: "Sports", info: "Supplements for athletic performance" },
-      { name: "Carnitine", info: "Supports energy production" },
-      // Add other subcategories as you require
+      { name: "Oats", info: "Healthy and energetic breakfast staple" },
+      { name: "Quinoa", info: "High protein superfood" },
+      { name: "Fat Burners", info: "Boost metabolism" },
+      { name: "Carnitine", info: "Energy production support" },
     ],
   },
   {
     title: "Supports & Braces",
     subItems: [
-      { name: "Elbow Support", info: "Braces for elbow injuries" },
-      { name: "Wrist Support", info: "Stabilizes wrists" },
-      { name: "Neck Support", info: "Braces for neck problems" },
-      { name: "Shoulder Support", info: "Relieves shoulder discomfort" },
+      { name: "Elbow Support", info: "Helps reduce strain" },
+      { name: "Wrist Support", info: "Stabilizes wrist joints" },
+      { name: "Neck Support", info: "Helps relieve neck tension" },
     ],
   },
   {
     title: "Immunity Boosters",
     subItems: [
-      { name: "Vitamin C Tablets", info: "Support immune health" },
+      { name: "Vitamin C Tablets", info: "Boosts immune function" },
       { name: "Herbal Tonics", info: "Traditional immunity boosters" },
-      { name: "Probiotics", info: "Improves gut health and immunity" },
+      { name: "Probiotics", info: "Improves gut and immune health" },
     ],
   },
   {
     title: "Homeopathy",
     subItems: [
-      { name: "Mother Tinctures", info: "Homeopathic plant extracts" },
-      { name: "Dilutions", info: "Remedies for various ailments" },
+      { name: "Mother Tinctures", info: "Homeopathic plant extract" },
+      { name: "Dilutions", info: "Widely used homeopathic remedies" },
     ],
   },
   {
     title: "First Aid",
     subItems: [
-      { name: "Bandages", info: "For minor wounds" },
-      { name: "Antiseptics", info: "Prevent infection" },
-      { name: "Medical Kits", info: "Complete first aid kits" }
+      { name: "Bandages", info: "Protects wounds" },
+      { name: "Antiseptics", info: "Kills germs and prevents infection" },
     ],
   },
 ];
 
+// convert any title into a clean URL slug
+const slugify = (text) =>
+  text
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 
 function NavbarWithDropdown() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [hoveredSubIndex, setHoveredSubIndex] = useState(null);
+  const [params] = useSearchParams();
+  const currentCat = params.get("cat") || "";
+
+  const navigate = useNavigate();
+  const hideTimer = useRef(null);
+
+  const openMenu = (index) => {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    setActiveIndex(index);
+  };
+
+  const closeMenu = () => {
+    hideTimer.current = setTimeout(() => {
+      setActiveIndex(null);
+      setHoveredSubIndex(null);
+    }, 160); // short delay to prevent flicker
+  };
+
+  const goToCategory = (title) => navigate(`/medicines?cat=${slugify(title)}`);
 
   return (
     <nav className="navbar">
       <ul className="navbar-menu">
-        {menuItems.map((menu, idx) => (
-          <li
-            key={menu.title}
-            className="navbar-item"
-            onMouseEnter={() => setActiveIndex(idx)}
-            onMouseLeave={() => { setActiveIndex(null); setHoveredSubIndex(null); }}
-          >
-            <span className="navbar-link">
-              {menu.title}
-              {menu.subItems.length > 0 && <span className="arrow">&#9662;</span>}
-            </span>
-            {menu.subItems.length > 0 && activeIndex === idx && (
-              <ul className="dropdown">
-                {menu.subItems.map((sub, i) => (
-                  <li
-                    key={i}
-                    className="dropdown-item"
-                    onMouseEnter={() => setHoveredSubIndex(i)}
-                    onMouseLeave={() => setHoveredSubIndex(null)}
-                  >
-                    {sub.name}
-                    {hoveredSubIndex === i && (
-                      <div className="subcategory-info">
-                        {sub.info}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
+        {menuItems.map((menu, index) => {
+          const catSlug = slugify(menu.title);
+          const isActive = currentCat === catSlug;
+
+          return (
+            <li
+              key={menu.title}
+              className="navbar-item"
+              onMouseEnter={() => openMenu(index)}
+              onMouseLeave={closeMenu}
+            >
+              <button
+                type="button"
+                className={`navbar-link ${isActive ? "is-active" : ""}`}
+                onClick={() => goToCategory(menu.title)}
+              >
+                {menu.title} <span className="arrow">▾</span>
+              </button>
+
+              {activeIndex === index && menu.subItems.length > 0 && (
+                <ul
+                  className="dropdown"
+                  onMouseEnter={() => openMenu(index)}
+                  onMouseLeave={closeMenu}
+                >
+                  {menu.subItems.map((sub, i) => (
+                    <li
+                      key={sub.name}
+                      className="dropdown-item"
+                      onMouseEnter={() => setHoveredSubIndex(i)}
+                      onMouseLeave={() => setHoveredSubIndex(null)}
+                    >
+                      <Link
+                        className="dropdown-link"
+                        to={`/medicines?cat=${catSlug}&sub=${slugify(sub.name)}`}
+                      >
+                        {sub.name}
+                      </Link>
+
+                      {hoveredSubIndex === i && (
+                        <div className="subcategory-info">{sub.info}</div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

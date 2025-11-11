@@ -11,6 +11,7 @@ import BloodBank from './components/BloodBank/blood_bank';
 
 import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
+import AppointmentPage from "./components/AppointmentPage/AppointmentPage";
 
 
 
@@ -27,6 +28,8 @@ function App() {
         <Route path="/Profile" element={<Profile />} />
          <Route path="/doctor" element={<DoctorAppointment />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/appointment" element={<AppointmentPage />} />
+
       </Routes>
     </Router>
   );

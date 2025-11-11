@@ -19,9 +19,9 @@ const sectionContent = {
 const ProfileRight = ({ selected }) => {
   const [user, setUser] = useState(null);
 
-  // ✅ Load user info from localStorage
+  // ✅ Load user info from sessionStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -29,8 +29,8 @@ const ProfileRight = ({ selected }) => {
 
   // ✅ Logout Function (inside right)
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("user");
     window.location.href = "/";
   };
 

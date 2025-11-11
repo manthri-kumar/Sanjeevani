@@ -3,7 +3,8 @@ import "./home.css";
 import {
   offerimg, sanjeevaniImg, bannerimg, medicineimg, Docimg, doctorimg,
   labimg, healthimg, monitorimg, painimg, proteinimg, babyimg,
-  ayurvedicimg, skincareimg, vitaminimg, Nutritiousimg, ambulance, bloodbank
+  ayurvedicimg, skincareimg, vitaminimg, Nutritiousimg, ambulance, bloodbank,LaShield,Minimalist,Neutrogena,Ordinary,Avene,carave,himalaya,johnson,pampers,
+        mamaearth,sebamed,dermadew,huggies
 } from "../../assets";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -16,67 +17,80 @@ import { useNavigate } from "react-router-dom";
 
 // --- CeraVe Product Data ---
 const ceraveProducts = [
-  { id: 1, name: "CeraVe Moisturising Lotion 473 ml", price: 1575, mrp: 1750, discount: "10% off", image: skincareimg, isBestseller: false, offer: "Buy 1 Get 1" },
-  { id: 2, name: "CeraVe Foaming Cleanser 473 ml", price: 1369.50, mrp: 1650, discount: "17% off", image: skincareimg, isBestseller: true, offer: null },
-  { id: 3, name: "CeraVe Moisturising Cream 454 gm", price: 1710, mrp: 1900, discount: "10% off", image: skincareimg, isBestseller: false, offer: null },
-  { id: 4, name: "CeraVe Hydrating Cleanser 236 ml", price: 657, mrp: 730, discount: "10% off", image: skincareimg, isBestseller: false, offer: null },
-  { id: 5, name: "CeraVe Hydrating Cleanser 473 ml", price: 945, mrp: 999, discount: "10% off", image: skincareimg, isBestseller: false, offer: null },
-  { id: 6, name: "CeraVe PM Facial Moisturising Lotion 52 ml", price: 1080, mrp: 1350, discount: "20% off", image: skincareimg, isBestseller: false, offer: null },
-  { id: 7, name: "CeraVe Resurfacing Retinol Serum", price: 1200, mrp: 1500, discount: "20% off", image: skincareimg, isBestseller: false, offer: "Buy 1 Get 1" },
+  { id: 1, name: "CeraVe Moisturising Lotion 473 ml", price: 1575, mrp: 1750, discount: "10% off", image: carave,stseller: true, offer: "Buy 1 Get 1" },
+  { id: 2, name: "Neutrogena Deep Clean Foaming Cleanser 200 ml", price: 599, mrp: 700, discount: "14% off", image: Neutrogena, isBestseller: true, offer: null },
+  { id: 3, name: "Cetaphil Moisturising Cream 250 gm", price: 890, mrp: 999, discount: "11% off", image: skincareimg, isBestseller: false, offer: "Flat ₹100 Cashback" },
+  { id: 4, name: "La Shield Sunscreen Gel SPF 40, 50 g", price: 730, mrp: 820, discount: "11% off", image: LaShield, isBestseller: true, offer: null },
+  { id: 5, name: "Minimalist 10% Niacinamide Serum 30 ml", price: 595, mrp: 650, discount: "8% off", image: Minimalist, isBestseller: true, offer: "Buy 2 Save 10%" },
+  { id: 6, name: "The Ordinary Hyaluronic Acid 2% + B5 Serum 30 ml", price: 1200, mrp: 1400, discount: "14% off", image: Ordinary, isBestseller: false, offer: null },
+  { id: 7, name: "Avene Cleanance Cleansing Gel 200 ml", price: 1450, mrp: 1600, discount: "9% off", image: Avene, isBestseller: true, offer: "Buy 1 Get 1 Free" }
 ];
 
 // --- Baby Care Products ---
 const babyCareProducts = [
-  { id: 101, name: "Himalaya Gentle Baby Shampoo 200ml", price: 180, mrp: 200, discount: "10% off", image: babyimg, isBestseller: true, offer: null },
-  { id: 102, name: "Johnson's Baby Powder 100g", price: 120, mrp: 120, discount: "0% off", image: babyimg, isBestseller: false, offer: null },
-  { id: 103, name: "Pampers Active Baby Diapers (M, 56 Pcs)", price: 899, mrp: 999, discount: "10% off", image: babyimg, isBestseller: true, offer: "Buy 2 Save 10%" },
-  { id: 104, name: "Mamaearth Moisturizing Baby Bathing Soap", price: 299, mrp: 350, discount: "15% off", image: babyimg, isBestseller: false, offer: null },
-  { id: 105, name: "Sebamed Baby Lotion 200ml", price: 540, mrp: 600, discount: "10% off", image: babyimg, isBestseller: false, offer: null },
-  { id: 106, name: "Dermadew Baby Soap 75g", price: 150, mrp: 175, discount: "14% off", image: babyimg, isBestseller: false, offer: null },
-  { id: 107, name: "Huggies Wonder Pants Diapers (L, 44 Pcs)", price: 580, mrp: 700, discount: "17% off", image: babyimg, isBestseller: true, offer: null },
+  { id: 101, name: "Himalaya Gentle Baby Shampoo 200ml", price: 180, mrp: 200, discount: "10% off", image: himalaya, isBestseller: true, offer: null },
+  { id: 102, name: "Johnson's Baby Powder 100g", price: 120, mrp: 120, discount: "0% off", image: johnson, isBestseller: false, offer: null },
+  { id: 103, name: "Pampers Active Baby Diapers (M, 56 Pcs)", price: 899, mrp: 999, discount: "10% off", image: pampers, isBestseller: true, offer: "Buy 2 Save 10%" },
+  { id: 104, name: "Mamaearth Moisturizing Baby Bathing Soap", price: 299, mrp: 350, discount: "15% off", image: mamaearth, isBestseller: false, offer: null },
+  { id: 105, name: "Sebamed Baby Lotion 200ml", price: 540, mrp: 600, discount: "10% off", image: sebamed, isBestseller: false, offer: null },
+  { id: 106, name: "Dermadew Baby Soap 75g", price: 150, mrp: 175, discount: "14% off", image: dermadew, isBestseller: false, offer: null },
+  { id: 107, name: "Huggies Wonder Pants Diapers (L, 44 Pcs)", price: 580, mrp: 700, discount: "17% off", image: huggies, isBestseller: true, offer: null },
 ];
 
 function Home() {
   const images = [offerimg, bannerimg, sanjeevaniImg];
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginStep, setLoginStep] = useState(1);
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
-  
-
   // ✅ Force Login Modal on Page Load
- // ✅ Only check login state, don't show modal automatically
+  // ✅ Only check login state, don't show modal automatically
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn");
+    const loggedIn = sessionStorage.getItem("isLoggedIn");
     setIsLoggedIn(loggedIn === "true");
 
-    const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const savedCart = JSON.parse(sessionStorage.getItem("cartItems")) || [];
     setCartItems(savedCart);
     setCartCount(savedCart.length);
   }, []);
-  // ✅ Save cart to localStorage when updated
- // ✅ Load and keep cart synced even when navigating back
-useEffect(() => {
-  const loadCart = () => {
-    const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setCartItems(savedCart);
-    setCartCount(savedCart.reduce((total, item) => total + item.qty, 0));
-  };
 
-  loadCart();
+  // ✅ Save cart to sessionStorage when updated
+  // ✅ Load and keep cart synced even when navigating back
+  // ✅ Load and sync cart (only after login)
+  useEffect(() => {
+    const loadCart = () => {
+      const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(loggedIn);
 
-  // ✅ Listen for updates made from other tabs/pages
-  window.addEventListener("storage", loadCart);
-  return () => window.removeEventListener("storage", loadCart);
-}, []);
+      if (loggedIn) {
+        const savedCart = JSON.parse(sessionStorage.getItem("cartItems")) || [];
+        setCartItems(savedCart);
+        setCartCount(savedCart.reduce((total, item) => total + item.qty, 0));
+      } else {
+        // not logged in → reset cart and count
+        setCartItems([]);
+        setCartCount(0);
+      }
+    };
+
+    loadCart();
+
+    // ✅ Listen for updates made from other tabs/pages
+    window.addEventListener("storage", loadCart);
+    return () => window.removeEventListener("storage", loadCart);
+  }, []);
 
   // ✅ Logout
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("cartItems");
     setIsLoggedIn(false);
+    setCartItems([]);
+    setCartCount(0);
     setShowLogin(true);
   };
 
@@ -96,8 +110,8 @@ useEffect(() => {
       const data = await response.json();
       if (data.success) {
         alert("Login successful!");
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(data.user));
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("user", JSON.stringify(data.user));
         setIsLoggedIn(true);
         setShowLogin(false);
       } else {
@@ -135,42 +149,40 @@ useEffect(() => {
       alert("Server error. Try again later.");
     }
   };
-  
 
   // ✅ Add to Cart
- // ✅ Add to Cart (fixed and working)
-// ✅ Common Add to Cart Function (works for all product buttons)
-const handleAddToCart = (product) => {
-  if (!isLoggedIn) {
-    alert("Please log in to add items to your cart!");
-    setShowLogin(true);
-    return;
-  }
+  // ✅ Common Add to Cart Function (works for all product buttons)
+  const handleAddToCart = (product) => {
+    if (!isLoggedIn) {
+      alert("Please log in to add items to your cart!");
+      setShowLogin(true);
+      return;
+    }
 
-  // Load existing cart
-  const existing = cartItems.find((item) => item.id === product.id);
-  let updatedCart;
+    // Load existing cart
+    const existing = cartItems.find((item) => item.id === product.id);
+    let updatedCart;
 
-  // Update quantity if exists, else add new product
-  if (existing) {
-    updatedCart = cartItems.map((item) =>
-      item.id === product.id ? { ...item, qty: item.qty + 1 } : item
-    );
-  } else {
-    updatedCart = [...cartItems, { ...product, qty: 1 }];
-  }
+    // Update quantity if exists, else add new product
+    if (existing) {
+      updatedCart = cartItems.map((item) =>
+        item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+      );
+    } else {
+      updatedCart = [...cartItems, { ...product, qty: 1 }];
+    }
 
-  // Update state + localStorage
-  setCartItems(updatedCart);
-  const newCount = updatedCart.reduce((total, item) => total + item.qty, 0);
-  setCartCount(newCount);
+    // Update state + sessionStorage
+    setCartItems(updatedCart);
+    const newCount = updatedCart.reduce((total, item) => total + item.qty, 0);
+    setCartCount(newCount);
 
-  localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-  window.dispatchEvent(new Event("storage")); // sync across tabs/pages
+    sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("storage")); // sync across tabs/pages
 
-  // Optional feedback
-  alert(`${product.name} added to cart!`);
-};
+    // Optional feedback
+    alert(`${product.name} added to cart!`);
+  };
 
 
   const swiperNav = {
@@ -190,7 +202,7 @@ const handleAddToCart = (product) => {
           <nav className="nav-links">
             <a href="/doctor">DOCTORS</a>
             <a href="#">HOSPITALS</a>
-            <a href="#">MEDICINES</a>
+            <a href="/Medicines">MEDICINES</a>
             <a href="/Profile">PROFILE</a>
           </nav>
           <div className="search">

@@ -10,9 +10,9 @@ const Profile = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [loginStep, setLoginStep] = useState(1);
 
-  // ✅ Check login state from localStorage
+  // ✅ Check login state from sessionStorage
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn");
+    const loggedIn = sessionStorage.getItem("isLoggedIn");
     setIsLoggedIn(loggedIn === "true");
   }, []);
 
@@ -29,11 +29,12 @@ const Profile = () => {
         body: JSON.stringify({ email, password }),
       });
 
+      
       const data = await response.json();
       if (data.success) {
         alert("Login successful!");
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(data.user));
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("user", JSON.stringify(data.user));
         setIsLoggedIn(true);
         setShowLogin(false);
       } else {

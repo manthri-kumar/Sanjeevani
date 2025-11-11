@@ -3,16 +3,37 @@ import "./Cart.css";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const loadCart = () => {
+    // ✅ Check login state first
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
+
+    if (loggedIn) {
+      // ✅ Load user-specific cart only if logged in
       const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
       setCartItems(savedCart);
+    } else {
+      // ✅ Empty cart if user not logged in
+      setCartItems([]);
+    }
+
+    // ✅ Sync across tabs
+    const handleStorage = () => {
+      const loggedInNow = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(loggedInNow);
+
+      if (loggedInNow) {
+        const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+        setCartItems(updatedCart);
+      } else {
+        setCartItems([]);
+      }
     };
 
-    loadCart();
-    window.addEventListener("storage", loadCart);
-    return () => window.removeEventListener("storage", loadCart);
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
   const updateCart = (updated) => {
@@ -41,14 +62,24 @@ function Cart() {
   return (
     <div className="cart-main-container">
       <section className="cart-items-section">
-        <h3>My Cart ({cartItems.length} item{cartItems.length !== 1 ? "s" : ""})</h3>
+        <h3>
+          My Cart ({cartItems.length} item{cartItems.length !== 1 ? "s" : ""})
+        </h3>
 
-        {cartItems.length === 0 ? (
+        {!isLoggedIn ? (
+          <div className="cart-empty-message">
+            Please log in to view your cart.
+          </div>
+        ) : cartItems.length === 0 ? (
           <div className="cart-empty-message">Your cart is empty.</div>
         ) : (
           cartItems.map((item, index) => (
             <div className="cart-item-card" key={index}>
-              <img src={item.image} alt={item.name} className="cart-item-image" />
+              <img
+                src={item.image}
+                alt={item.name}
+                className="cart-item-image"
+              />
               <div className="cart-item-details">
                 <div className="cart-item-title">{item.name}</div>
                 <div className="cart-item-price-single">
@@ -79,7 +110,10 @@ function Cart() {
                 </div>
               </div>
               <div className="cart-item-total">
-                ₹{item.price && item.qty ? (item.price * item.qty).toFixed(2) : "0.00"}
+                ₹
+                {item.price && item.qty
+                  ? (item.price * item.qty).toFixed(2)
+                  : "0.00"}
               </div>
             </div>
           ))
@@ -103,8 +137,11 @@ function Cart() {
         <div className="cart-summary-total">
           Total Amount: ₹{totalPrice.toFixed(2)}
         </div>
-        <button className="cart-summary-btn" disabled={cartItems.length === 0}>
-          Place Order
+        <button
+          className="cart-summary-btn"
+          disabled={!isLoggedIn || cartItems.length === 0}
+        >
+          {isLoggedIn ? "Place Order" : "Login to Order"}
         </button>
       </aside>
     </div>

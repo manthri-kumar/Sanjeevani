@@ -1,4 +1,4 @@
-Sanjeevani – Meta File
+Sanjeevani 
 Project Overview
 
 Sanjeevani is a full-stack healthcare web application developed using React.js, Node.js, and MySQL.

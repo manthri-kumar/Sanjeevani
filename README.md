@@ -79,22 +79,19 @@ MySQL is used to store all users, medicines, ambulances, and blood bank details.
 Import the provided SQL file (sanjeevani.sql) to create all necessary tables.
 
 Folder Structure
-
-Ensure your project follows this structure:
-
 my-web-app/
-├── backend/                 # Node.js backend
-│   ├── models/
-│   ├── routes/
-│   ├── controllers/
-│   ├── config/
-│   └── server.js
+├── backend/                     # Node.js backend
+│   ├── models/                  # Database models
+│   ├── routes/                  # API routes
+│   ├── controllers/             # Business logic
+│   ├── config/                  # Configuration files
+│   └── server.js                # Main server file
 │
-├── public/                  # React public assets
+├── public/                      # React public assets
 │
 ├── src/
-│   ├── assets/              # Images and icons
-│   ├── components/
+│   ├── assets/                  # Images and icons
+│   ├── components/              # Main UI components
 │   │   ├── Ambulance/
 │   │   ├── AppointmentPage/
 │   │   ├── BloodBank/
@@ -105,14 +102,15 @@ my-web-app/
 │   │   ├── Login/
 │   │   ├── Medicines/
 │   │   └── Profile/
-│   ├── App.css
-│   ├── App.js
-│   └── index.js
+│   │
+│   ├── App.css                  # Global CSS styles
+│   ├── App.js                   # Root React component
+│   └── index.js                 # Entry point of the React app
 │
-├── package.json
-├── package-lock.json
-├── .gitignore
-└── README.md
+├── package.json                 # Frontend dependencies
+├── package-lock.json            # Dependency lock file
+├── .gitignore                   # Ignored files list
+└── README.md                    # Project documentation
 
 Instructions to Run the Software
 Step 1: Clone the Repository
@@ -180,9 +178,7 @@ http://localhost:5000/
 
 Step 5: Frontend Setup
 
-Open a new terminal at the project root (my-web-app/).
-
-Run:
+Open a new terminal at the project root (my-web-app/) and run:
 
 npm install
 npm start
@@ -197,24 +193,24 @@ Step 6: Verify Application Functionality
 Once both servers are running, open http://localhost:3000
  in your browser and verify:
 
-Login and Registration:
+Login and Registration
 Users can create an account and log in using email and password.
 The backend verifies credentials and checks if the user exists in the database.
 
-Home Page:
+Home Page
 The homepage provides navigation to all major sections — Ambulance, Medicines, Blood Bank, Health Monitor, and Profile.
 
-Ambulance Module:
+Ambulance Module
 Users can search for nearby ambulances using Google Maps API.
 Ambulance locations and contact details appear on an interactive map.
 
-Pharmacy (Medicines):
+Pharmacy (Medicines)
 Users can browse medicines, add them to the cart, and place orders.
 
-Blood Bank:
+Blood Bank
 Users can search for nearby blood banks based on their location and required blood group.
 
-Profile Page:
+Profile Page
 Users can view and update their personal information.
 
 Step 7: Common Errors & Solutions
@@ -253,8 +249,7 @@ Run the frontend:
 npm start
 
 
-Open http://localhost:3000
- in your browser.
+Open http://localhost:3000 in your browser.
 
 Workflow Summary
 

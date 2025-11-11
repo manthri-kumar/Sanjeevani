@@ -112,43 +112,78 @@ const genPrice = (catIdx, subIdx, n) => {
   };
 };
 
+// ✅ COMPLETE IMAGE MAP (All Items Included)
 const IMAGE_MAP = [
-  { key: "optimum nutrition gold standard whey", img: Optimum_Nutrition_Gold_Standard_Whey },
-  { key: "manforce", img: Mankind_Manforce_Condoms },
-  { key: "tynor wrist", img: Tynor_Wrist_Support },
-  { key: "carbamide forte vitamin c", img: Carbimide_Forte_Vitamin_C },
-  { key: "healthkart vitamin d3", img: HealthKart_Vitamin_D3 },
+  { key: "scalpe plus anti-dandruff shampoo", img: Scalpe_Plus_Anti_Dandruff_Shampoo },
+  { key: "mamaearth onion shampoo", img: Mamaearth_Onion_Shampoo },
   { key: "dove intense repair shampoo", img: Dove_Intense_Repair_Shampoo },
-  { key: "first aid compact kit", img: First_Aid_Compact_Kit },
-  { key: "k-y jelly", img: KY_Jelly },
+  { key: "mamaearth onion conditioner", img: Mamaearth_Onion_Conditioner },
+  { key: "loreal total repair 5 conditioner", img: LOreal_Total_Repair_5_Conditioner },
+  { key: "wow apple cider vinegar conditioner", img: WOW_Apple_Cider_Vinegar_Conditioner },
+  { key: "indulekha bringha hair oil", img: Indulekha_Bringha_Hair_Oil },
+  { key: "parachute advanced aloe vera oil", img: Parachute_Adavanced_Aloe_Vera_Oil },
+  { key: "mamaearth onion hair oil", img: Mamaearth_Onion_Hair_Oil },
+  { key: "optimum nutrition gold standard whey", img: Optimum_Nutrition_Gold_Standard_Whey },
+  { key: "muscleblaze whey protein", img: MuscleBlaze_Whey_Protein },
+  { key: "myprotein impact whey", img: MyProtein_Impact_Whey_Protein },
   { key: "muscletech mass tech", img: MuscleTech_Mass_Tech },
+  { key: "muscleblaze mass gainer", img: MuscleBlaze_Mass_Gainer },
+  { key: "bigmuscles real mass", img: BigMuscles_Real_Mass },
+  { key: "muscletech platinum creatine", img: MuscleTech_Platinum_Creatine },
+  { key: "gnc pro performance creatine", img: GNC_Pro_Performance_Creatine },
+  { key: "bigmuscles micronized creatine", img: BigMuscles_Micronized_Creatine },
+  { key: "durex air condoms", img: Durex_Air_Condoms },
+  { key: "mankind manforce condoms", img: Mankind_Manforce_Condoms },
+  { key: "skore timeless condoms", img: Skore_Timeless_Condoms },
+  { key: "durex play lubricant", img: Durex_Play_Lubricant },
+  { key: "k-y jelly", img: KY_Jelly },
+  { key: "skore cool lubricant", img: Skore_Cool_Lubricant },
+  { key: "himalaya tentex royal", img: Himalaya_Tentex_Royal },
+  { key: "musli power x-tra", img: Musli_Power_Xtra },
+  { key: "kapiva shilajit gold", img: Kapiva_Shilajit_Gold },
+  { key: "himalayan organics vitamin c", img: Himalayan_Organics_Vitamin_C },
+  { key: "healthkart vitamin c", img: HealthKart_Vitamine_C },
+  { key: "carbamide forte vitamin c", img: Carbimide_Forte_Vitamin_C },
+  { key: "revital h multivitamin", img: Revital_H_Multivitamin },
+  { key: "healthkart hk vitals multivitamin", img: HealthKart_HK_Vitals_Multivitamin },
+  { key: "supradyn daily", img: Supradyn_Daily },
+  { key: "hk vitals fish oil", img: HK_Vitals_Fish_Oil },
+  { key: "wow omega-3", img: WOW_Omega_3 },
+  { key: "truebasics omega-3", img: TrueBasics_Omega3 },
+  { key: "tynor knee support", img: Tynor_Knee_Support },
+  { key: "accusure knee cap", img: AccuSure_Knee_Cap },
+  { key: "vissco knee brace", img: Vissco_Knee_Brace },
+  { key: "tynor wrist wrap", img: Tynor_Wrist_Wrap },
+  { key: "vissco wrist brace", img: Vissco_Wrist_Brace },
+  { key: "flamingo wrist support", img: Flamingo_Wrist_Support },
+  { key: "tynor shoulder support", img: Tynor_Shoulder_Support },
+  { key: "vissco shoulder immobilizer", img: Vissco_Shoulder_Immobilizer },
+  { key: "flamingo shoulder support", img: Flamingo_Shoulder_Support },
+  { key: "dabur chyawanprash", img: Dabur_Chyawanprash },
+  { key: "zandu chyawanprash avaleha", img: Zandu_Chyawanprash_Avaleha },
+  { key: "baidhyanath chyawanprash", img: Baidhyanath_Chyawanprash },
+  { key: "calcirol sachet vitamin d3", img: Calcirol_Sachet_Vitamine_D3 },
+  { key: "healthkart vitamin d3", img: HealthKart_Vitamin_D3 },
+  { key: "cipla vitamin d3", img: Cipla_Vitamine_D3 },
+  { key: "sporlac probiotic capsules", img: Sporlac_Probiotic_Capsules },
+  { key: "vsl#3 probiotic", img: VSL3_Probiotic },
+  { key: "vizylac probiotic", img: Vizylac_Probiotic },
+  { key: "sbl arnica montana q", img: SBL_Arnica_Montana_Q },
+  { key: "wheezal thuja occidentalis q", img: Wheezal_Thuja_Occidentalis_Q },
+  { key: "sbl belladonna 30", img: SBL_Belladonna_30 },
+  { key: "dr reckeweg nux vomica 200", img: Dr_Reckeweg_Nux_Vomica_200 },
   { key: "sbl aconite napellus 30", img: SBL_Aconite_Napellus_30 },
   { key: "dr reckeweg bc 16", img: Dr_ReckewegBC_16 },
-  { key: "durex air condoms", img: Durex_Air_Condoms },
-  { key: "durex play lubricant", img: Durex_Play_Lubricant },
-  { key: "dynaplast elastic adhesive", img: Dynaplast_Elastic_Adhesivev },
-  { key: "family first aid box", img: Family_First_Aid_Box },
-  { key: "flamingo wrist support", img: Flamingo_Wrist_Support },
-  { key: "healthkart hk vitals multivitamin", img: HealthKart_HK_Vitals_Multivitamin },
-  { key: "healthkart vitamin c", img: HealthKart_Vitamine_C },
-  { key: "healthkart vitamine d3", img: HealthKart_Vitamine_D3 },
-  { key: "himalaya tentex royal", img: Himalaya_Tentex_Royal },
-  { key: "loreal total repair 5 conditioner", img: LOreal_Total_Repair_5_Conditioner },
-  { key: "mamaearth onion shampoo", img: Mamaearth_Onion_Shampoo },
-  { key: "mamaearth onion hair oil", img: Mamaearth_Onion_Hair_Oil },
-  { key: "musli power x-tra", img: Musli_Power_Xtra },
-  { key: "muscletech platinum creatine", img: MuscleTech_Platinum_Creatine },
-  { key: "myprotein impact whey", img: MyProtein_Impact_Whey_Protein },
   { key: "sbl bio-combination 28", img: SBL_Bio_Combination_28 },
-  { key: "sporlac probiotic capsules", img: Sporlac_Probiotic_Capsules },
-  { key: "supradyn daily", img: Supradyn_Daily },
-  { key: "truebasics omega-3", img: TrueBasics_Omega3 },
-  { key: "tynor shoulder support", img: Tynor_Shoulder_Support },
-  { key: "vissco knee brace", img: Vissco_Knee_Brace },
-  { key: "vsl#3 probiotic", img: VSL3_Probiotic },
-  { key: "wheezal thuja occidentalis q", img: Wheezal_Thuja_Occidentalis_Q },
-  { key: "wow apple cider vinegar conditioner", img: WOW_Apple_Cider_Vinegar_Conditioner },
-  { key: "wow omega-3", img: WOW_Omega_3 },
+  { key: "hansaplast regular bandage", img: Hansaplast_Regular_Bandage },
+  { key: "band-aid flexible fabric", img: BandAid_Flexible_Fabric },
+  { key: "dynaplast elastic adhesive", img: Dynaplast_Elastic_Adhesivev },
+  { key: "savlon antiseptic liquid", img: Savlon_Antiseptic_Liquid },
+  { key: "dettol antiseptic liquid", img: Dettol_Antiseptic_Liquid },
+  { key: "cipladine povidone iodine", img: Cipladine_Providone_Iodine },
+  { key: "first aid compact kit", img: First_Aid_Compact_Kit },
+  { key: "travel first aid pouch", img: Travel_First_Aid_Pouch },
+  { key: "family first aid box", img: Family_First_Aid_Box },
 ];
 
 const getImageFor = (productName) => {
@@ -157,26 +192,51 @@ const getImageFor = (productName) => {
   return found ? found.img : sanjeevaniImg;
 };
 
-/* ---------------- catalog & products ---------------- */
+/* ---------------- CATALOG + PRODUCTS ---------------- */
 const CATALOG = [
   {
     category: "Hair Care",
     subs: {
-      Shampoos: ["Scalpe Plus Anti-Dandruff Shampoo", "Mamaearth Onion Shampoo", "Dove Intense Repair Shampoo"],
-      Conditioners: ["Mamaearth Onion Conditioner", "Loreal Total Repair 5 Conditioner", "WOW Apple Cider Vinegar Conditioner"],
-      "Hair Oils": ["Indulekha Bringha Hair Oil", "Parachute Advanced Aloe Vera Oil", "Mamaearth Onion Hair Oil"],
+      Shampoos: [
+        "Scalpe Plus Anti-Dandruff Shampoo",
+        "Mamaearth Onion Shampoo",
+        "Dove Intense Repair Shampoo",
+      ],
+      Conditioners: [
+        "Mamaearth Onion Conditioner",
+        "Loreal Total Repair 5 Conditioner",
+        "WOW Apple Cider Vinegar Conditioner",
+      ],
+      "Hair Oils": [
+        "Indulekha Bringha Hair Oil",
+        "Parachute Advanced Aloe Vera Oil",
+        "Mamaearth Onion Hair Oil",
+      ],
     },
   },
   {
     category: "Fitness & Health",
     subs: {
-      "Protein Supplements": ["Optimum Nutrition Gold Standard Whey", "MuscleBlaze Whey Protein", "MyProtein Impact Whey"],
-      "Mass Gainers": ["MuscleTech Mass Tech", "MuscleBlaze Mass Gainer", "BigMuscles Real Mass"],
-      Creatine: ["MuscleTech Platinum Creatine", "GNC Pro Performance Creatine", "BigMuscles Micronized Creatine"],
+      "Protein Supplements": [
+        "Optimum Nutrition Gold Standard Whey",
+        "MuscleBlaze Whey Protein",
+        "MyProtein Impact Whey",
+      ],
+      "Mass Gainers": [
+        "MuscleTech Mass Tech",
+        "MuscleBlaze Mass Gainer",
+        "BigMuscles Real Mass",
+      ],
+      Creatine: [
+        "MuscleTech Platinum Creatine",
+        "GNC Pro Performance Creatine",
+        "BigMuscles Micronized Creatine",
+      ],
     },
   },
 ];
 
+/* ---------------- PRODUCTS LIST ---------------- */
 const PRODUCTS = (() => {
   const list = [];
   CATALOG.forEach((cat, catIdx) => {
@@ -185,7 +245,7 @@ const PRODUCTS = (() => {
     subNames.forEach((subName, subIdx) => {
       const subSlug = slugify(subName);
       const names = cat.subs[subName] || [];
-      names.slice(0, 3).forEach((prodName, n) => {
+      names.forEach((prodName, n) => {
         const { price, mrp, discount } = genPrice(catIdx, subIdx, n + 1);
         list.push({
           id: `${categorySlug}-${subSlug}-${n + 1}`,
@@ -206,7 +266,7 @@ const PRODUCTS = (() => {
   return list;
 })();
 
-/* ---------------- component ---------------- */
+/* ---------------- COMPONENT ---------------- */
 function Medicines() {
   const [sortOption, setSortOption] = useState("relevance");
   const [cartCount, setCartCount] = useState(0);
@@ -269,7 +329,6 @@ function Medicines() {
 
   return (
     <div>
-      {/* Header */}
       <header className="header">
         <div className="logo">
           <img src={sanjeevaniImg} alt="Sanjeevani Logo" />
@@ -298,7 +357,6 @@ function Medicines() {
 
       <NavbarWithDropdown />
 
-      {/* Banner */}
       <div className="container">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -317,11 +375,9 @@ function Medicines() {
         </Swiper>
       </div>
 
-      {/* Product Section */}
       <section className="product-display">
         <div className="product-sort-container">
           <h2 className="category-heading">{heading}</h2>
-
           <div className="sort-row">
             <span className="sort-label">Sort By:</span>
             <select

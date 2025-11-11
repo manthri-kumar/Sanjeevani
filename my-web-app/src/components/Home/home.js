@@ -77,38 +77,46 @@ function Home() {
   // ✅ Load and keep cart synced even when navigating back
   // ✅ Load and sync cart (only after login)
   useEffect(() => {
-    const loadCart = () => {
-      const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-      setIsLoggedIn(loggedIn);
+  const loadCart = () => {
+    const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
 
-      if (loggedIn) {
-        const savedCart = JSON.parse(sessionStorage.getItem("cartItems")) || [];
-        setCartItems(savedCart);
-        setCartCount(savedCart.reduce((total, item) => total + item.qty, 0));
-      } else {
-        // not logged in → reset cart and count
-        setCartItems([]);
-        setCartCount(0);
-      }
-    };
+    if (loggedIn) {
+      const user = JSON.parse(sessionStorage.getItem("user"));
+      const email = user?.email || "";
+      const savedCart = JSON.parse(localStorage.getItem(`cartItems_${email}`)) || [];
+      setCartItems(savedCart);
+      setCartCount(savedCart.reduce((total, item) => total + item.qty, 0));
+    } else {
+      setCartItems([]);
+      setCartCount(0);
+    }
+  };
 
-    loadCart();
+  loadCart();
 
-    // ✅ Listen for updates made from other tabs/pages
-    window.addEventListener("storage", loadCart);
-    return () => window.removeEventListener("storage", loadCart);
-  }, []);
+  window.addEventListener("cartUpdated", loadCart);
+  window.addEventListener("storage", loadCart);
+
+  return () => {
+    window.removeEventListener("cartUpdated", loadCart);
+    window.removeEventListener("storage", loadCart);
+  };
+}, []);
+
 
   // ✅ Logout
-  const handleLogout = () => {
-  sessionStorage.removeItem("isLoggedIn");
-  sessionStorage.removeItem("user");
-  localStorage.removeItem("cartItems"); // ✅ clear localStorage cart
+const handleLogout = () => {
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const email = user?.email || "";
+  if (email) localStorage.removeItem(`cartItems_${email}`);
+
+  sessionStorage.clear();
   setIsLoggedIn(false);
   setCartItems([]);
   setCartCount(0);
-  setShowLogin(true);
   window.dispatchEvent(new Event("cartUpdated"));
+  setShowLogin(true);
 };
 
 
@@ -140,6 +148,23 @@ function Home() {
       alert("Server error. Try again later.");
     }
   };
+  useEffect(() => {
+  const handleOpenLogin = () => {
+    const shouldOpen = sessionStorage.getItem("triggerLogin") === "true";
+    if (shouldOpen) {
+      setShowLogin(true);
+      sessionStorage.removeItem("triggerLogin");
+    }
+  };
+
+  window.addEventListener("openLoginModal", handleOpenLogin);
+  handleOpenLogin(); // Check immediately on load
+
+  return () => {
+    window.removeEventListener("openLoginModal", handleOpenLogin);
+  };
+}, []);
+
 
   // ✅ Signup with backend
   const handleSignup = async (e) => {
@@ -178,9 +203,11 @@ const handleAddToCart = (product) => {
     return;
   }
 
-  // Load existing cart from localStorage
-  const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const email = user?.email || "";
+  const cartKey = `cartItems_${email}`;
 
+  const savedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
   const existing = savedCart.find((item) => item.id === product.id);
   let updatedCart;
 
@@ -192,14 +219,12 @@ const handleAddToCart = (product) => {
     updatedCart = [...savedCart, { ...product, qty: 1 }];
   }
 
-  // Save to localStorage (not sessionStorage)
-  localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-  window.dispatchEvent(new Event("cartUpdated")); // 🔥 trigger Cart refresh
+  localStorage.setItem(cartKey, JSON.stringify(updatedCart));
 
-  // Update UI count
-  const newCount = updatedCart.reduce((total, item) => total + item.qty, 0);
+  const newCount = updatedCart.reduce((t, i) => t + i.qty, 0);
   setCartCount(newCount);
 
+  window.dispatchEvent(new Event("cartUpdated"));
   alert(`${product.name} added to cart!`);
 };
 

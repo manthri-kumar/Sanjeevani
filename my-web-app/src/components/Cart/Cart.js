@@ -5,48 +5,47 @@ function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    // ✅ Check login state first
+  // 🟢 Function to load cart & login state
+  const loadCartData = () => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedIn);
 
     if (loggedIn) {
-      // ✅ Load user-specific cart only if logged in
       const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
       setCartItems(savedCart);
     } else {
-      // ✅ Empty cart if user not logged in
       setCartItems([]);
     }
+  };
 
-    // ✅ Sync across tabs
-    const handleStorage = () => {
-      const loggedInNow = localStorage.getItem("isLoggedIn") === "true";
-      setIsLoggedIn(loggedInNow);
+  // 🟢 Run once & listen for events
+  useEffect(() => {
+    loadCartData();
 
-      if (loggedInNow) {
-        const updatedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-        setCartItems(updatedCart);
-      } else {
-        setCartItems([]);
-      }
+    // ✅ Listen for cart updates (custom event + cross-tab)
+    window.addEventListener("cartUpdated", loadCartData);
+    window.addEventListener("storage", loadCartData);
+
+    return () => {
+      window.removeEventListener("cartUpdated", loadCartData);
+      window.removeEventListener("storage", loadCartData);
     };
-
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
+  // 🟢 Update cart in both localStorage + state
   const updateCart = (updated) => {
     setCartItems(updated);
     localStorage.setItem("cartItems", JSON.stringify(updated));
-    window.dispatchEvent(new Event("storage"));
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
+  // 🟢 Remove item
   const handleRemove = (index) => {
     const updated = cartItems.filter((_, i) => i !== index);
     updateCart(updated);
   };
 
+  // 🟢 Update quantity
   const handleUpdateQty = (index, newQty) => {
     if (newQty < 1) return;
     const updated = [...cartItems];
@@ -54,6 +53,7 @@ function Cart() {
     updateCart(updated);
   };
 
+  // 🟢 Total calculation
   const totalPrice = cartItems.reduce(
     (total, item) => total + (item.price || 0) * (item.qty || 0),
     0
@@ -67,9 +67,7 @@ function Cart() {
         </h3>
 
         {!isLoggedIn ? (
-          <div className="cart-empty-message">
-            Please log in to view your cart.
-          </div>
+          <div className="cart-empty-message">Please log in to view your cart.</div>
         ) : cartItems.length === 0 ? (
           <div className="cart-empty-message">Your cart is empty.</div>
         ) : (

@@ -48,14 +48,30 @@ function Home() {
 
   // ✅ Force Login Modal on Page Load
   // ✅ Only check login state, don't show modal automatically
-  useEffect(() => {
-    const loggedIn = sessionStorage.getItem("isLoggedIn");
-    setIsLoggedIn(loggedIn === "true");
+ useEffect(() => {
+  const loggedIn = sessionStorage.getItem("isLoggedIn");
+  setIsLoggedIn(loggedIn === "true");
 
-    const savedCart = JSON.parse(sessionStorage.getItem("cartItems")) || [];
-    setCartItems(savedCart);
-    setCartCount(savedCart.length);
-  }, []);
+  const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+  setCartItems(savedCart);
+  setCartCount(savedCart.reduce((total, item) => total + item.qty, 0));
+
+  // ✅ Listen for global cart updates
+  const syncCart = () => {
+    const updated = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(updated);
+    setCartCount(updated.reduce((t, i) => t + i.qty, 0));
+  };
+
+  window.addEventListener("cartUpdated", syncCart);
+  window.addEventListener("storage", syncCart);
+
+  return () => {
+    window.removeEventListener("cartUpdated", syncCart);
+    window.removeEventListener("storage", syncCart);
+  };
+}, []);
+
 
   // ✅ Save cart to sessionStorage when updated
   // ✅ Load and keep cart synced even when navigating back
@@ -85,14 +101,16 @@ function Home() {
 
   // ✅ Logout
   const handleLogout = () => {
-    sessionStorage.removeItem("isLoggedIn");
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("cartItems");
-    setIsLoggedIn(false);
-    setCartItems([]);
-    setCartCount(0);
-    setShowLogin(true);
-  };
+  sessionStorage.removeItem("isLoggedIn");
+  sessionStorage.removeItem("user");
+  localStorage.removeItem("cartItems"); // ✅ clear localStorage cart
+  setIsLoggedIn(false);
+  setCartItems([]);
+  setCartCount(0);
+  setShowLogin(true);
+  window.dispatchEvent(new Event("cartUpdated"));
+};
+
 
   // ✅ Login with backend
   const handleLogin = async (e) => {
@@ -152,37 +170,38 @@ function Home() {
 
   // ✅ Add to Cart
   // ✅ Common Add to Cart Function (works for all product buttons)
-  const handleAddToCart = (product) => {
-    if (!isLoggedIn) {
-      alert("Please log in to add items to your cart!");
-      setShowLogin(true);
-      return;
-    }
+// ✅ Add to Cart (Unified with Cart.js)
+const handleAddToCart = (product) => {
+  if (!isLoggedIn) {
+    alert("Please log in to add items to your cart!");
+    setShowLogin(true);
+    return;
+  }
 
-    // Load existing cart
-    const existing = cartItems.find((item) => item.id === product.id);
-    let updatedCart;
+  // Load existing cart from localStorage
+  const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-    // Update quantity if exists, else add new product
-    if (existing) {
-      updatedCart = cartItems.map((item) =>
-        item.id === product.id ? { ...item, qty: item.qty + 1 } : item
-      );
-    } else {
-      updatedCart = [...cartItems, { ...product, qty: 1 }];
-    }
+  const existing = savedCart.find((item) => item.id === product.id);
+  let updatedCart;
 
-    // Update state + sessionStorage
-    setCartItems(updatedCart);
-    const newCount = updatedCart.reduce((total, item) => total + item.qty, 0);
-    setCartCount(newCount);
+  if (existing) {
+    updatedCart = savedCart.map((item) =>
+      item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+    );
+  } else {
+    updatedCart = [...savedCart, { ...product, qty: 1 }];
+  }
 
-    sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event("storage")); // sync across tabs/pages
+  // Save to localStorage (not sessionStorage)
+  localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+  window.dispatchEvent(new Event("cartUpdated")); // 🔥 trigger Cart refresh
 
-    // Optional feedback
-    alert(`${product.name} added to cart!`);
-  };
+  // Update UI count
+  const newCount = updatedCart.reduce((total, item) => total + item.qty, 0);
+  setCartCount(newCount);
+
+  alert(`${product.name} added to cart!`);
+};
 
 
   const swiperNav = {

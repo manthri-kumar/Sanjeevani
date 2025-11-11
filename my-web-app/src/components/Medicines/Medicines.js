@@ -1,6 +1,6 @@
 // src/components/Medicines/Medicines.js
 import React from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   sanjeevaniImg,
   Optimum_Nutrition_Gold_Standard_Whey,
@@ -78,6 +78,7 @@ import {
   Vissco_Wrist_Brace,
   Travel_First_Aid_Pouch,
 } from "../../assets";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -113,7 +114,7 @@ const genPrice = (catIdx, subIdx, n) => {
   };
 };
 
-/* --------- NAME → IMAGE map (use any heuristics you like) ---------- */
+/* --------- NAME → IMAGE map ---------- */
 const IMAGE_MAP = [
   { key: "optimum nutrition gold standard whey", img: Optimum_Nutrition_Gold_Standard_Whey },
   { key: "manforce", img: Mankind_Manforce_Condoms },
@@ -133,7 +134,7 @@ const IMAGE_MAP = [
   { key: "flamingo wrist support", img: Flamingo_Wrist_Support },
   { key: "healthkart hk vitals multivitamin", img: HealthKart_HK_Vitals_Multivitamin },
   { key: "healthkart vitamin c", img: HealthKart_Vitamine_C },
-  { key: "healthkart vitamin d3", img: HealthKart_Vitamine_D3 },
+  { key: "healthkart vitamine d3", img: HealthKart_Vitamine_D3 },
   { key: "himalaya tentex royal", img: Himalaya_Tentex_Royal },
   { key: "loreal total repair 5 conditioner", img: LOreal_Total_Repair_5_Conditioner },
   { key: "mamaearth onion shampoo", img: Mamaearth_Onion_Shampoo },
@@ -192,10 +193,10 @@ const IMAGE_MAP = [
 const getImageFor = (productName) => {
   const name = (productName || "").toLowerCase();
   const found = IMAGE_MAP.find((m) => name.includes(m.key));
-  return found ? found.img : sanjeevaniImg; // fallback if no match
+  return found ? found.img : sanjeevaniImg;
 };
 
-/* ---------------- catalog spec ---------------- */
+/* ---------------- catalog & products ---------------- */
 const CATALOG = [
   {
     category: "Hair Care",
@@ -207,7 +208,7 @@ const CATALOG = [
       ],
       Conditioners: [
         "Mamaearth Onion Conditioner",
-        "loreal total repair 5 conditioner",
+        "Loreal Total Repair 5 Conditioner",
         "WOW Apple Cider Vinegar Conditioner",
       ],
       "Hair Oils": [
@@ -285,8 +286,8 @@ const CATALOG = [
     category: "Homeopathy",
     subs: {
       "Mother Tinctures": ["SBL Arnica Montana Q", "Wheezal Thuja Occidentalis Q"],
-      Dilutions: ["SBL Belladonna 30", "dr reckeweg nux vomica 200", "SBL Aconite Napellus 30"],
-      "Biochemic Tablets": [ "dr reckeweg bc 16", "SBL Bio-Combination 28"],
+      Dilutions: ["SBL Belladonna 30", "Dr Reckeweg Nux Vomica 200", "SBL Aconite Napellus 30"],
+      "Biochemic Tablets": ["Dr Reckeweg BC 16", "SBL Bio-Combination 28"],
     },
   },
   {
@@ -299,7 +300,6 @@ const CATALOG = [
   },
 ];
 
-/* ---------------- build the products list ---------------- */
 const PRODUCTS = (() => {
   const list = [];
   CATALOG.forEach((cat, catIdx) => {
@@ -313,7 +313,7 @@ const PRODUCTS = (() => {
         list.push({
           id: `${categorySlug}-${subSlug}-${n + 1}`,
           name: prodName,
-          image: getImageFor(prodName),     // <-- HERE we apply the product image
+          image: getImageFor(prodName),
           price,
           mrp,
           discount,
@@ -332,7 +332,9 @@ const PRODUCTS = (() => {
 /* ---------------- component ---------------- */
 function Medicines({ handleAddToCart }) {
   const [sortOption, setSortOption] = React.useState("relevance");
+  const [cartCount, setCartCount] = React.useState(0); // ✅ added
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate(); // ✅ added
 
   const cat = searchParams.get("cat") || "";
   const sub = searchParams.get("sub") || "";
@@ -361,7 +363,37 @@ function Medicines({ handleAddToCart }) {
               : "All Medicines";
 
   return (
-    <div>
+     <div>
+      {/* ✅ Header */}
+      <header className="header">
+        <div className="logo">
+          <img src={sanjeevaniImg} alt="Sanjeevani Logo" />
+        </div>
+
+        <nav className="nav-links">
+          <a href="/doctor">DOCTORS</a>
+          <a href="#">HOSPITALS</a>
+          <a href="/Medicines">MEDICINES</a>
+          <a href="/Profile">PROFILE</a>
+        </nav>
+
+        <div className="search">
+          <div className="search-box">
+            <input type="text" placeholder="Search" />
+            <button>
+              <i className="fas fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </div>
+
+        <div className="cart">
+          <button onClick={() => navigate("/cart")}>
+            <i className="fa-solid fa-cart-shopping"></i>
+            <span className="cart-count">{cartCount}</span>
+          </button>
+        </div>
+      </header>
+
       <NavbarWithDropdown />
 
       {/* Banner / Slider */}
@@ -411,7 +443,8 @@ function Medicines({ handleAddToCart }) {
               <MedicineCard
                 key={product.id}
                 product={product}
-                onAddToCart={handleAddToCart}
+                // ✅ fixed: always pass a valid function
+                onAddToCart={() => handleAddToCart && handleAddToCart(product)}
               />
             ))
           )}

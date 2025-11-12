@@ -1,0 +1,94 @@
+.baby-container {
+  width: 90%;
+  margin: 2rem auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+.baby-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.baby-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2D6A5A;
+}
+
+.back-btn {
+  text-decoration: none;
+  color: #2D6A5A;
+  font-weight: 600;
+}
+
+.baby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.baby-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 1rem;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.baby-card:hover {
+  transform: translateY(-5px);
+}
+
+.baby-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.product-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0.8rem 0;
+  color: #333;
+}
+
+.price-section {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.current-price {
+  font-weight: 700;
+  color: #111;
+}
+
+.mrp del {
+  color: #777;
+  font-size: 0.8rem;
+}
+
+.discount {
+  color: #2D6A5A;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.add-btn {
+  background-color: #2D6A5A;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #245c41;
+}

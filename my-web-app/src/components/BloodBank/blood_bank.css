@@ -24,6 +24,14 @@
   padding: 100px 20px;
 }
 
+.bb-hero-buttons {
+  display: flex;
+  justify-content: center; /* optional – centers the buttons */
+  align-items: center;
+  gap: 20px; /* ✅ This adds space between buttons */
+  margin-top: 20px; /* optional – spacing from above elements */
+}
+
 .bb-hero h2 {
   font-size: 2.5rem;
   margin-bottom: 10px;

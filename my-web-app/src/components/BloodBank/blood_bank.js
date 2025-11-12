@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./blood_bank.css";
 import INDIA_DISTRICTS from "../../data/indiaDistricts";
 import MOCK_BLOOD_BANKS from "../../data/indiabloodbanks";
+import { useNavigate } from "react-router-dom";
 
 import { sanjeevaniImg } from "../../assets";
 
@@ -11,7 +12,7 @@ const cartCount = 0;
 
 
 const bloodGroups = ["All Blood Groups", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-const components = ["Whole Blood", "Platelets", "Plasma"];
+const components = ["Select Type","Whole Blood", "Platelets", "Plasma"];
 
 // Static fallback list
 const INDIAN_STATES = [
@@ -67,6 +68,7 @@ function mockNearest(lat, lng) {
 
 function BloodBank() {
   // ✅ Use these names consistently
+  const [message, setMessage] = useState("");
   const [stateOptions, setStateOptions] = useState(toStateObjects(INDIAN_STATES));
   const [districts, setDistricts] = useState([]);
   const [selectedState, setSelectedState] = useState("");
@@ -77,6 +79,7 @@ function BloodBank() {
   const [activeTab, setActiveTab] = useState("Govt");
   const [isLoading, setIsLoading] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
+  const navigate = useNavigate();
 
   // --- State/District API Logic ---
 useEffect(() => {
@@ -137,18 +140,19 @@ useEffect(() => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(searchParams),
   })
-    .then((res) => res.ok ? res.json() : Promise.reject(res))
+    .then((res) => res.json())
     .then((data) => {
-      const list = Array.isArray(data) ? data : [];
-      if (list.length === 0) {
-        // Fallback to mock
-        const mock = mockSearchByStateDistrict(stateName, districtName);
-        setSearchResults(mock);
-      } else {
-        setSearchResults(list);
-      }
+      const results = Array.isArray(data) ? data : [];
+      setSearchResults(results);
       setActiveTab("Govt");
+
+      if (results.length === 0) {
+        setMessage("No blood banks were found for the selected location.");
+      } else {
+        setMessage(""); // clear previous message if data is found
+      }
     })
+
     .catch((err) => {
       console.error("Search failed, using mock:", err);
       const mock = mockSearchByStateDistrict(stateName, districtName);
@@ -231,13 +235,14 @@ useEffect(() => {
       return (
         <tbody>
           <tr>
-            <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-              Search to view blood bank stock and location.
+            <td colSpan="6" style={{ textAlign: "center", padding: "20px", color: "#b30000", fontWeight: 600 }}>
+              No blood banks were found for the selected location.
             </td>
           </tr>
         </tbody>
       );
     }
+
     return (
       <tbody>
         {filteredResults.map((bank, index) => (
@@ -297,12 +302,17 @@ useEffect(() => {
         <div className="bb-hero-buttons">
           <button className="bb-btn bb-btn-primary">Search By Location</button>
           <button
-            className="bb-btn bb-btn-secondary"
-            onClick={searchNearestBloodBank}
-            disabled={isLocating}
-          >
-            {isLocating ? "Locating..." : "Search Blood Bank Near Me"}
-          </button>
+  className="bb-btn bb-btn-primary"
+  onClick={() => {
+    // optional: debug log
+    console.log("Donate Blood clicked — navigating to /hospitals");
+    navigate("/HospitalRegister");
+  }}
+>
+  Donate Blood
+</button>
+
+          
         </div>
       </section>
 
@@ -341,7 +351,7 @@ useEffect(() => {
                   ? isLoading
                     ? "Loading Districts..."
                     : "Select District"
-                  : "Select State First"}
+                  : "Select State"}
               </option>
               {districts.map((district) => (
                 <option key={district.district_id} value={district.district_id}>
@@ -426,63 +436,81 @@ useEffect(() => {
         )}
       </section>
 
-        <footer className="footer">
-          {/* ... existing footer markup ... */}
-          <div className="footer-container">
-            <div className="footer-section">
-              <h4>About Sanjeevani</h4>
-              <ul>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">FAQs</a></li>
-                <li><a href="#">Terms & Conditions</a></li>
-                <li><a href="#">Refund Policy</a></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Corporate</h4>
-              <ul>
-                <li><a href="#">Corporate Disclosures</a></li>
-                <li><a href="#">Corporate Partnerships</a></li>
-                <li><a href="#">Sanjeevani Sitemap</a></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Services</h4>
-              <ul>
-                <li><a href="#">Online Doctor Consultation</a></li>
-                <li><a href="#">Online Medicines</a></li>
-                <li><a href="#">Health Programs</a></li>
-                <li><a href="#">Doctors by Specialty</a></li>
-                <li><a href="#">Doctors by City</a></li>
-                <li><a href="#">All Doctors List</a></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Lab Tests</h4>
-              <ul><li><a href="#">Book Lab Tests at Home</a></li></ul>
-            </div>
-            <div className="footer-section">
-              <h4>Product Categories</h4>
-              <ul>
-                <li><a href="#">Health Care</a></li>
-                <li><a href="#">Personal Care</a></li>
-                <li><a href="#">Baby Care</a></li>
-                <li><a href="#">Nutrition</a></li>
-                <li><a href="#">Healthcare Devices</a></li>
-                <li><a href="#">Beauty & Skin Care</a></li>
-                <li><a href="#">Immunity Boosters</a></li>
-                <li><a href="#">Diabetes Care</a></li>
-              </ul>
-            </div>
-            <div className="footer-section footer-brand">
-              <img src={sanjeevaniImg} alt="Sanjeevani Logo" className="footer logo" />
-              <h4>A MANTHRI Enterprise</h4>
-            </div>
-          </div>
-        </footer>
+{/* ===== Replace existing footer with this (uses bb- classes) ===== */}
+    <footer className="bb-footer">
+      <div className="bb-footer-container">
+        <div className="bb-footer-section">
+          <h4>About Sanjeevani</h4>
+          <ul className="bb-footer-list">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Refund Policy</a></li>
+          </ul>
+        </div>
+
+        <div className="bb-footer-section">
+          <h4>Corporate</h4>
+          <ul className="bb-footer-list">
+            <li><a href="#">Corporate Disclosures</a></li>
+            <li><a href="#">Corporate Partnerships</a></li>
+            <li><a href="#">Sanjeevani Sitemap</a></li>
+          </ul>
+        </div>
+
+        <div className="bb-footer-section">
+          <h4>Services</h4>
+          <ul className="bb-footer-list">
+            <li><a href="#">Online Doctor Consultation</a></li>
+            <li><a href="#">Online Medicines</a></li>
+            <li><a href="#">Health Programs</a></li>
+            <li><a href="#">Doctors by Specialty</a></li>
+            <li><a href="#">Doctors by City</a></li>
+            <li><a href="#">All Doctors List</a></li>
+          </ul>
+        </div>
+
+        <div className="bb-footer-section">
+          <h4>Lab Tests</h4>
+          <ul className="bb-footer-list">
+            <li><a href="#">Book Lab Tests at Home</a></li>
+          </ul>
+        </div>
+
+        <div className="bb-footer-section">
+          <h4>Product Categories</h4>
+          <ul className="bb-footer-list">
+            <li><a href="#">Health Care</a></li>
+            <li><a href="#">Personal Care</a></li>
+            <li><a href="#">Baby Care</a></li>
+            <li><a href="#">Nutrition</a></li>
+            <li><a href="#">Healthcare Devices</a></li>
+            <li><a href="#">Beauty & Skin Care</a></li>
+            <li><a href="#">Immunity Boosters</a></li>
+            <li><a href="#">Diabetes Care</a></li>
+          </ul>
+        </div>
+
+        <div className="bb-footer-section bb-footer-brand">
+          <img src={sanjeevaniImg} alt="Sanjeevani Logo" className="bb-footer-logo" />
+          <h4 className="bb-brand-title">A MANTHRI Enterprise</h4>
+        </div>
       </div>
-    );
+
+      <div className="bb-footer-bottom">
+        <p>© {new Date().getFullYear()} Sanjeevani. All rights reserved.</p>
+        <div className="bb-footer-links-inline">
+          <a href="#">Privacy</a>
+          <span aria-hidden="true">·</span>
+          <a href="#">Terms</a>
+          <span aria-hidden="true">·</span>
+          <a href="#">Support</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+  );
 }
 
-export default BloodBank;
+  export default BloodBank;

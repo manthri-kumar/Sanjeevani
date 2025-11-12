@@ -1,0 +1,65 @@
+.hl-container, .hr-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+.hl-title, .hr-title {
+  text-align: center;
+  color: #b30000;
+}
+
+.hl-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.hl-item {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hl-item:hover {
+  background: #fff3f3;
+  transform: translateY(-2px);
+}
+
+.hl-name { font-weight: bold; }
+.hl-address { font-size: 0.9rem; color: #555; }
+
+.hr-hospital { color: #900; text-align: center; margin-top: 10px; }
+.hr-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+.hr-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+}
+.hr-form input, .hr-form select {
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.hr-submit {
+  background: #b30000;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hr-submit:hover {
+  background: #990000;
+}

@@ -12,7 +12,8 @@ import BloodBank from './components/BloodBank/blood_bank';
 import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
 import AppointmentPage from "./components/AppointmentPage/AppointmentPage";
-
+import HospitalList from "./pages/HospitalList";
+import HospitalRegister from "./pages/HospitalRegister";
 
 
 function App() {
@@ -29,10 +30,15 @@ function App() {
          <Route path="/doctor" element={<DoctorAppointment />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/appointment" element={<AppointmentPage />} />
+          <Route path="/" element={<HospitalList />} />
+        <Route path="/register" element={<HospitalRegister />} /> {/*  updated path */}        
+        <Route path="/bloodbank" element={<BloodBank />} />
+        <Route path="/HospitalRegister" element={<HospitalRegister />} />
+        <Route path="/" element={<BloodBank />} />
 
       </Routes>
     </Router>
   );
 }
-
+    
 export default App;

@@ -89,12 +89,11 @@
 /* DOCTOR CARDS */
 .doctor-row {
   display: flex;
-  flex-wrap: wrap;         /* allows next row */
+  flex-wrap: wrap;
   gap: 22px;
   padding: 0 60px;
   margin-top: 15px;
 }
-
 
 .doctor-card {
   background: #fff;
@@ -146,4 +145,63 @@
 
 .btn-book:hover {
   background: #24503c;
+}
+
+/* FOOTER (added) */
+.footer {
+  background: #fff;
+  color: #7f7575;
+  padding: 3rem 4%;
+  text-align: center;
+  border-top: 1px solid #eee;
+  margin-top: 50px;
+}
+
+.footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-section {
+  flex: 1 1 180px;
+  text-align: left;
+}
+
+.footer-section h4 {
+  color: #2d6a4f;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 6px;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: #7f7575;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #2d6a4f;
+}
+
+.footer-brand {
+  text-align: center;
+}
+
+.footer-logo {
+  width: 70px;
+  margin-bottom: 8px;
 }

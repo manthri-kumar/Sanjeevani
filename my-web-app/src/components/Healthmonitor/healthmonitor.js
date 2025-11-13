@@ -1,30 +1,29 @@
 import React, { useState, useMemo } from "react";
 // Assuming you have a default image for placeholders
-import { offerimg, sanjeevaniImg, healthimg } from "../../assets"; 
+import { offerimg, sanjeevaniImg, healthimg,h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14, h15, h16 } from "../../assets"; 
 import { Swiper } from "swiper/react"; // Swiper is not used for the banner anymore, but kept here
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./healthmonitor.css";
 
 // --- DUMMY PRODUCT DATA (16 products total - Syntax Corrected) ---
-const initialProducts = [
-  // Row 1 & 2 (Original 8 products)
-  { id: 1, name: "Digital Blood Pressure Monitor", price: 1899.00, mrp: 2500, discount: "24% off", image: sanjeevaniImg, rating: 4.5 },
-  { id: 2, name: "Smart Wi-Fi Body Weighing Scale", price: 1249.50, mrp: 2499, discount: "50% off", image: sanjeevaniImg, rating: 4.2 },
-  { id: 3, name: "Infrared Thermometer Gun", price: 850.00, mrp: 1000, discount: "15% off", image: sanjeevaniImg, rating: 4.7 },
-  { id: 4, name: "Pulse Oximeter Fingertip", price: 699.00, mrp: 999, discount: "30% off", image: sanjeevaniImg, rating: 4.3 },
-  { id: 5, name: "Accurate Blood Glucose Meter Kit", price: 1450.00, mrp: 1800, discount: "19% off", image: sanjeevaniImg, rating: 4.6 },
-  { id: 6, name: "Activity & Sleep Tracker Watch", price: 2999.00, mrp: 3500, discount: "14% off", image: sanjeevaniImg, rating: 4.0 },
-  { id: 7, name: "Nebulizer Machine for Home Use", price: 1120.00, mrp: 1400, discount: "20% off", image: sanjeevaniImg, rating: 4.1 },
-  { id: 8, name: "Digital Body Fat Caliper", price: 499.00, mrp: 750, discount: "33% off", image: sanjeevaniImg, rating: 3.9 },
-  // New Products (Rows 3 & 4)
-  { id: 9, name: "Smart Watch with ECG Monitor", price: 4999.00, mrp: 6500, discount: "23% off", image: sanjeevaniImg, rating: 4.4 },
-  { id: 10, name: "Hearing Aid Amplifier Digital", price: 3200.00, mrp: 4000, discount: "20% off", image: sanjeevaniImg, rating: 4.1 },
-  { id: 11, name: "Cervical Traction Device", price: 1950.00, mrp: 2250, discount: "13% off", image: sanjeevaniImg, rating: 4.0 },
-  { id: 12, name: "Hot & Cold Gel Pack", price: 250.00, mrp: 350, discount: "28% off", image: sanjeevaniImg, rating: 4.8 },
-  { id: 13, name: "Electric Heating Pad", price: 799.00, mrp: 999, discount: "20% off", image: sanjeevaniImg, rating: 4.3 },
-  { id: 14, name: "Foot Massager Machine", price: 6500.00, mrp: 7500, discount: "13% off", image: sanjeevaniImg, rating: 4.5 },
-  { id: 15, name: "Portable Oxygen Can", price: 550.00, mrp: 699, discount: "21% off", image: sanjeevaniImg, rating: 3.7 },
-  { id: 16, name: "UV Sterilizer Box", price: 1599.00, mrp: 1999, discount: "20% off", image: sanjeevaniImg, rating: 4.6 },
+const initialProducts =[
+  { id: 1, name: "Digital Blood Pressure Monitor", price: 1899.00, mrp: 2500, discount: "24% off", image: h1, rating: 4.5 },
+  { id: 2, name: "Smart Wi-Fi Body Weighing Scale", price: 1249.50, mrp: 2499, discount: "50% off", image: h2, rating: 4.2 },
+  { id: 3, name: "Infrared Thermometer Gun", price: 850.00, mrp: 1000, discount: "15% off", image: h3, rating: 4.7 },
+  { id: 4, name: "Pulse Oximeter Fingertip", price: 699.00, mrp: 999, discount: "30% off", image: h4, rating: 4.3 },
+  { id: 5, name: "Accurate Blood Glucose Meter Kit", price: 1450.00, mrp: 1800, discount: "19% off", image: h5, rating: 4.6 },
+  { id: 6, name: "Activity & Sleep Tracker Watch", price: 2999.00, mrp: 3500, discount: "14% off", image: h6, rating: 4.0 },
+  { id: 7, name: "Nebulizer Machine for Home Use", price: 1120.00, mrp: 1400, discount: "20% off", image: h7, rating: 4.1 },
+  { id: 8, name: "Digital Body Fat Caliper", price: 499.00, mrp: 750, discount: "33% off", image: h8, rating: 3.9 },
+
+  { id: 9, name: "Smart Watch with ECG Monitor", price: 4999.00, mrp: 6500, discount: "23% off", image: h9, rating: 4.4 },
+  { id: 10, name: "Hearing Aid Amplifier Digital", price: 3200.00, mrp: 4000, discount: "20% off", image: h10, rating: 4.1 },
+  { id: 11, name: "Cervical Traction Device", price: 1950.00, mrp: 2250, discount: "13% off", image: h11, rating: 4.0 },
+  { id: 12, name: "Hot & Cold Gel Pack", price: 250.00, mrp: 350, discount: "28% off", image: h12, rating: 4.8 },
+  { id: 13, name: "Electric Heating Pad", price: 799.00, mrp: 999, discount: "20% off", image: h13, rating: 4.3 },
+  { id: 14, name: "Foot Massager Machine", price: 6500.00, mrp: 7500, discount: "13% off", image: h14, rating: 4.5 },
+  { id: 15, name: "Portable Oxygen Can", price: 550.00, mrp: 699, discount: "21% off", image: h15, rating: 3.7 },
+  { id: 16, name: "UV Sterilizer Box", price: 1599.00, mrp: 1999, discount: "20% off", image: h16, rating: 4.6 },
 ];
 
 function Home() {

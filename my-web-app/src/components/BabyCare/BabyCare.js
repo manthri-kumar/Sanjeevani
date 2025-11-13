@@ -1,24 +1,23 @@
 import React, { useState, useMemo } from "react";
 import "./BabyCare.css";
-import { sanjeevaniImg, offerimg } from "../../assets"; // ✅ add your logo and banner images
+import { sanjeevaniImg, offerimg ,b1, b2, b3, b4, b5, b6, b7, b8, b9, b10} from "../../assets"; // ✅ add your logo and banner images
 
 function BabyCare() {
   const [cart, setCart] = useState([]);
   const [currentSort, setCurrentSort] = useState("relevance");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const products = [
-  { id: 1, name: "Himalaya Baby Lotion 200ml", price: "₹175", mrp: "₹199", discount: "12% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07838/himalaya-baby-lotion-200ml-2-1669650558.jpg" },
-  { id: 2, name: "Sebamed Baby Cream Extra Soft 200ml", price: "₹575", mrp: "₹650", discount: "12% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07222/sebamed-baby-cream-extra-soft-200ml-1-1669650624.jpg" },
-  { id: 3, name: "Johnson's Baby Soap 100g (Pack of 3)", price: "₹155", mrp: "₹180", discount: "14% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07203/johnsons-baby-soap-100g-pack-of-3-1-1669650623.jpg" },
-  { id: 4, name: "Pampers Active Baby Diapers Large 64s", price: "₹999", mrp: "₹1199", discount: "17% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07213/pampers-active-baby-diapers-large-64s-2-1669650579.jpg" },
-  { id: 5, name: "Mother Sparsh Natural Baby Wash 200ml", price: "₹240", mrp: "₹280", discount: "14% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/Q91269/mother-sparsh-plant-powered-natural-baby-wash-200ml-2-1681386360.jpg" },
-  { id: 6, name: "Sebamed Baby Shampoo 150ml", price: "₹400", mrp: "₹450", discount: "11% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07218/sebamed-baby-shampoo-150ml-1-1669650625.jpg" },
-  { id: 7, name: "Mee Mee Nourishing Baby Oil 500ml", price: "₹360", mrp: "₹410", discount: "12% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07212/mee-mee-nourishing-baby-oil-500ml-1-1669650581.jpg" },
-  { id: 8, name: "Johnson's Baby Powder 200g", price: "₹165", mrp: "₹190", discount: "13% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07207/johnsons-baby-powder-200g-1-1669650620.jpg" },
-  { id: 9, name: "Cetaphil Baby Daily Lotion 400ml", price: "₹825", mrp: "₹920", discount: "10% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07224/cetaphil-baby-daily-lotion-400ml-2-1669650622.jpg" },
-  { id: 10, name: "Himalaya Gentle Baby Shampoo 400ml", price: "₹255", mrp: "₹299", discount: "15% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07834/himalaya-gentle-baby-shampoo-400ml-1-1669650560.jpg" },
-
+  const products =  [
+  { id: 1, name: "Himalaya Baby Lotion 200ml", price: "₹175", mrp: "₹199", discount: "12% off", image: b1 },
+  { id: 2, name: "Sebamed Baby Cream Extra Soft 200ml", price: "₹575", mrp: "₹650", discount: "12% off", image: b2 },
+  { id: 3, name: "Johnson's Baby Soap 100g (Pack of 3)", price: "₹155", mrp: "₹180", discount: "14% off", image: b3 },
+  { id: 4, name: "Pampers Active Baby Diapers Large 64s", price: "₹999", mrp: "₹1199", discount: "17% off", image: b4 },
+  { id: 5, name: "Mother Sparsh Natural Baby Wash 200ml", price: "₹240", mrp: "₹280", discount: "14% off", image: b5 },
+  { id: 6, name: "Sebamed Baby Shampoo 150ml", price: "₹400", mrp: "₹450", discount: "11% off", image: b6 },
+  { id: 7, name: "Mee Mee Nourishing Baby Oil 500ml", price: "₹360", mrp: "₹410", discount: "12% off", image: b7 },
+  { id: 8, name: "Johnson's Baby Powder 200g", price: "₹165", mrp: "₹190", discount: "13% off", image: b8 },
+  { id: 9, name: "Cetaphil Baby Daily Lotion 400ml", price: "₹825", mrp: "₹920", discount: "10% off", image: b9 },
+  { id: 10, name: "Himalaya Gentle Baby Shampoo 400ml", price: "₹255", mrp: "₹299", discount: "15% off", image: b10 },
 ];
 
 

@@ -1027,15 +1027,6 @@ input:focus {
     font-size: 0.8rem;
 }
 
-/* ------------------------------------------- */
-/* Universal Styling for both carousels: */
-/* ------------------------------------------- */
-
-/* NOTE: Since .product-carousel-section and .carousel-product-card 
-   are universal class names, they already apply to the Baby Care carousel, 
-   ensuring consistent sizing, shadows, and spacing. */
-
-/* Mobile adjustments (if you want the buttons to look different than the CeraVe mobile styles) */
 @media (max-width: 768px) {
     .swiper-button-prev-babycare,
     .swiper-button-next-babycare {
@@ -1044,4 +1035,53 @@ input:focus {
         width: 30px;
         height: 30px;
     }
+}
+
+
+.login-card .primary-btn:hover {
+  opacity: 0.95;
+}
+
+/* Google Button */
+.google-btn {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  padding: 11px;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  margin: 10px 0 6px;
+  font-weight: 600;
+}
+.google-btn i {
+  margin-right: 6px;
+}
+
+/* Doctor Login Toggle */
+.doctor-login-toggle {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #0f0f0f;
+  font-weight: 700;
+  margin-top: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.doctor-login-toggle:hover {
+  text-decoration: underline;
+}
+
+/* Back button for doctor */
+.back-btn {
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
 }

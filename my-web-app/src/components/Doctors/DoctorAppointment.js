@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./DoctorAppointment.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import sanjeevaniImg from "../../assets/sanjeevani.jpg";
-import { Link } from "react-router-dom";
-import AppointmentModal from "./AppointmentModal";   // ✅ ADDED
+import { Link, useNavigate } from "react-router-dom";
+import AppointmentModal from "./AppointmentModal";
 
 const specializations = [
   "Cardiologist",
@@ -70,10 +70,47 @@ const doctors = [
 
 function DoctorAppointment() {
   const [selectedSpec, setSelectedSpec] = useState(null);
-  const [selectedDoctor, setSelectedDoctor] = useState(null); // ✅ ADDED
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
 
+  const [showLogin, setShowLogin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Load login state
+  useEffect(() => {
+    const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
+  }, []);
+
+  // Global login popup trigger
+  useEffect(() => {
+    const handleOpenLogin = () => {
+      const shouldOpen = sessionStorage.getItem("triggerLogin") === "true";
+      if (shouldOpen) {
+        setShowLogin(true);
+        sessionStorage.removeItem("triggerLogin");
+      }
+    };
+
+    window.addEventListener("openLoginModal", handleOpenLogin);
+    handleOpenLogin();
+
+    return () => {
+      window.removeEventListener("openLoginModal", handleOpenLogin);
+    };
+  }, []);
+
+  // ✅ BOOK BUTTON LOGIC WITH LOGIN CHECK
   const handleBook = (doc) => {
-    setSelectedDoctor(doc); // ✅ OPEN MODAL
+    const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+
+    if (!loggedIn) {
+      alert("Please log in to book an appointment!");
+      sessionStorage.setItem("triggerLogin", "true");
+      window.dispatchEvent(new Event("openLoginModal"));
+      return;
+    }
+
+    setSelectedDoctor(doc);
   };
 
   return (
@@ -116,7 +153,11 @@ function DoctorAppointment() {
                 <h3 className="doc-name">{doc.name}</h3>
                 <p className="doc-spec">{doc.specialization}</p>
                 <span className="exp-chip">{doc.experience}</span>
-                <button className="btn-book" onClick={() => handleBook(doc)}>
+
+                <button
+                  className="btn-book"
+                  onClick={() => handleBook(doc)}
+                >
                   Book Appointment
                 </button>
               </div>
@@ -124,12 +165,72 @@ function DoctorAppointment() {
         </div>
       </div>
 
-      {/* Modal Popup */}
+      {/* Appointment Modal */}
       {selectedDoctor && (
         <AppointmentModal
           doctor={selectedDoctor}
           onClose={() => setSelectedDoctor(null)}
         />
+      )}
+
+      {/* LOGIN POPUP */}
+      {showLogin && !isLoggedIn && (
+        <>
+          <div className="overlay" onClick={() => setShowLogin(false)}></div>
+
+          <div className="login-card">
+            <span className="close-btn" onClick={() => setShowLogin(false)}>
+              &times;
+            </span>
+
+            <h2 style={{ textAlign: "center", marginBottom: "10px" }}>
+              Login to Continue
+            </h2>
+
+            <form
+              autoComplete="off"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const email = e.target.email.value;
+                const password = e.target.password.value;
+
+                fetch("http://localhost:5000/api/login", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email, password }),
+                })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    if (data.success) {
+                      alert("Login successful!");
+                      sessionStorage.setItem("isLoggedIn", "true");
+                      sessionStorage.setItem("user", JSON.stringify(data.user));
+                      setIsLoggedIn(true);
+                      setShowLogin(false);
+                    } else {
+                      alert(data.message);
+                    }
+                  });
+              }}
+            >
+              <label>Email</label>
+              <div className="input-container">
+                <i className="fa-solid fa-envelope icon"></i>
+                <input type="email" name="email" required />
+              </div>
+
+              <label>Password</label>
+              <div className="input-container">
+                <i className="fa-solid fa-lock icon"></i>
+                <input type="password" name="password" required />
+              </div>
+
+              <button type="submit" className="primary-btn">
+                Log In
+              </button>
+            </form>
+          </div>
+        </>
       )}
 
       {/* Footer */}
@@ -154,6 +255,7 @@ function DoctorAppointment() {
       </footer>
     </div>
   );
+  
 }
-
+export { doctors };
 export default DoctorAppointment;

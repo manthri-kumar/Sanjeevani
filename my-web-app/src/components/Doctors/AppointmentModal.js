@@ -13,15 +13,28 @@ export default function AppointmentModal({ doctor, onClose }) {
     "12:00 PM", "12:10 PM", "12:20 PM"
   ];
 
-  const handleBook = () => {
-    if (!selectedDate || !selectedTime) {
-      alert("Please select both date and time!");
-      return;
-    }
-    // Replace with real booking action later
-    alert(`Appointment booked with ${doctor.name} on ${selectedDate} at ${selectedTime}`);
-    onClose();
+ const handleBook = () => {
+  if (!selectedDate || !selectedTime) {
+    alert("Please select both date and time!");
+    return;
+  }
+
+  const appointmentData = {
+    doctor: doctor.name,
+    specialization: doctor.specialization,
+    date: selectedDate,
+    time: selectedTime,
   };
+
+  // Save in sessionStorage list
+  const existing = JSON.parse(sessionStorage.getItem("appointments")) || [];
+  existing.push(appointmentData);
+  sessionStorage.setItem("appointments", JSON.stringify(existing));
+
+  onClose();   // close modal
+
+};
+
 
   return (
     <div className="modal-overlay">

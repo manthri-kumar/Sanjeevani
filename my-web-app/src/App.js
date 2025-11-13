@@ -1,32 +1,23 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DoctorDashboard from "./components/Doctordash/doctordas";
 
-/* --- Main Pages --- */
 import Home from './components/Home/home';
 
-/* --- Services --- */
 import Ambulance from './components/Ambulance/Ambulance';
 import Healthmonitor from './components/Healthmonitor/healthmonitor';
 import BloodBank from './components/BloodBank/blood_bank';
-
-/* --- Medicines Section --- */
 import Medicines from './components/Medicines/Medicines';
-import PainRelief from './components/PainRelief/PainRelief';     // ✅ ADDED
-import BabyCare from './components/BabyCare/BabyCare';           // ✅ ADDED
-
-/* --- Doctors --- */
+import PainRelief from './components/PainRelief/PainRelief';
+import BabyCare from './components/BabyCare/BabyCare';
 import DoctorAppointment from './components/Doctors/DoctorAppointment';
-
-/* --- Appointment Page --- */
 import AppointmentPage from './components/AppointmentPage/AppointmentPage';
-
-/* --- Profile & Cart --- */
 import Profile from './components/Profile/Profile';
 import Cart from './components/Cart/Cart';
-
-/* --- Ayurvedic Care --- */
 import Ayurvedic from './components/AyurvedicCare/AyurvedicCare';
+import SearchResult from './components/Search_Result/SearchResults';
+import Login from "./components/Login/login";
 
 function App() {
   return (
@@ -38,32 +29,34 @@ function App() {
 
         {/* Medicines */}
         <Route path="/medicines" element={<Medicines />} />
-        <Route path="/painrelief" element={<PainRelief />} />       {/* ✅ NEW */}
-        <Route path="/babycare" element={<BabyCare />} />           {/* ✅ NEW */}
+        <Route path="/painrelief" element={<PainRelief />} />
+        <Route path="/babycare" element={<BabyCare />} />
 
-        {/* Ambulance */}
+        {/* Services */}
         <Route path="/ambulance" element={<Ambulance />} />
-
-        {/* Health Monitor */}
         <Route path="/healthmonitor" element={<Healthmonitor />} />
-
-        {/* Blood Bank */}
         <Route path="/bloodbank" element={<BloodBank />} />
 
-        {/* Doctor Appointment */}
+        {/* Doctors */}
         <Route path="/doctorappointment" element={<DoctorAppointment />} />
-
-        {/* Profile */}
-        <Route path="/profile" element={<Profile />} />
-
-        {/* Cart */}
-        <Route path="/cart" element={<Cart />} />
 
         {/* Appointment Page */}
         <Route path="/appointment" element={<AppointmentPage />} />
 
-        {/* Ayurvedic Care */}
+        {/* Profile + Cart */}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/cart" element={<Cart />} />
+
+        {/* Ayurvedic */}
         <Route path="/ayurvediccare" element={<Ayurvedic />} />
+
+        {/* Search */}
+        <Route path="/search" element={<SearchResult />} />
+
+        {/* Login Page */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/doctor-dashboard" element={<doctordas />} />
+
 
       </Routes>
     </Router>

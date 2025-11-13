@@ -291,6 +291,154 @@ app.get("/api/user/:id", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+// ==========================================================
+// DOCTOR SIGNUP (CLEAN AND CORRECT)
+// ==========================================================
+app.post("/api/doctor/signup", async (req, res) => {
+  const { name, email, specialist, experience, password } = req.body;
+
+  if (!name || !email || !specialist || !experience || !password) {
+    return res.json({ success: false, message: "All fields are required" });
+  }
+
+  try {
+    // Check if doctor already exists
+    const checkQuery = "SELECT * FROM doctors WHERE email = ?";
+    db.query(checkQuery, [email], async (err, results) => {
+      if (err) {
+        console.error("Signup error:", err);
+        return res.json({ success: false, message: "Database error" });
+      }
+
+      if (results.length > 0) {
+        return res.json({ success: false, message: "Doctor already exists" });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const insertQuery = `
+        INSERT INTO doctors (name, email, specialist, experience_years, password)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+
+      db.query(
+        insertQuery,
+        [name, email, specialist, experience, hashedPassword],
+        (err) => {
+          if (err) {
+            console.error("Doctor signup error:", err);
+            return res.json({
+              success: false,
+              message: "Error registering doctor",
+            });
+          }
+
+          res.json({
+            success: true,
+            message: "Doctor registered successfully! Please log in.",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    console.error("Server Error (Doctor Signup):", error);
+    res.json({ success: false, message: "Server error" });
+  }
+});
+
+// ==========================================================
+// DOCTOR LOGIN (CLEAN AND CORRECT)
+// ==========================================================
+app.post("/api/doctor/login", (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return res.json({ success: false, message: "Email and password required" });
+
+  const query = "SELECT * FROM doctors WHERE email = ?";
+
+  db.query(query, [email], async (err, results) => {
+    if (err) {
+      console.error("Doctor login error:", err);
+      return res.json({ success: false, message: "Database error" });
+    }
+
+    if (results.length === 0) {
+      return res.json({ success: false, message: "Doctor not found" });
+    }
+
+    const doctor = results[0];
+
+    // Compare hashed passwords
+    const passwordMatch = await bcrypt.compare(password, doctor.password);
+
+    if (!passwordMatch) {
+      return res.json({ success: false, message: "Incorrect password" });
+    }
+
+    res.json({
+      success: true,
+      message: "Doctor login successful!",
+      doctor: {
+        id: doctor.id,
+        name: doctor.name,
+        email: doctor.email,
+        specialist: doctor.specialist,
+        experience: doctor.experience_years,
+      },
+    });
+    app.post("/api/appointments/book", (req, res) => {
+  const { user_id, doctor_id, date, time } = req.body;
+
+  if (!user_id || !doctor_id || !date || !time) {
+    return res.json({ success: false, message: "Missing fields" });
+  }
+
+  const appointmentDateTime = `${date} ${time}`;
+
+  const query = `
+    INSERT INTO appointments (user_id, doctor_id, appointment_time)
+    VALUES (?, ?, ?)
+  `;
+
+  db.query(query, [user_id, doctor_id, appointmentDateTime], (err, result) => {
+    if (err) {
+      console.error("Error inserting appointment:", err);
+      return res.json({ success: false, message: "Database error" });
+    }
+
+    res.json({ success: true, message: "Appointment booked successfully!" });
+  });
+});
+
+app.get("/api/appointments/:userId", (req, res) => {
+  const userId = req.params.userId;
+
+  const query = `
+    SELECT a.id, a.appointment_time, a.status,
+           d.name AS doctor_name, d.specialist AS specialization
+    FROM appointments a
+    LEFT JOIN doctors d ON a.doctor_id = d.id
+    WHERE a.user_id = ?
+    ORDER BY a.appointment_time DESC
+  `;
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching appointments:", err);
+      return res.json({ success: false, message: "Database error" });
+    }
+
+    res.json({ success: true, appointments: results });
+  });
+});
+
+  });
+});
+
+
+
 
 // ==========================================================
 // START SERVER (Render + Local)

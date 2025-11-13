@@ -1,25 +1,24 @@
 import React, { useState, useMemo } from "react";
 import "./PainRelief.css";
 import { Link } from "react-router-dom";
-import { sanjeevaniImg, offerimg } from "../../assets"; // your existing images
+import { sanjeevaniImg, offerimg,p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 } from "../../assets"; // your existing images
 
 function PainRelief() {
   const [cart, setCart] = useState([]);
   const [currentSort, setCurrentSort] = useState("relevance");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const products = [
-  { id: 1, name: "Moov Pain Relief Spray 80g", price: "₹170", mrp: "₹190", discount: "10% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I40846/moov-pain-relief-spray-80g-1-1669627301.jpg" },
-  { id: 2, name: "Volini Pain Relief Gel 75g", price: "₹170", mrp: "₹200", discount: "15% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I00949/volini-pain-relief-gel-75g-1-1669650639.jpg" },
-  { id: 3, name: "Iodex Ultra Gel 30g", price: "₹145", mrp: "₹165", discount: "12% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/V36462/iodex-ultra-gel-30g-1-1671740174.jpg" },
-  { id: 4, name: "Himalaya Pain Balm Strong 45g", price: "₹95", mrp: "₹110", discount: "14% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I07364/himalaya-pain-balm-strong-45g-1-1669650561.jpg" },
-  { id: 5, name: "Zandu Balm Ultra Power 50ml", price: "₹120", mrp: "₹145", discount: "17% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I00952/zandu-balm-ultra-power-50ml-1-1669650615.jpg" },
-  { id: 6, name: "Omnigel Pain Relief Gel 75g", price: "₹145", mrp: "₹175", discount: "17% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I00943/omnigel-pain-relief-gel-75g-1-1669650644.jpg" },
-  { id: 7, name: "Dolo 650 Tablet 15s", price: "₹30", mrp: "₹35", discount: "14% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/H33042/dolo-650-tablet-15s-1-1669650519.jpg" },
-  { id: 8, name: "Relispray Instant Pain Relief Spray 100g", price: "₹175", mrp: "₹199", discount: "12% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I00945/relispray-instant-pain-relief-spray-100g-1-1669650616.jpg" },
-  { id: 9, name: "Amrutanjan Pain Balm Extra Power 45ml", price: "₹95", mrp: "₹115", discount: "17% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/I00951/amrutanjan-pain-balm-extra-power-45ml-1-1669650564.jpg" },
-  { id: 10, name: "Biofreeze Pain Relief Gel 110g", price: "₹250", mrp: "₹290", discount: "14% off", image: "https://cdn01.pharmeasy.in/dam/products_otc/D83572/biofreeze-pain-relief-gel-110g-2-1684825323.jpg" },
-  
+  const products =  [
+  { id: 1, name: "Moov Pain Relief Spray 80g", price: "₹170", mrp: "₹190", discount: "10% off", image: p1 },
+  { id: 2, name: "Volini Pain Relief Gel 75g", price: "₹170", mrp: "₹200", discount: "15% off", image: p2 },
+  { id: 3, name: "Iodex Ultra Gel 30g", price: "₹145", mrp: "₹165", discount: "12% off", image: p3 },
+  { id: 4, name: "Himalaya Pain Balm Strong 45g", price: "₹95", mrp: "₹110", discount: "14% off", image: p4 },
+  { id: 5, name: "Zandu Balm Ultra Power 50ml", price: "₹120", mrp: "₹145", discount: "17% off", image: p5 },
+  { id: 6, name: "Omnigel Pain Relief Gel 75g", price: "₹145", mrp: "₹175", discount: "17% off", image: p6 },
+  { id: 7, name: "Dolo 650 Tablet 15s", price: "₹30", mrp: "₹35", discount: "14% off", image: p7 },
+  { id: 8, name: "Relispray Instant Pain Relief Spray 100g", price: "₹175", mrp: "₹199", discount: "12% off", image: p8 },
+  { id: 9, name: "Amrutanjan Pain Balm Extra Power 45ml", price: "₹95", mrp: "₹115", discount: "17% off", image: p9 },
+  { id: 10, name: "Biofreeze Pain Relief Gel 110g", price: "₹250", mrp: "₹290", discount: "14% off", image: p10 },
 ];
 
 

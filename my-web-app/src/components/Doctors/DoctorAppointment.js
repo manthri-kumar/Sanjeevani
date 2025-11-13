@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./DoctorAppointment.css";
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import sanjeevaniImg from "../../assets/sanjeevani.jpg";
 import { Link } from "react-router-dom";
+import AppointmentModal from "./AppointmentModal";   // ✅ ADDED
 
 const specializations = [
   "Cardiologist",
@@ -16,7 +17,6 @@ const specializations = [
 ];
 
 const doctors = [
-  // Cardiologists
   { name: "Dr. Anil Sharma", specialization: "Cardiologist", experience: "12 years" },
   { name: "Dr. Megha Suri", specialization: "Cardiologist", experience: "9 years" },
   { name: "Dr. Raghav Prasad", specialization: "Cardiologist", experience: "7 years" },
@@ -25,7 +25,6 @@ const doctors = [
   { name: "Dr. Anita Balan", specialization: "Cardiologist", experience: "6 years" },
   { name: "Dr. M. Jayaprakash", specialization: "Cardiologist", experience: "8 years" },
 
-  // Dermatologists
   { name: "Dr. Meera Patel", specialization: "Dermatologist", experience: "8 years" },
   { name: "Dr. Sneha Rao", specialization: "Dermatologist", experience: "5 years" },
   { name: "Dr. Tanvi Jain", specialization: "Dermatologist", experience: "9 years" },
@@ -33,7 +32,6 @@ const doctors = [
   { name: "Dr. Priya Nambiar", specialization: "Dermatologist", experience: "10 years" },
   { name: "Dr. Rupali Khanna", specialization: "Dermatologist", experience: "6 years" },
 
-  // Orthopedic
   { name: "Dr. Rajesh Kumar", specialization: "Orthopedic", experience: "10 years" },
   { name: "Dr. Vishal Deshmukh", specialization: "Orthopedic", experience: "7 years" },
   { name: "Dr. Harshit Tiwari", specialization: "Orthopedic", experience: "12 years" },
@@ -41,33 +39,28 @@ const doctors = [
   { name: "Dr. Smriti Sen", specialization: "Orthopedic", experience: "6 years" },
   { name: "Dr. N. Balaji", specialization: "Orthopedic", experience: "11 years" },
 
-  // Neurologists
   { name: "Dr. Kavita Reddy", specialization: "Neurologist", experience: "9 years" },
   { name: "Dr. Ayesha Siddiqui", specialization: "Neurologist", experience: "11 years" },
   { name: "Dr. Manoj Shetty", specialization: "Neurologist", experience: "14 years" },
   { name: "Dr. Kumaran Rao", specialization: "Neurologist", experience: "6 years" },
   { name: "Dr. Alok Agrawal", specialization: "Neurologist", experience: "10 years" },
 
-  // Pediatricians
   { name: "Dr. Suresh Verma", specialization: "Pediatrician", experience: "14 years" },
   { name: "Dr. Neha Varrier", specialization: "Pediatrician", experience: "8 years" },
   { name: "Dr. Ritu Batra", specialization: "Pediatrician", experience: "6 years" },
   { name: "Dr. Sanjay Naidu", specialization: "Pediatrician", experience: "11 years" },
   { name: "Dr. Surekha Iyer", specialization: "Pediatrician", experience: "9 years" },
 
-  // ENT
   { name: "Dr. Anita Joshi", specialization: "ENT Specialist", experience: "7 years" },
   { name: "Dr. Srikar Rao", specialization: "ENT Specialist", experience: "9 years" },
   { name: "Dr. Deepika Mohan", specialization: "ENT Specialist", experience: "5 years" },
   { name: "Dr. Abhijeet Singh", specialization: "ENT Specialist", experience: "12 years" },
 
-  // Gynecology
   { name: "Dr. Pooja Singh", specialization: "Gynecologist", experience: "11 years" },
   { name: "Dr. Radhika Prabhu", specialization: "Gynecologist", experience: "8 years" },
   { name: "Dr. Ananya Chatterjee", specialization: "Gynecologist", experience: "6 years" },
   { name: "Dr. Hemalatha Gowda", specialization: "Gynecologist", experience: "14 years" },
 
-  // Dentist
   { name: "Dr. Sneha Kapoor", specialization: "Dentist", experience: "6 years" },
   { name: "Dr. Rohit Saxena", specialization: "Dentist", experience: "7 years" },
   { name: "Dr. Varun Shankar", specialization: "Dentist", experience: "10 years" },
@@ -77,13 +70,15 @@ const doctors = [
 
 function DoctorAppointment() {
   const [selectedSpec, setSelectedSpec] = useState(null);
+  const [selectedDoctor, setSelectedDoctor] = useState(null); // ✅ ADDED
 
   const handleBook = (doc) => {
-    alert(`Booking appointment with ${doc.name} (${doc.specialization})`);
+    setSelectedDoctor(doc); // ✅ OPEN MODAL
   };
 
   return (
-    <>
+    <div className="appointment-page">
+      {/* Header */}
       <header className="header">
         <div className="logo">
           <img src={sanjeevaniImg} alt="Sanjeevani Logo" />
@@ -97,9 +92,8 @@ function DoctorAppointment() {
         </nav>
       </header>
 
+      {/* Main Content */}
       <div className="appointment-container">
-
-        {/* Specializations */}
         <h2 className="title">Specializations</h2>
         <div className="specialization-row">
           {specializations.map((spec, idx) => (
@@ -113,11 +107,10 @@ function DoctorAppointment() {
           ))}
         </div>
 
-        {/* Doctors */}
         <h2 className="title">Available Doctors</h2>
         <div className="doctor-row">
           {doctors
-            .filter(doc => !selectedSpec || doc.specialization === selectedSpec)
+            .filter((doc) => !selectedSpec || doc.specialization === selectedSpec)
             .map((doc, idx) => (
               <div key={idx} className="doctor-card">
                 <h3 className="doc-name">{doc.name}</h3>
@@ -129,9 +122,37 @@ function DoctorAppointment() {
               </div>
             ))}
         </div>
-
       </div>
-    </>
+
+      {/* Modal Popup */}
+      {selectedDoctor && (
+        <AppointmentModal
+          doctor={selectedDoctor}
+          onClose={() => setSelectedDoctor(null)}
+        />
+      )}
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-container">
+          <div className="footer-section">
+            <h4>About Sanjeevani</h4>
+            <ul>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">FAQs</a></li>
+              <li><a href="#">Terms & Conditions</a></li>
+              <li><a href="#">Refund Policy</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-section footer-brand">
+            <img src={sanjeevaniImg} alt="Sanjeevani Logo" className="footer-logo" />
+            <h4>A MANTHRI Enterprise</h4>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
 

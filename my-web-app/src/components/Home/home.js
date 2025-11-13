@@ -328,23 +328,48 @@ const handleAddToCart = (product) => {
         </div>
 
         {/* Categories */}
-        <h2 className="Categories-h3">Shop By Category</h2>
-        <div className="category-grid">
-          <Link to="/healthmonitor" className="category-card service-card light-green">
-            <img src={monitorimg} alt="Health Monitors" />
-            <p>Health Monitors</p>
-          </Link>
-          <div className="category-card"><img src={ayurvedicimg} alt="Ayurvedic" /><p>Ayurvedic Diabetes Care</p></div>
-          <div className="category-card"><img src={painimg} alt="Pain Relief" /><p>Pain Relief</p></div>
-          <div className="category-card"><img src={babyimg} alt="Baby Care" /><p>Baby Care</p></div>
-        </div>
+      <h2 className="Categories-h3">Shop By Category</h2>
+
+<div className="category-grid">
+
+  {/* Health Monitor */}
+  <Link to="/healthmonitor" className="category-card service-card light-green">
+    <img src={monitorimg} alt="Health Monitors" />
+    <p>Health Monitors</p>
+  </Link>
+
+  {/* Ayurvedic Diabetes Care */}
+  <Link to="/ayurvediccare" className="category-card">
+    <img src={ayurvedicimg} alt="Ayurvedic Care" />
+    <p>Ayurvedic Diabetes Care</p>
+  </Link>
+
+  {/* Pain Relief */}
+  <Link to="/painrelief" className="category-card">
+    <img src={painimg} alt="Pain Relief" />
+    <p>Pain Relief</p>
+  </Link>
+
+  {/* Baby Care */}
+  <Link to="/babycare" className="category-card">
+    <img src={babyimg} alt="Baby Care" />
+    <p>Baby Care</p>
+  </Link>
+
+</div>
+
 
         {/* Health Banner */}
         <div className="health-banner">
           <div className="banner-content">
             <h2>Stay informed about your health at any time..</h2>
             <p>Get trusted answers directly from Sanjeevani.</p>
-            <button className="booking-btn">Book</button>
+           <button
+      className="booking-btn"
+      onClick={() => navigate("/doctorappointment")}   // ✅ Navigate on click
+    >
+      Book
+    </button>
           </div>
           <img src={Docimg} alt="Doctor Illustration" className="banner-illustration" />
         </div>

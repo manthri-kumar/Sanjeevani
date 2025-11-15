@@ -1,4 +1,3 @@
-
 // ==========================================================
 // IMPORTS
 // ==========================================================
@@ -32,7 +31,7 @@ app.use(
 // ==========================================================
 // DATABASE CONNECTION (POOL)
 // ==========================================================
-// ⚠️ NOTE: When deploying, localhost DB won't work.
+// ⚠ NOTE: When deploying, localhost DB won't work.
 // You’ll need a cloud DB (e.g., Render PostgreSQL, Railway MySQL, etc.)
 const db = mysql.createPool({
   host: process.env.MYSQLHOST || "localhost",
@@ -292,94 +291,77 @@ app.get("/api/user/:id", async (req, res) => {
   }
 });
 // ==========================================================
-// DOCTOR SIGNUP (CLEAN AND CORRECT)
+// ⭐ DOCTOR API ROUTES
 // ==========================================================
-app.post("/api/doctor/signup", async (req, res) => {
-  const { name, email, specialist, experience, password } = req.body;
 
-  if (!name || !email || !specialist || !experience || !password) {
-    return res.json({ success: false, message: "All fields are required" });
+// 1️⃣ GET ALL DOCTORS
+app.get("/api/doctors", async (req, res) => {
+  try {
+    const [rows] = await db
+      .promise()
+      .query("SELECT id, name, email, specialist, experience_years FROM doctors");
+
+    res.json({ success: true, doctors: rows });
+  } catch (err) {
+    console.error("Doctor Fetch Error:", err);
+    res.json({ success: false, message: "Database error" });
   }
+});
+
+// 2️⃣ DOCTOR SIGNUP
+app.post("/api/doctor/signup", async (req, res) => {
+  const { name, email, specialist, experience_years, password } = req.body;
+
+  if (!name || !email || !specialist || !experience_years || !password)
+    return res.json({ success: false, message: "All fields required" });
 
   try {
-    // Check if doctor already exists
-    const checkQuery = "SELECT * FROM doctors WHERE email = ?";
-    db.query(checkQuery, [email], async (err, results) => {
-      if (err) {
-        console.error("Signup error:", err);
-        return res.json({ success: false, message: "Database error" });
-      }
+    const [exists] = await db
+      .promise()
+      .query("SELECT * FROM doctors WHERE email = ?", [email]);
 
-      if (results.length > 0) {
-        return res.json({ success: false, message: "Doctor already exists" });
-      }
+    if (exists.length > 0)
+      return res.json({ success: false, message: "Doctor already exists" });
 
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
-      const insertQuery = `
-        INSERT INTO doctors (name, email, specialist, experience_years, password)
-        VALUES (?, ?, ?, ?, ?)
-      `;
-
-      db.query(
-        insertQuery,
-        [name, email, specialist, experience, hashedPassword],
-        (err) => {
-          if (err) {
-            console.error("Doctor signup error:", err);
-            return res.json({
-              success: false,
-              message: "Error registering doctor",
-            });
-          }
-
-          res.json({
-            success: true,
-            message: "Doctor registered successfully! Please log in.",
-          });
-        }
+    await db
+      .promise()
+      .query(
+        "INSERT INTO doctors (name, email, specialist, experience_years, password) VALUES (?, ?, ?, ?, ?)",
+        [name, email, specialist, experience_years, hashed]
       );
-    });
-  } catch (error) {
-    console.error("Server Error (Doctor Signup):", error);
+
+    res.json({ success: true, message: "Doctor registered successfully" });
+  } catch (err) {
+    console.error("Doctor Signup Error:", err);
     res.json({ success: false, message: "Server error" });
   }
 });
 
-// ==========================================================
-// DOCTOR LOGIN (CLEAN AND CORRECT)
-// ==========================================================
-app.post("/api/doctor/login", (req, res) => {
+// 3️⃣ DOCTOR LOGIN
+app.post("/api/doctor/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password)
-    return res.json({ success: false, message: "Email and password required" });
+    return res.json({ success: false, message: "All fields required" });
 
-  const query = "SELECT * FROM doctors WHERE email = ?";
+  try {
+    const [docs] = await db
+      .promise()
+      .query("SELECT * FROM doctors WHERE email = ?", [email]);
 
-  db.query(query, [email], async (err, results) => {
-    if (err) {
-      console.error("Doctor login error:", err);
-      return res.json({ success: false, message: "Database error" });
-    }
-
-    if (results.length === 0) {
+    if (docs.length === 0)
       return res.json({ success: false, message: "Doctor not found" });
-    }
 
-    const doctor = results[0];
+    const doctor = docs[0];
+    const match = await bcrypt.compare(password, doctor.password);
 
-    // Compare hashed passwords
-    const passwordMatch = await bcrypt.compare(password, doctor.password);
-
-    if (!passwordMatch) {
+    if (!match)
       return res.json({ success: false, message: "Incorrect password" });
-    }
 
     res.json({
       success: true,
-      message: "Doctor login successful!",
       doctor: {
         id: doctor.id,
         name: doctor.name,
@@ -388,66 +370,66 @@ app.post("/api/doctor/login", (req, res) => {
         experience: doctor.experience_years,
       },
     });
-    app.post("/api/appointments/book", (req, res) => {
-  const { user_id, doctor_id, date, time } = req.body;
-
-  if (!user_id || !doctor_id || !date || !time) {
-    return res.json({ success: false, message: "Missing fields" });
+  } catch (err) {
+    console.error("Doctor Login Error:", err);
+    res.json({ success: false, message: "Server error" });
   }
-
-  const appointmentDateTime = `${date} ${time}`;
-
-  const query = `
-    INSERT INTO appointments (user_id, doctor_id, appointment_time)
-    VALUES (?, ?, ?)
-  `;
-
-  db.query(query, [user_id, doctor_id, appointmentDateTime], (err, result) => {
-    if (err) {
-      console.error("Error inserting appointment:", err);
-      return res.json({ success: false, message: "Database error" });
-    }
-
-    res.json({ success: true, message: "Appointment booked successfully!" });
-  });
 });
 
-app.get("/api/appointments/:userId", (req, res) => {
+// ==========================================================
+// ⭐ BOOK APPOINTMENT
+// ==========================================================
+app.post("/api/appointments/book", async (req, res) => {
+  const { user_id, doctor_id, appointment_time } = req.body;
+
+  if (!user_id || !doctor_id || !appointment_time)
+    return res.json({ success: false, message: "Missing fields" });
+
+  try {
+    await db
+      .promise()
+      .query(
+        `INSERT INTO appointments (user_id, doctor_id, appointment_time, status)
+         VALUES (?, ?, ?, 'pending')`,
+        [user_id, doctor_id, appointment_time]
+      );
+
+    res.json({ success: true, message: "Appointment booked successfully" });
+  } catch (err) {
+    console.error("Appointment Insert Error:", err);
+    res.json({ success: false, message: "Database error" });
+  }
+});
+
+// ==========================================================
+// ⭐ GET USER APPOINTMENTS
+// ==========================================================
+app.get("/api/appointments/:userId", async (req, res) => {
   const userId = req.params.userId;
 
-  const query = `
-    SELECT a.id, a.appointment_time, a.status,
-           d.name AS doctor_name, d.specialist AS specialization
-    FROM appointments a
-    LEFT JOIN doctors d ON a.doctor_id = d.id
-    WHERE a.user_id = ?
-    ORDER BY a.appointment_time DESC
-  `;
+  try {
+    const [appointments] = await db.promise().query(
+      `SELECT a.id, a.appointment_time, a.status,
+              d.name AS doctor_name, d.specialist AS specialization
+       FROM appointments a
+       LEFT JOIN doctors d ON a.doctor_id = d.id
+       WHERE a.user_id = ?
+       ORDER BY a.appointment_time DESC`,
+      [userId]
+    );
 
-  db.query(query, [userId], (err, results) => {
-    if (err) {
-      console.error("Error fetching appointments:", err);
-      return res.json({ success: false, message: "Database error" });
-    }
-
-    res.json({ success: true, appointments: results });
-  });
+    res.json({ success: true, appointments });
+  } catch (err) {
+    console.error("Appointment Fetch Error:", err);
+    res.json({ success: false, message: "Database error" });
+  }
 });
 
-  });
-});
-
-
-
-
 // ==========================================================
-// START SERVER (Render + Local)
-// ==========================================================
-// ==========================================================
-// START SERVER (Render + Local)
+// START SERVER
 // ==========================================================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });

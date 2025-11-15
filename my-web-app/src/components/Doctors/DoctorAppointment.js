@@ -1,8 +1,8 @@
+// src/pages/DoctorAppointment.jsx
 import React, { useState, useEffect } from "react";
 import "./DoctorAppointment.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import sanjeevaniImg from "../../assets/sanjeevani.jpg";
-import { Link, useNavigate } from "react-router-dom";
 import AppointmentModal from "./AppointmentModal";
 
 const specializations = [
@@ -17,55 +17,55 @@ const specializations = [
 ];
 
 const doctors = [
-  { name: "Dr. Anil Sharma", specialization: "Cardiologist", experience: "12 years" },
-  { name: "Dr. Megha Suri", specialization: "Cardiologist", experience: "9 years" },
-  { name: "Dr. Raghav Prasad", specialization: "Cardiologist", experience: "7 years" },
-  { name: "Dr. Kavya Menon", specialization: "Cardiologist", experience: "11 years" },
-  { name: "Dr. S. Venkatesh", specialization: "Cardiologist", experience: "14 years" },
-  { name: "Dr. Anita Balan", specialization: "Cardiologist", experience: "6 years" },
-  { name: "Dr. M. Jayaprakash", specialization: "Cardiologist", experience: "8 years" },
+  { id: 1, name: "Dr. Anil Sharma", specialist: "Cardiologist", experience: "12 years" },
+  { id: 2, name: "Dr. Megha Suri", specialist: "Cardiologist", experience: "9 years" },
+  { id: 3, name: "Dr. Raghav Prasad", specialist: "Cardiologist", experience: "7 years" },
+  { id: 4, name: "Dr. Kavya Menon", specialist: "Cardiologist", experience: "11 years" },
+  { id: 5, name: "Dr. S. Venkatesh", specialist: "Cardiologist", experience: "14 years" },
+  { id: 6, name: "Dr. Anita Balan", specialist: "Cardiologist", experience: "6 years" },
+  { id: 7, name: "Dr. M. Jayaprakash", specialist: "Cardiologist", experience: "8 years" },
 
-  { name: "Dr. Meera Patel", specialization: "Dermatologist", experience: "8 years" },
-  { name: "Dr. Sneha Rao", specialization: "Dermatologist", experience: "5 years" },
-  { name: "Dr. Tanvi Jain", specialization: "Dermatologist", experience: "9 years" },
-  { name: "Dr. Nikhil Shah", specialization: "Dermatologist", experience: "7 years" },
-  { name: "Dr. Priya Nambiar", specialization: "Dermatologist", experience: "10 years" },
-  { name: "Dr. Rupali Khanna", specialization: "Dermatologist", experience: "6 years" },
+  { id: 8, name: "Dr. Meera Patel", specialist: "Dermatologist", experience: "8 years" },
+  { id: 9, name: "Dr. Sneha Rao", specialist: "Dermatologist", experience: "5 years" },
+  { id: 10, name: "Dr. Tanvi Jain", specialist: "Dermatologist", experience: "9 years" },
+  { id: 11, name: "Dr. Nikhil Shah", specialist: "Dermatologist", experience: "7 years" },
+  { id: 12, name: "Dr. Priya Nambiar", specialist: "Dermatologist", experience: "10 years" },
+  { id: 13, name: "Dr. Rupali Khanna", specialist: "Dermatologist", experience: "6 years" },
 
-  { name: "Dr. Rajesh Kumar", specialization: "Orthopedic", experience: "10 years" },
-  { name: "Dr. Vishal Deshmukh", specialization: "Orthopedic", experience: "7 years" },
-  { name: "Dr. Harshit Tiwari", specialization: "Orthopedic", experience: "12 years" },
-  { name: "Dr. Kiran Joseph", specialization: "Orthopedic", experience: "9 years" },
-  { name: "Dr. Smriti Sen", specialization: "Orthopedic", experience: "6 years" },
-  { name: "Dr. N. Balaji", specialization: "Orthopedic", experience: "11 years" },
+  { id: 14, name: "Dr. Rajesh Kumar", specialist: "Orthopedic", experience: "10 years" },
+  { id: 15, name: "Dr. Vishal Deshmukh", specialist: "Orthopedic", experience: "7 years" },
+  { id: 16, name: "Dr. Harshit Tiwari", specialist: "Orthopedic", experience: "12 years" },
+  { id: 17, name: "Dr. Kiran Joseph", specialist: "Orthopedic", experience: "9 years" },
+  { id: 18, name: "Dr. Smriti Sen", specialist: "Orthopedic", experience: "6 years" },
+  { id: 19, name: "Dr. N. Balaji", specialist: "Orthopedic", experience: "11 years" },
 
-  { name: "Dr. Kavita Reddy", specialization: "Neurologist", experience: "9 years" },
-  { name: "Dr. Ayesha Siddiqui", specialization: "Neurologist", experience: "11 years" },
-  { name: "Dr. Manoj Shetty", specialization: "Neurologist", experience: "14 years" },
-  { name: "Dr. Kumaran Rao", specialization: "Neurologist", experience: "6 years" },
-  { name: "Dr. Alok Agrawal", specialization: "Neurologist", experience: "10 years" },
+  { id: 20, name: "Dr. Kavita Reddy", specialist: "Neurologist", experience: "9 years" },
+  { id: 21, name: "Dr. Ayesha Siddiqui", specialist: "Neurologist", experience: "11 years" },
+  { id: 22, name: "Dr. Manoj Shetty", specialist: "Neurologist", experience: "14 years" },
+  { id: 23, name: "Dr. Kumaran Rao", specialist: "Neurologist", experience: "6 years" },
+  { id: 24, name: "Dr. Alok Agrawal", specialist: "Neurologist", experience: "10 years" },
 
-  { name: "Dr. Suresh Verma", specialization: "Pediatrician", experience: "14 years" },
-  { name: "Dr. Neha Varrier", specialization: "Pediatrician", experience: "8 years" },
-  { name: "Dr. Ritu Batra", specialization: "Pediatrician", experience: "6 years" },
-  { name: "Dr. Sanjay Naidu", specialization: "Pediatrician", experience: "11 years" },
-  { name: "Dr. Surekha Iyer", specialization: "Pediatrician", experience: "9 years" },
+  { id: 25, name: "Dr. Suresh Verma", specialist: "Pediatrician", experience: "14 years" },
+  { id: 26, name: "Dr. Neha Varrier", specialist: "Pediatrician", experience: "8 years" },
+  { id: 27, name: "Dr. Ritu Batra", specialist: "Pediatrician", experience: "6 years" },
+  { id: 28, name: "Dr. Sanjay Naidu", specialist: "Pediatrician", experience: "11 years" },
+  { id: 29, name: "Dr. Surekha Iyer", specialist: "Pediatrician", experience: "9 years" },
 
-  { name: "Dr. Anita Joshi", specialization: "ENT Specialist", experience: "7 years" },
-  { name: "Dr. Srikar Rao", specialization: "ENT Specialist", experience: "9 years" },
-  { name: "Dr. Deepika Mohan", specialization: "ENT Specialist", experience: "5 years" },
-  { name: "Dr. Abhijeet Singh", specialization: "ENT Specialist", experience: "12 years" },
+  { id: 30, name: "Dr. Anita Joshi", specialist: "ENT Specialist", experience: "7 years" },
+  { id: 31, name: "Dr. Srikar Rao", specialist: "ENT Specialist", experience: "9 years" },
+  { id: 32, name: "Dr. Deepika Mohan", specialist: "ENT Specialist", experience: "5 years" },
+  { id: 33, name: "Dr. Abhijeet Singh", specialist: "ENT Specialist", experience: "12 years" },
 
-  { name: "Dr. Pooja Singh", specialization: "Gynecologist", experience: "11 years" },
-  { name: "Dr. Radhika Prabhu", specialization: "Gynecologist", experience: "8 years" },
-  { name: "Dr. Ananya Chatterjee", specialization: "Gynecologist", experience: "6 years" },
-  { name: "Dr. Hemalatha Gowda", specialization: "Gynecologist", experience: "14 years" },
+  { id: 34, name: "Dr. Pooja Singh", specialist: "Gynecologist", experience: "11 years" },
+  { id: 35, name: "Dr. Radhika Prabhu", specialist: "Gynecologist", experience: "8 years" },
+  { id: 36, name: "Dr. Ananya Chatterjee", specialist: "Gynecologist", experience: "6 years" },
+  { id: 37, name: "Dr. Hemalatha Gowda", specialist: "Gynecologist", experience: "14 years" },
 
-  { name: "Dr. Sneha Kapoor", specialization: "Dentist", experience: "6 years" },
-  { name: "Dr. Rohit Saxena", specialization: "Dentist", experience: "7 years" },
-  { name: "Dr. Varun Shankar", specialization: "Dentist", experience: "10 years" },
-  { name: "Dr. Reema Pathak", specialization: "Dentist", experience: "8 years" },
-  { name: "Dr. Mithilesh Rao", specialization: "Dentist", experience: "5 years" }
+  { id: 38, name: "Dr. Sneha Kapoor", specialist: "Dentist", experience: "6 years" },
+  { id: 39, name: "Dr. Rohit Saxena", specialist: "Dentist", experience: "7 years" },
+  { id: 40, name: "Dr. Varun Shankar", specialist: "Dentist", experience: "10 years" },
+  { id: 41, name: "Dr. Reema Pathak", specialist: "Dentist", experience: "8 years" },
+  { id: 42, name: "Dr. Mithilesh Rao", specialist: "Dentist", experience: "5 years" }
 ];
 
 function DoctorAppointment() {
@@ -75,67 +75,31 @@ function DoctorAppointment() {
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Load login state
   useEffect(() => {
-    const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedIn);
+    setIsLoggedIn(sessionStorage.getItem("isLoggedIn") === "true");
   }, []);
 
-  // Global login popup trigger
-  useEffect(() => {
-    const handleOpenLogin = () => {
-      const shouldOpen = sessionStorage.getItem("triggerLogin") === "true";
-      if (shouldOpen) {
-        setShowLogin(true);
-        sessionStorage.removeItem("triggerLogin");
-      }
-    };
-
-    window.addEventListener("openLoginModal", handleOpenLogin);
-    handleOpenLogin();
-
-    return () => {
-      window.removeEventListener("openLoginModal", handleOpenLogin);
-    };
-  }, []);
-
-  // ✅ BOOK BUTTON LOGIC WITH LOGIN CHECK
   const handleBook = (doc) => {
-    const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-
-    if (!loggedIn) {
+    if (!isLoggedIn) {
       alert("Please log in to book an appointment!");
       sessionStorage.setItem("triggerLogin", "true");
       window.dispatchEvent(new Event("openLoginModal"));
       return;
     }
-
     setSelectedDoctor(doc);
   };
 
   return (
     <div className="appointment-page">
-      {/* Header */}
-      <header className="header">
-        <div className="logo">
-          <img src={sanjeevaniImg} alt="Sanjeevani Logo" />
-        </div>
 
-        <nav className="nav-links">
-          <Link to="/doctorappointment">DOCTORS</Link>
-          <Link to="/medicines">MEDICINES</Link>
-          <Link to="/bloodbank">BLOOD BANKS</Link>
-          <Link to="/profile">PROFILE</Link>
-        </nav>
-      </header>
-
-      {/* Main Content */}
+      {/* Specializations */}
       <div className="appointment-container">
         <h2 className="title">Specializations</h2>
+
         <div className="specialization-row">
-          {specializations.map((spec, idx) => (
+          {specializations.map((spec, index) => (
             <div
-              key={idx}
+              key={index}
               className={`spec-card ${selectedSpec === spec ? "active" : ""}`}
               onClick={() => setSelectedSpec(spec)}
             >
@@ -144,20 +108,19 @@ function DoctorAppointment() {
           ))}
         </div>
 
+        {/* Doctors */}
         <h2 className="title">Available Doctors</h2>
+
         <div className="doctor-row">
           {doctors
-            .filter((doc) => !selectedSpec || doc.specialization === selectedSpec)
-            .map((doc, idx) => (
-              <div key={idx} className="doctor-card">
+            .filter((doc) => !selectedSpec || doc.specialist === selectedSpec)
+            .map((doc) => (
+              <div key={doc.id} className="doctor-card">
                 <h3 className="doc-name">{doc.name}</h3>
-                <p className="doc-spec">{doc.specialization}</p>
+                <p className="doc-spec">{doc.specialist}</p>
                 <span className="exp-chip">{doc.experience}</span>
 
-                <button
-                  className="btn-book"
-                  onClick={() => handleBook(doc)}
-                >
+                <button className="btn-book" onClick={() => handleBook(doc)}>
                   Book Appointment
                 </button>
               </div>
@@ -172,90 +135,9 @@ function DoctorAppointment() {
           onClose={() => setSelectedDoctor(null)}
         />
       )}
-
-      {/* LOGIN POPUP */}
-      {showLogin && !isLoggedIn && (
-        <>
-          <div className="overlay" onClick={() => setShowLogin(false)}></div>
-
-          <div className="login-card">
-            <span className="close-btn" onClick={() => setShowLogin(false)}>
-              &times;
-            </span>
-
-            <h2 style={{ textAlign: "center", marginBottom: "10px" }}>
-              Login to Continue
-            </h2>
-
-            <form
-              autoComplete="off"
-              onSubmit={(e) => {
-                e.preventDefault();
-                const email = e.target.email.value;
-                const password = e.target.password.value;
-
-                fetch("http://localhost:5000/api/login", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ email, password }),
-                })
-                  .then((res) => res.json())
-                  .then((data) => {
-                    if (data.success) {
-                      alert("Login successful!");
-                      sessionStorage.setItem("isLoggedIn", "true");
-                      sessionStorage.setItem("user", JSON.stringify(data.user));
-                      setIsLoggedIn(true);
-                      setShowLogin(false);
-                    } else {
-                      alert(data.message);
-                    }
-                  });
-              }}
-            >
-              <label>Email</label>
-              <div className="input-container">
-                <i className="fa-solid fa-envelope icon"></i>
-                <input type="email" name="email" required />
-              </div>
-
-              <label>Password</label>
-              <div className="input-container">
-                <i className="fa-solid fa-lock icon"></i>
-                <input type="password" name="password" required />
-              </div>
-
-              <button type="submit" className="primary-btn">
-                Log In
-              </button>
-            </form>
-          </div>
-        </>
-      )}
-
-      {/* Footer */}
-      <footer className="footer">
-        <div className="footer-container">
-          <div className="footer-section">
-            <h4>About Sanjeevani</h4>
-            <ul>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Contact Us</a></li>
-              <li><a href="#">FAQs</a></li>
-              <li><a href="#">Terms & Conditions</a></li>
-              <li><a href="#">Refund Policy</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-section footer-brand">
-            <img src={sanjeevaniImg} alt="Sanjeevani Logo" className="footer-logo" />
-            <h4>A MANTHRI Enterprise</h4>
-          </div>
-        </div>
-      </footer>
     </div>
   );
-  
 }
+
 export { doctors };
 export default DoctorAppointment;

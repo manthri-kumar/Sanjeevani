@@ -1,3 +1,4 @@
+// src/components/ProfileRight.jsx
 import React, { useEffect, useState } from "react";
 import "./ProfileRight.css";
 
@@ -16,33 +17,27 @@ const ProfileRight = ({ selected }) => {
   const [user, setUser] = useState(null);
   const [appointments, setAppointments] = useState([]);
 
-  // Load user info
   useEffect(() => {
-  const storedUser = sessionStorage.getItem("user");
-  if (storedUser) {
-    const parsed = JSON.parse(storedUser);
-    setUser(parsed);
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
 
-    // Fetch user appointments
-    fetch(`http://localhost:5000/api/appointments/${parsed.id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) setAppointments(data.appointments);
-      });
-  }
-}, []);
+      fetch(`http://localhost:5000/api/appointments/${storedUser.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setAppointments(data.appointments);
+          }
+        })
+        .catch((err) => console.error("Error fetching appointments:", err));
+    }
+  }, []);
 
-  // Logout function
   const handleLogout = () => {
-    sessionStorage.removeItem("isLoggedIn");
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("appointments");
+    sessionStorage.clear();
     window.location.href = "/";
   };
 
-  // ==========================================================
-  // APPOINTMENTS SECTION
-  // ==========================================================
   if (selected === "appointments") {
     return (
       <section className="profile-right">
@@ -54,10 +49,10 @@ const ProfileRight = ({ selected }) => {
           ) : (
             appointments.map((app, index) => (
               <div key={index} className="appoint-item">
-                <p><strong>Doctor:</strong> {app.doctor}</p>
+                <p><strong>Doctor:</strong> {app.doctor_name}</p>
                 <p><strong>Specialization:</strong> {app.specialization}</p>
-                <p><strong>Date:</strong> {app.date}</p>
-                <p><strong>Time:</strong> {app.time}</p>
+                <p><strong>Date:</strong> {app.appointment_time.split(" ")[0]}</p>
+                <p><strong>Time:</strong> {app.appointment_time.split(" ")[1]}</p>
                 <hr />
               </div>
             ))
@@ -67,9 +62,6 @@ const ProfileRight = ({ selected }) => {
     );
   }
 
-  // ==========================================================
-  // PROFILE SECTION
-  // ==========================================================
   if (selected === "profile") {
     return (
       <section className="profile-right">
@@ -94,9 +86,6 @@ const ProfileRight = ({ selected }) => {
     );
   }
 
-  // ==========================================================
-  // OTHER SECTIONS
-  // ==========================================================
   const section = sectionContent[selected];
 
   return (

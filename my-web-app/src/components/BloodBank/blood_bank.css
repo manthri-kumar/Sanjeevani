@@ -24,6 +24,14 @@
   padding: 100px 20px;
 }
 
+.bb-hero-buttons {
+  display: flex;
+  justify-content: center; /* optional – centers the buttons */
+  align-items: center;
+  gap: 20px; /* ✅ This adds space between buttons */
+  margin-top: 20px; /* optional – spacing from above elements */
+}
+
 .bb-hero h2 {
   font-size: 2.5rem;
   margin-bottom: 10px;
@@ -289,53 +297,129 @@
 /* ===========================
    FOOTER
 =========================== */
+/* ===============================
+   BLOOD BANK FOOTER STYLING
+   =============================== */
+
 .bb-footer {
-  background-color: #b71c1c;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  font-size: 0.95rem;
-  margin-top: 40px;
+  background: #fafafa;
+  border-top: 1px solid #ececec;
+  color: #2a2a2a;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
 }
 
-/* ===========================
-   RESPONSIVE DESIGN
-=========================== */
-@media (max-width: 768px) {
-  .header {
+.bb-footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(180px, 1fr)) 220px;
+  gap: 32px 28px;
+  align-items: start;
+}
+
+.bb-footer-col h4 {
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: #161616;
+}
+
+.bb-footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bb-footer-list li {
+  margin: 8px 0;
+}
+
+.bb-footer a {
+  color: #4b4b4b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.bb-footer a:hover,
+.bb-footer a:focus {
+  color: #111;
+  text-decoration: underline;
+  outline: none;
+}
+
+.bb-footer-brand {
+  justify-self: end;
+  text-align: center;
+}
+
+.bb-footer-brand img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  margin: 0 auto 10px;
+  filter: saturate(0) brightness(0.35);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.bb-footer-brand img:hover {
+  transform: scale(1.03);
+  filter: none;
+}
+
+.bb-brand-title {
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.bb-footer-bottom {
+  border-top: 1px solid #ececec;
+  padding: 14px 24px 24px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.bb-footer-links-inline {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.bb-footer-links-inline a {
+  color: #4b4b4b;
+}
+
+.bb-footer-links-inline a:hover {
+  color: #111;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1100px) {
+  .bb-footer-container {
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+  }
+  .bb-footer-brand {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .bb-footer-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bb-footer-bottom {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .search {
-    max-width: 100%;
-    margin: 10px 0;
-  }
-
-  .bb-hero {
-    padding: 70px 20px;
-  }
-
-  .bb-hero h2 {
-    font-size: 2rem;
-  }
-
-  .bb-services h2 {
-    font-size: 1.8rem;
-  }
-
-  .bb-service-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .bb-card {
-    width: 90%;
+    align-items: flex-start;
   }
 }

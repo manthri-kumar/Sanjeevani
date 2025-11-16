@@ -1,10 +1,9 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import DoctorDashboard from "./components/Doctordash/doctordas";
 
+import DHome from "./components/DoctorDashBoard/DHome";   // ✅ Correct Import
 import Home from './components/Home/home';
-
 import Ambulance from './components/Ambulance/Ambulance';
 import Healthmonitor from './components/Healthmonitor/healthmonitor';
 import BloodBank from './components/BloodBank/blood_bank';
@@ -24,39 +23,27 @@ function App() {
     <Router>
       <Routes>
 
-        {/* Home */}
         <Route path="/" element={<Home />} />
-
-        {/* Medicines */}
         <Route path="/medicines" element={<Medicines />} />
         <Route path="/painrelief" element={<PainRelief />} />
         <Route path="/babycare" element={<BabyCare />} />
 
-        {/* Services */}
         <Route path="/ambulance" element={<Ambulance />} />
         <Route path="/healthmonitor" element={<Healthmonitor />} />
         <Route path="/bloodbank" element={<BloodBank />} />
 
-        {/* Doctors */}
         <Route path="/doctorappointment" element={<DoctorAppointment />} />
-
-        {/* Appointment Page */}
         <Route path="/appointment" element={<AppointmentPage />} />
 
-        {/* Profile + Cart */}
         <Route path="/profile" element={<Profile />} />
         <Route path="/cart" element={<Cart />} />
 
-        {/* Ayurvedic */}
         <Route path="/ayurvediccare" element={<Ayurvedic />} />
-
-        {/* Search */}
         <Route path="/search" element={<SearchResult />} />
-
-        {/* Login Page */}
         <Route path="/login" element={<Login />} />
-        <Route path="/doctor-dashboard" element={<doctordas />} />
 
+        {/* ⭐ Doctor Home Route */}
+        <Route path="/dhome" element={<DHome />} />   {/* ✅ Correct Route */}
 
       </Routes>
     </Router>

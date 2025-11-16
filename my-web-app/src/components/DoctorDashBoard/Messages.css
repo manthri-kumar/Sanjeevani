@@ -1,0 +1,110 @@
+/* Page container */
+.page {
+  padding: 24px 40px;
+  font-family: "Inter", sans-serif;
+}
+
+/* Header */
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Card Wrapper */
+.card {
+  background: #fff;
+  border: 1px solid #eceffd;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  max-height: 650px;
+}
+
+/* Chat area */
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Message bubble */
+.bubble {
+  background: #f3f4ff;
+  padding: 12px 16px;
+  border-radius: 14px;
+  max-width: 70%;
+  border: 1px solid #e5e7fa;
+  position: relative;
+}
+
+.bubble.me {
+  align-self: flex-end;
+  background: #6f4cff;
+  color: white;
+  border: 1px solid #6d4aff;
+}
+
+.bubble-from {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 3px;
+  opacity: 0.8;
+}
+
+.bubble.me .bubble-from {
+  color: #e8e0ff;
+}
+
+/* Timestamp */
+.bubble-time {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* Chat input bar */
+.chat-input {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  border-top: 1px solid #eaeaff;
+  padding-top: 16px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #d8daf2;
+  outline: none;
+  transition: 0.2s;
+}
+
+.chat-input input:focus {
+  border-color: #6f4cff;
+  box-shadow: 0 0 0 2px rgba(111, 76, 255, 0.15);
+}
+
+/* Send button */
+.btn {
+  padding: 10px 18px;
+  background: #6f4cff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #5c3de0;
+}

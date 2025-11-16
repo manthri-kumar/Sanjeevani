@@ -177,42 +177,57 @@ function Home() {
       alert("Server error. Try again later.");
     }
   };
+// ---------------- DOCTOR LOGIN ----------------
+const handleDoctorLogin = async (e) => {
+  e.preventDefault();
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
-  // DOCTOR LOGIN
-  const handleDoctorLogin = async (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+  try {
+    const response = await fetch("http://localhost:5000/api/doctor/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-    try {
-      const response = await fetch("http://localhost:5000/api/doctor/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
+    const data = await response.json();
 
     if (data.success) {
-    alert("Doctor Login Successful!");
-    sessionStorage.setItem("isLoggedIn", "true");
-    sessionStorage.setItem("doctor", JSON.stringify(data.doctor));
-    
-    setIsLoggedIn(true);
-    setShowLogin(false);
-    setIsDoctorMode(true);
+      alert("Doctor Login Successful!");
 
-    // ⭐ Redirect doctor to dashboard
-    navigate("/doctor-dashboard");
-}
- else {
-        alert(data.message || "Login failed");
-      }
-    } catch (error) {
-      console.error("Doctor login error:", error);
-      alert("Server error. Try again later.");
+      // ⭐ Save correct full doctor object in sessionStorage
+      sessionStorage.setItem(
+        "doctor",
+        JSON.stringify({
+          id: data.doctor.id,
+          name: data.doctor.name,
+          email: data.doctor.email,
+          specialist: data.doctor.specialist,
+          experience: data.doctor.experience
+        })
+      );
+
+      sessionStorage.setItem("isLoggedIn", "true");
+
+      console.log("Doctor saved =", JSON.parse(sessionStorage.getItem("doctor")));
+
+      setIsLoggedIn(true);
+      setShowLogin(false);
+      setIsDoctorMode(true);
+
+      // Redirect doctor to dashboard
+      navigate("/dhome");
+    } 
+    else {
+      alert(data.message || "Login failed");
     }
-  };
+  } catch (error) {
+    console.error("Doctor login error:", error);
+    alert("Server error. Try again later.");
+  }
+};
+
+
 
   // DOCTOR SIGNUP
   const handleDoctorSignup = async (e) => {
@@ -651,7 +666,13 @@ function Home() {
         </footer>
       </div>
 
-      {/* 🔐 Login/Signup Modal */}
+
+
+
+
+
+
+      {/* Login/Signup Modal */}
       {showLogin && !isLoggedIn && (
         <>
           <div className="overlay" onClick={() => setShowLogin(false)}></div>

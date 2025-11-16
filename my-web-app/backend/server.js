@@ -1,422 +1,305 @@
-// ==========================================================
-// IMPORTS
-// ==========================================================
+// server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
 const bcrypt = require("bcryptjs");
 
-// ==========================================================
-// APP INITIALIZATION
-// ==========================================================
 const app = express();
-
 app.use(express.json());
 
-// ==========================================================
-// CORS CONFIGURATION
-// ==========================================================
-// ✅ Allows both local dev & Render deployed frontend
+/**
+ * CORS - allow your frontend origin(s)
+ * update origins array if your frontend runs from other host
+ */
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",             // local development
-      "https://sanjeevani.onrender.com",   // deployed frontend URL
-    ],
+    origin: ["http://localhost:3000", "https://sanjeevani.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
-// ==========================================================
-// DATABASE CONNECTION (POOL)
-// ==========================================================
+// ---------- MySQL Pool ----------
 const db = mysql.createPool({
-  host: process.env.MYSQLHOST || "localhost",
-  user: process.env.MYSQLUSER || "root",
-  password: process.env.MYSQLPASSWORD || "kumar2005",
-  database: process.env.MYSQLDATABASE || "sanjeevani",
-  port: process.env.MYSQLPORT ? Number(process.env.MYSQLPORT) : 3306,
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "kumar2005",
+  database: process.env.DB_NAME || "sanjeevani",
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
 });
 
-db.getConnection((err, connection) => {
+// quick connection check
+db.getConnection((err, conn) => {
   if (err) {
-    console.error("❌ MySQL Pool connection error:", err.message || err);
+    console.error("MySQL Connection Error:", err);
   } else {
-    console.log("✅ MySQL connected (Pool established)");
-    if (connection && typeof connection.release === "function") connection.release();
+    console.log("MySQL connected");
+    conn.release();
   }
 });
 
-// ==========================================================
-// TEST ROUTE
-// ==========================================================
+// ---------- Helpers ----------
+const sendServerError = (res, err, msg = "Server error") => {
+  console.error(msg, err);
+  return res.status(500).json({ success: false, message: msg });
+};
+
+// ---------- Routes ----------
+
+// Root
 app.get("/", (req, res) => {
-  res.send("✅ Sanjeevani Backend is Running Successfully!");
+  res.send("Backend Running Successfully!");
 });
 
-// ==========================================================
-// USER AUTHENTICATION ROUTES (SIGNUP + LOGIN)
-// ==========================================================
-
-// 🟢 SIGNUP ROUTE
+// -------------------- USER SIGNUP --------------------
 app.post("/api/signup", async (req, res) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password) {
-    return res
-      .status(400)
-      .json({ success: false, message: "All fields are required" });
-  }
-
   try {
-    const checkQuery = "SELECT id FROM users WHERE email = ?";
-    db.query(checkQuery, [email], async (err, results) => {
-      if (err) {
-        console.error("❌ Error checking user:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Database error" });
-      }
+    const { username, email, password } = req.body;
+    if (!username || !email || !password)
+      return res.status(400).json({ success: false, message: "All fields required" });
 
-      if (results.length > 0) {
-        return res
-          .status(400)
-          .json({ success: false, message: "User already exists" });
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const insertQuery =
-        "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-      db.query(insertQuery, [username, email, hashedPassword], (err) => {
-        if (err) {
-          console.error("❌ Signup Error:", err);
-          return res
-            .status(500)
-            .json({ success: false, message: "Error creating user" });
-        }
-        res.status(200).json({ success: true, message: "Signup successful" });
-      });
-    });
-  } catch (err) {
-    console.error("❌ Server Error (Signup):", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Server error during signup" });
-  }
-});
-
-// 🔵 LOGIN ROUTE
-app.post("/api/login", (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password)
-    return res
-      .status(400)
-      .json({ success: false, message: "Email and password are required" });
-
-  const query = "SELECT * FROM users WHERE email = ?";
-  db.query(query, [email], async (err, results) => {
-    if (err) {
-      console.error("❌ Login Error:", err);
-      return res
-        .status(500)
-        .json({ success: false, message: "Database error during login" });
-    }
-
-    if (results.length === 0)
-      return res
-        .status(401)
-        .json({ success: false, message: "User not found" });
-
-    const user = results[0];
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch)
-      return res
-        .status(401)
-        .json({ success: false, message: "Incorrect password" });
-
-    res.status(200).json({
-      success: true,
-      message: "Login successful",
-      user: { id: user.id, username: user.username, email: user.email },
-    });
-  });
-});
-
-// ==========================================================
-// BLOOD BANK ROUTES
-// ==========================================================
-
-// GET /api/states - Retrieves all states
-app.get("/api/states", (req, res) => {
-  db.query(
-    "SELECT state_id, state_name FROM states ORDER BY state_name",
-    (err, results) => {
-      if (err) {
-        console.error("❌ Error fetching states:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Database error fetching states" });
-      }
-      res.json(results);
-    }
-  );
-});
-
-// GET /api/districts/:stateId - Retrieves districts of a state
-app.get("/api/districts/:stateId", (req, res) => {
-  const { stateId } = req.params;
-  db.query(
-    "SELECT district_id, district_name FROM districts WHERE state_id=? ORDER BY district_name",
-    [stateId],
-    (err, results) => {
-      if (err) {
-        console.error("❌ Error fetching districts:", err);
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Database error fetching districts",
-          });
-      }
-      res.json(results);
-    }
-  );
-});
-
-// POST /api/blood-banks/search - Search by district
-app.post("/api/blood-banks/search", (req, res) => {
-  const { districtId } = req.body;
-  if (!districtId)
-    return res
-      .status(400)
-      .json({ success: false, message: "District ID required" });
-
-  const query = `
-        SELECT BB.bank_id AS id, BB.bank_name AS name, BB.address, BB.category,
-        BB.bank_type AS type, DATE_FORMAT(BB.last_updated,'%Y-%m-%d %H:%i:%s') AS updated,
-        (SELECT GROUP_CONCAT(blood_group, ':', units_available)
-         FROM availability WHERE bank_id=BB.bank_id) AS availability
-        FROM blood_banks BB WHERE BB.district_id=? 
-        ORDER BY BB.category DESC, BB.bank_name ASC
-    `;
-
-  db.query(query, [districtId], (err, results) => {
-    if (err) {
-      console.error("❌ Error during blood bank search:", err);
-      return res
-        .status(500)
-        .json({ success: false, message: "Database error during search" });
-    }
-    res.json(results);
-  });
-});
-
-// POST /api/blood-banks/nearest - Find nearest blood banks
-app.post("/api/blood-banks/nearest", (req, res) => {
-  const { latitude, longitude, radius = 50 } = req.body;
-
-  // Use null checks (so 0 is allowed)
-  if (latitude == null || longitude == null)
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Latitude and longitude are required",
-      });
-
-  const query = `
-        SELECT
-            BB.bank_id AS id,
-            BB.bank_name AS name,
-            BB.address,
-            BB.category,
-            BB.bank_type AS type,
-            DATE_FORMAT(BB.last_updated, '%Y-%m-%d %H:%i:%s') AS updated,
-            (6371 * acos(
-                cos(radians(?)) * cos(radians(BB.latitude)) * 
-                cos(radians(BB.longitude) - radians(?)) + 
-                sin(radians(?)) * sin(radians(BB.latitude))
-            )) AS distance_km,
-            (
-                SELECT GROUP_CONCAT(blood_group, ':', units_available)
-                FROM availability A
-                WHERE A.bank_id = BB.bank_id
-            ) AS availability
-        FROM blood_banks BB
-        HAVING distance_km < ?  
-        ORDER BY distance_km ASC
-        LIMIT 10;
-    `;
-
-  const params = [latitude, longitude, latitude, radius];
-
-  db.query(query, params, (err, results) => {
-    if (err) {
-      console.error("❌ Error during nearest blood bank search:", err);
-      return res
-        .status(500)
-        .json({
-          success: false,
-          message: "Database error during radius search",
-        });
-    }
-    res.json(results);
-  });
-});
-
-// GET user data (profile + cart + appointments)
-app.get("/api/user/:id", async (req, res) => {
-  const userId = req.params.id;
-
-  try {
-    const [userRows] = await db.promise().query("SELECT * FROM users WHERE id = ?", [userId]);
-    const [cart] = await db.promise().query("SELECT * FROM cart_items WHERE user_id = ?", [userId]);
-    const [appointments] = await db.promise().query("SELECT * FROM appointments WHERE user_id = ?", [userId]);
-
-    res.json({
-      success: true,
-      user: userRows[0] || null,
-      cart,
-      appointments,
-    });
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
-
-// DOCTOR SIGNUP
-app.post("/api/doctor/signup", async (req, res) => {
-  const { name, email, specialist, experience, password } = req.body;
-
-  if (!name || !email || !specialist || !experience || !password)
-    return res.status(400).json({ success: false, message: "All fields required" });
-
-  try {
-    const [exists] = await db
-      .promise()
-      .query("SELECT id FROM doctors WHERE email = ?", [email]);
-
+    // check exists
+    const [exists] = await db.promise().query("SELECT id FROM users WHERE email = ?", [email]);
     if (exists.length > 0)
-      return res.status(400).json({ success: false, message: "Doctor already exists" });
+      return res.json({ success: false, message: "User already exists" });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
+    await db
+      .promise()
+      .query("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [
+        username,
+        email,
+        hashed,
+      ]);
 
-    await db.promise().query(
-      `INSERT INTO doctors (name, email, specialist, experience_years, password)
-       VALUES (?, ?, ?, ?, ?)`,
-      [name, email, specialist, Number(experience), hashedPassword]
-    );
-
-    res.json({ success: true, message: "Doctor registered!" });
+    return res.json({ success: true, message: "Signup successful!" });
   } catch (err) {
-    console.error("Doctor Signup Error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    return sendServerError(res, err, "Signup error");
   }
 });
 
-
-// ==========================================================
-// DOCTOR LOGIN
-// ==========================================================
-app.post("/api/doctor/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password)
-    return res.status(400).json({ success: false, message: "All fields required" });
-
+// -------------------- USER LOGIN --------------------
+app.post("/api/login", async (req, res) => {
   try {
-    const [docs] = await db
-      .promise()
-      .query("SELECT * FROM doctors WHERE email = ?", [email]);
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ success: false, message: "Email and password required" });
 
-    if (docs.length === 0)
+    const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
+
+    if (rows.length === 0)
+      return res.status(404).json({ success: false, message: "User not found" });
+
+    const user = rows[0];
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) return res.status(401).json({ success: false, message: "Incorrect password" });
+
+    // return user object with 'username' (as requested)
+    return res.json({
+      success: true,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    return sendServerError(res, err, "Login error");
+  }
+});
+
+// -------------------- DOCTOR SIGNUP --------------------
+app.post("/api/doctor/signup", async (req, res) => {
+  try {
+    const { name, email, specialist, experience, password } = req.body;
+
+    if (!name || !email || !specialist || experience == null || !password)
+      return res.status(400).json({ success: false, message: "All fields required" });
+
+    const [exists] = await db.promise().query("SELECT id FROM doctors WHERE email = ?", [email]);
+    if (exists.length > 0)
+      return res.json({ success: false, message: "Doctor already exists" });
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    await db
+      .promise()
+      .query(
+        "INSERT INTO doctors (name, email, specialist, experience_years, password) VALUES (?, ?, ?, ?, ?)",
+        [name, email, specialist, experience, hashed]
+      );
+
+    return res.json({ success: true, message: "Doctor registered successfully!" });
+  } catch (err) {
+    return sendServerError(res, err, "Doctor signup error");
+  }
+});
+
+// -------------------- DOCTOR LOGIN --------------------
+app.post("/api/doctor/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ success: false, message: "Email and password required" });
+
+    const [rows] = await db.promise().query("SELECT * FROM doctors WHERE email = ?", [email]);
+
+    if (rows.length === 0)
       return res.status(404).json({ success: false, message: "Doctor not found" });
 
-    const doctor = docs[0];
+    const doctor = rows[0];
     const match = await bcrypt.compare(password, doctor.password);
 
-    if (!match)
-      return res.status(401).json({ success: false, message: "Incorrect password" });
+    if (!match) return res.status(401).json({ success: false, message: "Incorrect password" });
 
-    res.json({
+    // IMPORTANT: return 'experience' (mapped) so frontend expecting `experience` works
+    return res.json({
       success: true,
       doctor: {
         id: doctor.id,
         name: doctor.name,
         email: doctor.email,
         specialist: doctor.specialist,
-        experience: doctor.experience_years,
+        experience: doctor.experience_years, // mapped field name
       },
     });
   } catch (err) {
-    console.error("Doctor Login Error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    return sendServerError(res, err, "Doctor login error");
   }
 });
 
-// ==========================================================
-// BOOK APPOINTMENT (FINAL FIXED VERSION)
-// ==========================================================
-app.post("/api/appointments/book", async (req, res) => {
-  const { user_id, doctor_id, appointment_time } = req.body;
-
-  if (!user_id || !doctor_id || !appointment_time) {
-    return res.status(400).json({ success: false, message: "Missing fields" });
-  }
-
+// -------------------- SAVE DOCTOR AVAILABILITY --------------------
+app.post("/api/doctor/availability", async (req, res) => {
   try {
-    await db
+    const { doctor_id, available_date, start_time, end_time } = req.body;
+
+    if (!doctor_id || !available_date || !start_time || !end_time)
+      return res.status(400).json({ success: false, message: "Missing fields" });
+
+    // check existing record for that doctor + date (optional)
+    const [exists] = await db
+      .promise()
+      .query("SELECT id FROM doctor_availability WHERE doctor_id = ? AND available_date = ?", [
+        doctor_id,
+        available_date,
+      ]);
+
+    if (exists.length > 0) {
+      await db
+        .promise()
+        .query(
+          "UPDATE doctor_availability SET start_time = ?, end_time = ? WHERE doctor_id = ? AND available_date = ?",
+          [start_time, end_time, doctor_id, available_date]
+        );
+    } else {
+      await db
+        .promise()
+        .query(
+          "INSERT INTO doctor_availability (doctor_id, available_date, start_time, end_time) VALUES (?, ?, ?, ?)",
+          [doctor_id, available_date, start_time, end_time]
+        );
+    }
+
+    return res.json({ success: true, message: "Availability saved!" });
+  } catch (err) {
+    return sendServerError(res, err, "Save availability error");
+  }
+});
+
+// -------------------- GET AVAILABILITY FOR A DOCTOR --------------------
+app.get("/api/doctor/availability/:doctorId", async (req, res) => {
+  try {
+    const doctorId = req.params.doctorId;
+    const [rows] = await db
       .promise()
       .query(
-        `INSERT INTO appointments (user_id, doctor_id, appointment_time, status)
-         VALUES (?, ?, ?, 'pending')`,
-        [user_id, doctor_id, appointment_time]
+        "SELECT available_date, start_time, end_time FROM doctor_availability WHERE doctor_id = ? ORDER BY available_date",
+        [doctorId]
       );
 
-    res.json({ success: true, message: "Appointment booked successfully!" });
+    return res.json({ success: true, availability: rows });
   } catch (err) {
-    console.error("Appointment Insert Error:", err);
-    return res.status(500).json({ success: false, message: "Database error" });
+    return sendServerError(res, err, "Get availability error");
   }
 });
 
-// ==========================================================
-// GET USER APPOINTMENTS
-// ==========================================================
-app.get("/api/appointments/:userId", async (req, res) => {
-  const userId = req.params.userId;
-
+// -------------------- GET ALL DOCTORS (+ availability if present) --------------------
+app.get("/api/doctors", async (req, res) => {
   try {
-    const [appointments] = await db.promise().query(
-      `SELECT a.id, a.appointment_time, a.status,
-              d.name AS doctor_name, d.specialist AS specialization
-       FROM appointments a
-       LEFT JOIN doctors d ON a.doctor_id = d.id
-       WHERE a.user_id = ?
-       ORDER BY a.appointment_time DESC`,
-      [userId]
-    );
+    // left join to get availability if exists
+    const [rows] = await db.promise().query(`
+      SELECT d.id, d.name, d.specialist, d.experience_years,
+             a.available_date, a.start_time, a.end_time
+      FROM doctors d
+      LEFT JOIN doctor_availability a
+        ON d.id = a.doctor_id
+      ORDER BY d.name, a.available_date DESC
+    `);
 
-    res.json({ success: true, appointments });
+    // Map the result to group availability per doctor if there are multiple availability rows
+    const doctorsMap = new Map();
+
+    rows.forEach((r) => {
+      if (!doctorsMap.has(r.id)) {
+        doctorsMap.set(r.id, {
+          id: r.id,
+          name: r.name,
+          specialist: r.specialist,
+          experience: r.experience_years, // mapped
+          availability: [],
+        });
+      }
+      if (r.available_date) {
+        doctorsMap.get(r.id).availability.push({
+          available_date: r.available_date,
+          start_time: r.start_time,
+          end_time: r.end_time,
+        });
+      }
+    });
+
+    const doctors = Array.from(doctorsMap.values());
+    return res.json({ success: true, doctors });
   } catch (err) {
-    console.error("Appointment Fetch Error:", err);
-    res.status(500).json({ success: false, message: "Database error" });
+    return sendServerError(res, err, "Load doctors error");
   }
 });
 
-// ==========================================================
-// START SERVER (Render + Local)
-// ==========================================================
-const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
+// -------------------- Optional: rehash plain-text doctor passwords (ADMIN ONLY) --------------------
+/**
+ * NOTE: If you previously inserted doctors with plain-text "pass" values,
+ * you can run this endpoint once (or run the equivalent script locally)
+ * to replace plain-text passwords with hashed versions.
+ *
+ * SECURITY: This endpoint is unprotected — remove or protect it after use.
+ */
+app.post("/api/doctors/rehash-plain-passwords", async (req, res) => {
+  try {
+    // find doctors where password does NOT look like a bcrypt hash (simple heuristic: starts with $2)
+    const [rows] = await db.promise().query("SELECT id, password FROM doctors");
+    const updates = [];
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+    for (const r of rows) {
+      const pw = r.password || "";
+      if (!pw.startsWith("$2")) {
+        // plain text -> hash it
+        const hashed = await bcrypt.hash(pw, 10);
+        updates.push(db.promise().query("UPDATE doctors SET password = ? WHERE id = ?", [hashed, r.id]));
+      }
+    }
+
+    if (updates.length > 0) await Promise.all(updates);
+    return res.json({ success: true, message: `Rehashed ${updates.length} doctor password(s)` });
+  } catch (err) {
+    return sendServerError(res, err, "Rehash error");
+  }
+});
+
+// -------------------- Start Server --------------------
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

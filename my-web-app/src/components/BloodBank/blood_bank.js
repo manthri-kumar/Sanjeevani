@@ -5,10 +5,22 @@ import MOCK_BLOOD_BANKS from "../../data/indiabloodbanks";
 import { useNavigate } from "react-router-dom";
 
 import { sanjeevaniImg } from "../../assets";
+import INDIA_BLOOD_BANKS from "../../data/indiabloodbanks";
 
 const API_BASE_URL = "http://localhost:5000/api";
 const cartCount = 0;
 
+// normalize and compare helper
+const eq = (a, b) =>
+  String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
+
+const containsBloodGroup = (availabilityStr = "", group) => {
+  // availabilityStr example: "A+:12 A-:5 B+:10 O+:18 AB+:3"
+  // check for whole token like "A+" (avoid false positives)
+  if (!group) return true;
+  const tokens = String(availabilityStr).split(/[\s,]+/).map(t => t.replace(/[:,-]/g,''));
+  return tokens.some(t => t === group.replace(/\s/g, ""));
+};
 
 
 const bloodGroups = ["All Blood Groups", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -80,6 +92,8 @@ function BloodBank() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const navigate = useNavigate();
+  const [noResults, setNoResults] = useState(false);
+  const rawList = INDIA_BLOOD_BANKS
 
   // --- State/District API Logic ---
 useEffect(() => {
@@ -120,18 +134,25 @@ useEffect(() => {
   };
   const handleDistrictChange = (e) => setSelectedDistrict(e.target.value);
 
-  // 1. State/District Search
-  const handleSearch = () => {
+const handleSearch = () => {
   if (!selectedState || !selectedDistrict) {
     alert("Please select both State and District.");
     return;
   }
-  setIsLoading(true);
 
-  const stateName =
-    stateOptions.find((s) => String(s.state_id) === String(selectedState))?.state_name;
-  const districtName =
-    districts.find((d) => String(d.district_id) === String(selectedDistrict))?.district_name;
+  setIsLoading(true);
+  setNoResults(false);
+  setSearchResults([]);
+
+  // find readable names from the dropdown objects
+  const selectedStateObj = stateOptions.find(s => String(s.state_id) === String(selectedState));
+  const stateName = selectedStateObj?.state_name || "";
+
+  const selectedDistrictObj = districts.find(d => String(d.district_id) === String(selectedDistrict));
+  const districtName = selectedDistrictObj?.district_name || "";
+
+  const wantedGroup = selectedBloodGroup && selectedBloodGroup !== "All Blood Groups" ? selectedBloodGroup : "";
+  const wantedComponent = selectedComponent && selectedComponent !== components[0] ? selectedComponent : "";
 
   const searchParams = { districtId: selectedDistrict };
 
@@ -140,28 +161,75 @@ useEffect(() => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(searchParams),
   })
-    .then((res) => res.json())
+    .then(async (res) => {
+      if (!res.ok) {
+        // Try to parse JSON but fallback to empty array
+        try { return await res.json(); } catch { return []; }
+      }
+      return res.json();
+    })
     .then((data) => {
-      const results = Array.isArray(data) ? data : [];
-      setSearchResults(results);
+      // use returned list or fallback BANKS if empty
+      const rawList = Array.isArray(data) && data.length ? data : INDIA_BLOOD_BANKS;
+
+      // apply client-side filtering so UI always matches user's selection
+      const filtered = rawList.filter((b) => {
+        // safe guards: ensure fields exist
+        const bState = (b.state_name || "").toString().trim();
+        const bDistrict = (b.district_name || "").toString().trim();
+
+        // state must match exactly (case-insensitive)
+        if (stateName && !eq(bState, stateName)) return false;
+
+        // district should match (case-insensitive). Use exact match but tolerant to whitespace/case.
+        if (districtName && !eq(bDistrict, districtName)) return false;
+
+        // blood group (check availability string for presence of group token)
+        if (wantedGroup && !containsBloodGroup(b.availability, wantedGroup)) return false;
+
+        // component (optional) - expects b.components to be an array like ["Whole Blood","Plasma"]
+        if (wantedComponent) {
+          if (Array.isArray(b.components)) {
+            const found = b.components.some(c => eq(c, wantedComponent));
+            if (!found) return false;
+          } else {
+            // if components not provided in data, skip component filtering
+          }
+        }
+
+        return true;
+      });
+
+      setSearchResults(filtered);
       setActiveTab("Govt");
 
-      if (results.length === 0) {
-        setMessage("No blood banks were found for the selected location.");
+      if (!filtered || filtered.length === 0) {
+        setNoResults(true);
       } else {
-        setMessage(""); // clear previous message if data is found
+        setNoResults(false);
       }
     })
-
     .catch((err) => {
-      console.error("Search failed, using mock:", err);
-      const mock = mockSearchByStateDistrict(stateName, districtName);
-      setSearchResults(mock);
-      setActiveTab("Govt");
-    })
-    .finally(() => setIsLoading(false));
-};
+      console.error("Search failed, using fallback and filtering:", err);
+      const rawList = INDIA_BLOOD_BANKS;
+      const filtered = rawList.filter((b) => {
+        if (stateName && !eq(b.state_name, stateName)) return false;
+        if (districtName && !eq(b.district_name, districtName)) return false;
+        if (wantedGroup && !containsBloodGroup(b.availability, wantedGroup)) return false;
+        if (wantedComponent && Array.isArray(b.components)) {
+          if (!b.components.some(c => eq(c, wantedComponent))) return false;
+        }
+        return true;
+      });
 
+      setSearchResults(filtered);
+      setActiveTab("Govt");
+      setNoResults(!filtered || filtered.length === 0);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
+};
 
   // 2. Geolocation Search
   const searchNearestBloodBank = () => {
@@ -306,7 +374,7 @@ useEffect(() => {
   onClick={() => {
     // optional: debug log
     console.log("Donate Blood clicked — navigating to /hospitals");
-    navigate("/HospitalRegister");
+    navigate("/donate-blood");
   }}
 >
   Donate Blood

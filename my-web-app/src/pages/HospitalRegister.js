@@ -17,7 +17,7 @@ export default function Hospitals() {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert(
-      `✅ Thank you, ${formData.name}!\n\nYou have successfully registered to donate ${formData.bloodGroup} blood on ${formData.date}.`
+      `Thank you, ${formData.name}!\n\nYou have successfully registered to donate ${formData.bloodGroup} blood on ${formData.date}.`
     );
 
     // reset form after submission

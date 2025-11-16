@@ -1,11 +1,8 @@
+// src/components/ProfileRight.jsx
 import React, { useEffect, useState } from "react";
 import "./ProfileRight.css";
 
 const sectionContent = {
-  appointments: {
-    title: "Appointments",
-    content: "No upcoming appointments.",
-  },
   health: {
     title: "Health Records",
     content: "Your medical records will appear here.",
@@ -18,32 +15,64 @@ const sectionContent = {
 
 const ProfileRight = ({ selected }) => {
   const [user, setUser] = useState(null);
+  const [appointments, setAppointments] = useState([]);
 
-  // ✅ Load user info from sessionStorage
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("user");
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(storedUser);
+
+      fetch(`http://localhost:5000/api/appointments/${storedUser.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setAppointments(data.appointments);
+          }
+        })
+        .catch((err) => console.error("Error fetching appointments:", err));
     }
   }, []);
 
-  // ✅ Logout Function (inside right)
   const handleLogout = () => {
-    sessionStorage.removeItem("isLoggedIn");
-    sessionStorage.removeItem("user");
+    sessionStorage.clear();
     window.location.href = "/";
   };
 
-  // ✅ "My Profile" section
+  if (selected === "appointments") {
+    return (
+      <section className="profile-right">
+        <h1 className="pr-title">Appointments</h1>
+
+        <div className="pr-card">
+          {appointments.length === 0 ? (
+            <p>No upcoming appointments.</p>
+          ) : (
+            appointments.map((app, index) => (
+              <div key={index} className="appoint-item">
+                <p><strong>Doctor:</strong> {app.doctor_name}</p>
+                <p><strong>Specialization:</strong> {app.specialization}</p>
+                <p><strong>Date:</strong> {app.appointment_time.split(" ")[0]}</p>
+                <p><strong>Time:</strong> {app.appointment_time.split(" ")[1]}</p>
+                <hr />
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+    );
+  }
+
   if (selected === "profile") {
     return (
       <section className="profile-right">
         <h1 className="pr-title">My Profile</h1>
+
         {user ? (
           <div className="pr-card">
             <p><strong>Username:</strong> {user.username}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>User ID:</strong> {user.id}</p>
+
             <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
@@ -57,8 +86,8 @@ const ProfileRight = ({ selected }) => {
     );
   }
 
-  // ✅ Other sections
   const section = sectionContent[selected];
+
   return (
     <section className="profile-right">
       {section ? (

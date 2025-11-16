@@ -10,7 +10,7 @@
   flex-wrap: wrap;
   justify-content: space-around;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 0;
   gap: 2rem;
 }
 

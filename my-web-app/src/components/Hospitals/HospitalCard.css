@@ -1,0 +1,54 @@
+.hospital-card-large {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e9e9ee;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 8px 22px rgba(2, 6, 23, 0.06);
+  margin-bottom: 14px;
+}
+
+/* Since image is removed */
+.no-img-card {
+  padding-left: 14px !important;
+}
+
+.card-body {
+  width: 100%;
+}
+
+.hospital-name {
+  margin: 0 0 8px 0;
+  font-size: 1.05rem;
+  color: #0f1724;
+}
+
+.badges-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.badge {
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: #f2f7f4;
+  color: #0f6b4f;
+  border: 1px solid rgba(22, 125, 99, 0.08);
+}
+
+.badge.muted {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #f0f0f2;
+}
+
+.meta-row {
+  color: #6b7280;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+}

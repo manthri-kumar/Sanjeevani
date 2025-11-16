@@ -1,0 +1,81 @@
+:root{
+  --muted: #6b7280;
+  --border: #e9e9ee;
+  --accent: #167d63;
+}
+
+/* wrapper */
+.hospital-list-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  width:100%;
+  box-sizing:border-box;
+}
+
+/* top row with placeholder for search */
+.list-top-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.search-inline-placeholder{
+  flex:1;
+  height:38px; /* keep same height as search bar area */
+}
+.list-controls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.results-count{
+  color:var(--muted);
+  font-size:0.95rem;
+}
+.list-controls select{
+  padding:8px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  font-size:0.95rem;
+}
+
+/* cards container - make it scrollable to match sidebar height */
+.cards{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* no results */
+.no-results{
+  padding:18px;
+  border:1px dashed var(--border);
+  border-radius:8px;
+  color:var(--muted);
+}
+
+/* pagination */
+.pagination{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content:flex-end;
+}
+.pagination button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#fff;
+  cursor:pointer;
+}
+.pagination span{
+  color:var(--muted);
+}
+
+/* ensure that the list area can scroll independently when placed in right column (page layout handles height) */
+.hospital-list-scrollable{
+  overflow-y:auto;
+  max-height:100%;
+  padding-right:4px; /* to avoid content getting hidden under scrollbar */
+}

@@ -18,7 +18,7 @@ function Navbar({ isLoggedIn, cartCount, onLoginClick, onLogoutClick }) {
       </div>
       <nav className="nav-links">
         <a href="#">DOCTORS</a>
-        <a href="#">HOSPITALS</a>
+        <a href="/hospitals">HOSPITALS</a>
         <Link to="/medicines">MEDICINES</Link>
         <Link to="/profile">PROFILE</Link>
       </nav>

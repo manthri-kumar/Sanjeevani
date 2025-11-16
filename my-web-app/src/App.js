@@ -9,6 +9,7 @@ import Footer from './components/Home/Footer';
 import Login from './components/Login/login';
 import Profile from './components/Profile/Profile';
 import Cart from './components/Cart/Cart';
+import Hospitals from './components/Hospitals/HospitalPage';
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -68,6 +69,7 @@ function App() {
         />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/hospitals" element={<Hospitals />} />
           <Route
             path="/medicines"
             element={

@@ -681,84 +681,200 @@ input:focus {
   padding: 10px;
   margin: 0;
 }
-
-/* OTP input */
-.otp-input-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.otp-input-container input {
-  flex: 1;
-  text-align: center;
-  letter-spacing: 3px;
-  font-weight: 600;
-  font-size: 1.2rem;
-}
-
-/* Timer */
-.timer {
-  font-size: 0.9rem;
-  color: #2d6a4f;
-  font-weight: 500;
-}
-
-/* Buttons */
-.slider-btn {
+/* ---------- LOGIN POPUP OVERLAY ---------- */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  background: #2d6a4f;
-  color: #fff;
-  border: none;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.slider-btn:hover {
-  background: #245c41;
-}
-
-.resend-btn {
-  background: transparent;
-  border: none;
-  color: #2d6a4f;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-/* Info text */
-.otp-info,
-.otp-message {
-  font-size: 0.85rem;
-  color: #555;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-  text-align: center;
-}
-
-.otp-alert-box {
-  background: #f0fdf4;
-  border: 1.5px solid #2d6a4f;
-  color: #1b4332;
-  padding: 16px;
-  border-radius: 10px;
-  margin-top: 20px;
-  text-align: center;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
   animation: fadeIn 0.3s ease-in-out;
 }
 
-.otp-alert-box p {
-  margin-bottom: 12px;
-  font-size: 15px;
-  font-weight: 500;
+/* ---------- LOGIN CARD ---------- */
+.login-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(25px);
+  border-radius: 22px;
+  width: 390px;
+  text-align: center;
+  padding: 30px 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  animation: popIn 0.3s forwards;
 }
+
+/* ---------- CLOSE BUTTON ---------- */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #555;
+  transition: 0.3s;
+}
+.close-btn:hover {
+  color: #000;
+}
+
+/* ---------- TABS (Login / Signup) ---------- */
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+.tab-buttons button {
+  background: none;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 8px 20px;
+  border-radius: 25px;
+  color: #555;
+  transition: 0.3s;
+}
+.tab-buttons .active {
+  background: linear-gradient(90deg, #0f5f1b, #070707);
+  color: white;
+}
+
+/* ---------- LABELS ---------- */
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+/* ---------- INPUT CONTAINER ---------- */
+.input-container {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+/* Icons inside input */
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 15px;
+}
+
+/* Input field */
+input {
+  width: 84%;
+  padding: 12px 15px 12px 40px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 14px;
+  outline: none;
+  color: #333;
+  transition: 0.2s;
+}
+input::placeholder {
+  color: #999;
+}
+input:focus {
+  border-color: #75d258;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255, 140, 0, 0.25);
+}
+
+/* ---------- PRIMARY LOGIN BUTTON ---------- */
+.primary-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #1f972f, #313130);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 15px;
+  transition: 0.2s;
+}
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(68, 255, 0, 0.3);
+}
+
+/* ---------- GOOGLE LOGIN BUTTON ---------- */
+.google-btn {
+  margin-top: 15px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  width: 100%;
+  padding: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+.google-btn:hover {
+  background: #158546;
+  color: #fff;
+  border-color: #158546;
+}
+
+/* ---------- DOCTOR / ADMIN BUTTONS ---------- */
+.login-extra-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-top: 12px;
+}
+
+.login-option-btn {
+  background: transparent;
+  border: none;
+  color: #000;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.login-option-btn:hover {
+  text-decoration: underline;
+  color: #2D6A5A;
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-5px); }

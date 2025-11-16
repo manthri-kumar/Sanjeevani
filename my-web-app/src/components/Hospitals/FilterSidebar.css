@@ -1,0 +1,118 @@
+:root{
+  --bg: #ffffff;
+  --muted: #6b7280;
+  --accent: #167d63;
+  --accent-600: #0f6b4f;
+  --border: #e6e6e9;
+  --card-shadow: 0 6px 18px rgba(15,23,36,0.06);
+  --radius: 10px;
+  --gap: 12px;
+  --text: #0f1724;
+}
+
+/* Container */
+.filter-sidebar{
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--card-shadow);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header */
+.filter-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 10px;
+}
+.filter-header h4{
+  margin:0;
+  font-size:1rem;
+  color:var(--text);
+}
+.filter-header .clear-btn{
+  background:transparent;
+  border: none;
+  color: var(--muted);
+  cursor:pointer;
+  font-size:0.9rem;
+}
+
+/* Blocks */
+.filter-block{
+  margin-bottom: 12px;
+}
+.filter-block .label{
+  display:block;
+  font-size:0.85rem;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+/* Select / input */
+.filter-block select,
+.filter-block input[type="text"],
+.filter-block input[type="search"]{
+  width:100%;
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  box-sizing:border-box;
+  font-size:0.95rem;
+  outline:none;
+}
+.filter-block input[type="range"]{
+  width:100%;
+  margin:8px 0;
+}
+
+/* distance value */
+.distance-val{
+  font-size:0.85rem;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* Checkbox rows */
+.checkbox-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 4px;
+  cursor:pointer;
+  user-select:none;
+  font-size:0.95rem;
+  color: var(--text);
+}
+.checkbox-row input[type="checkbox"]{
+  /* smaller checkbox */
+  width:16px;
+  height:16px;
+  margin:0;
+  accent-color: var(--accent);
+  cursor:pointer;
+}
+
+/* Muted text */
+.muted{
+  color:var(--muted);
+  font-size:0.9rem;
+}
+
+/* small screens: make filters full width top */
+@media (max-width: 820px){
+  .filter-sidebar{
+    border-radius:0;
+    padding:10px;
+  }
+}
+
+/* Remove number input spinners (up/down arrows) */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

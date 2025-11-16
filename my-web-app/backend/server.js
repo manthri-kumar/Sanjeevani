@@ -338,6 +338,173 @@ app.delete("/api/appointments/:id", async (req, res) => {
   }
 });
 
+
+// Haversine formula for distance
+function distanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// ---------------------------------------------------------
+// 1️⃣ SEARCH HOSPITALS BY CITY + QUERY
+// ---------------------------------------------------------
+app.post("/api/hospitals/search", (req, res) => {
+  const { city, search } = req.body;
+
+  let sql = "SELECT * FROM hospitals WHERE 1=1";
+  let params = [];
+
+  if (city) {
+    sql += " AND city = ?";
+    params.push(city);
+  }
+
+  if (search) {
+    sql += " AND (name LIKE ? OR address LIKE ?)";
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  db.query(sql, params, (err, rows) => {
+    if (err) return res.status(500).json({ error: err });
+
+    return res.json(rows);
+  });
+});
+
+app.post("/api/hospitals/nearest", (req, res) => {
+  const { latitude, longitude } = req.body;
+
+  console.log("📍 Received NEAREST request:", latitude, longitude);
+
+  if (!latitude || !longitude) {
+    console.log("❌ Missing coordinates");
+    return res.status(400).json({ msg: "Missing coordinates" });
+  }
+
+  const sql = "SELECT * FROM hospitals";
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      console.log("❌ SQL error:", err);
+      return res.status(500).json({ error: err });
+    }
+
+    console.log("📌 Found hospitals:", rows.length);
+
+    try {
+      const withDistance = rows.map((h) => {
+        if (!h.lat || !h.lng) {
+          console.log("⚠ Row missing lat/lng:", h);
+        }
+
+        return {
+          ...h,
+          distance_km: distanceKm(latitude, longitude, h.lat, h.lng),
+        };
+      });
+
+      const sorted = withDistance.sort((a, b) => a.distance_km - b.distance_km);
+
+      return res.json(sorted.slice(0, 10));
+    } catch (ex) {
+      console.log("🔥 Distance calculation error:", ex);
+      return res.status(500).json({ error: "Distance calc failed" });
+    }
+  });
+});
+
+// -------------------- ADMIN LOGIN --------------------
+app.post("/api/admin/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const [rows] = await db.promise().query(
+      "SELECT * FROM admins WHERE email = ?", 
+      [email]
+    );
+
+    if (rows.length === 0)
+      return res.json({ success: false, message: "Admin not found" });
+
+    const admin = rows[0];
+
+    // PLAINTEXT PASSWORD CHECK (NO BCRYPT)
+    const match = password === admin.password;
+
+    if (!match)
+      return res.json({ success: false, message: "Incorrect password" });
+
+    return res.json({
+      success: true,
+      message: "Admin logged in",
+      admin: {
+        id: admin.id,
+        username: admin.username,
+        email: admin.email,
+      }
+    });
+
+  } catch (err) {
+    console.error("ADMIN LOGIN ERROR:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+
+// ------------------------------
+//      ADMIN FETCH ROUTES
+// ------------------------------
+app.get("/api/admin/users", async (req, res) => {
+  try {
+    const [rows] = await db.promise().query("SELECT * FROM users");
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    res.json({ success: false, message: "Error fetching users" });
+  }
+});
+
+app.get("/api/admin/doctors", async (req, res) => {
+  try {
+    const [rows] = await db.promise().query("SELECT * FROM doctors");
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    res.json({ success: false, message: "Error fetching doctors" });
+  }
+});
+
+app.get("/api/admin/appointments", async (req, res) => {
+  try {
+    const [rows] = await db.promise().query(`
+      SELECT a.*, u.username AS user_name, d.name AS doctor_name
+      FROM appointments a
+      LEFT JOIN users u ON a.user_id = u.id
+      LEFT JOIN doctors d ON a.doctor_id = d.id
+    `);
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    res.json({ success: false, message: "Error fetching appointments" });
+  }
+});
+
+app.get("/api/admin/hospitals", async (req, res) => {
+  try {
+    const [rows] = await db.promise().query("SELECT * FROM hospitals");
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    res.json({ success: false, message: "Error fetching hospitals" });
+  }
+});
+
+
 // -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

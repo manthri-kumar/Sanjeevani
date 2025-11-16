@@ -46,8 +46,9 @@ function Home() {
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
-  // Doctor mode toggle
+  // Doctor & Admin mode toggles
   const [isDoctorMode, setIsDoctorMode] = useState(false);
+  const [isAdminMode, setIsAdminMode] = useState(false);
 
   useEffect(() => {
     const loggedIn = sessionStorage.getItem("isLoggedIn");
@@ -78,11 +79,12 @@ function Home() {
       setIsLoggedIn(loggedIn);
 
       if (loggedIn) {
-        // prefer user first, then doctor
+        // prefer user first, then doctor, then admin (admin might not have cart)
         const user = JSON.parse(sessionStorage.getItem("user"));
         const doctor = JSON.parse(sessionStorage.getItem("doctor"));
-        const email = user?.email || doctor?.email || "";
-        const savedCart = JSON.parse(localStorage.getItem(`cartItems_${email}`)) || [];
+        const admin = JSON.parse(sessionStorage.getItem("admin"));
+        const email = user?.email || doctor?.email || admin?.email || "";
+        const savedCart = email ? (JSON.parse(localStorage.getItem(`cartItems_${email}`)) || []) : [];
         setCartItems(savedCart);
         setCartCount(savedCart.reduce((total, item) => total + (item.qty || 0), 0));
       } else {
@@ -105,18 +107,21 @@ function Home() {
   const handleLogout = () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
     const doctor = JSON.parse(sessionStorage.getItem("doctor"));
-    const email = user?.email || doctor?.email || "";
+    const admin = JSON.parse(sessionStorage.getItem("admin"));
+    const email = user?.email || doctor?.email || admin?.email || "";
     if (email) localStorage.removeItem(`cartItems_${email}`);
 
     sessionStorage.removeItem("isLoggedIn");
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("doctor");
+    sessionStorage.removeItem("admin");
     setIsLoggedIn(false);
     setCartItems([]);
     setCartCount(0);
     window.dispatchEvent(new Event("cartUpdated"));
     setShowLogin(true);
     setIsDoctorMode(false);
+    setIsAdminMode(false);
   };
 
   // USER LOGIN
@@ -140,6 +145,7 @@ function Home() {
         setIsLoggedIn(true);
         setShowLogin(false);
         setIsDoctorMode(false);
+        setIsAdminMode(false);
         window.dispatchEvent(new Event("cartUpdated"));
       } else {
         alert(data.message || "Login failed");
@@ -169,6 +175,7 @@ function Home() {
         alert("Signup successful! Please log in.");
         setLoginStep(1);
         setIsDoctorMode(false);
+        setIsAdminMode(false);
       } else {
         alert(data.message || "Signup failed");
       }
@@ -177,57 +184,55 @@ function Home() {
       alert("Server error. Try again later.");
     }
   };
-// ---------------- DOCTOR LOGIN ----------------
-const handleDoctorLogin = async (e) => {
-  e.preventDefault();
-  const email = e.target.email.value;
-  const password = e.target.password.value;
 
-  try {
-    const response = await fetch("http://localhost:5000/api/doctor/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  // ---------------- DOCTOR LOGIN ----------------
+  const handleDoctorLogin = async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-    const data = await response.json();
+    try {
+      const response = await fetch("http://localhost:5000/api/doctor/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (data.success) {
-      alert("Doctor Login Successful!");
+      const data = await response.json();
 
-      // ⭐ Save correct full doctor object in sessionStorage
-      sessionStorage.setItem(
-        "doctor",
-        JSON.stringify({
-          id: data.doctor.id,
-          name: data.doctor.name,
-          email: data.doctor.email,
-          specialist: data.doctor.specialist,
-          experience: data.doctor.experience
-        })
-      );
+      if (data.success) {
+        alert("Doctor Login Successful!");
 
-      sessionStorage.setItem("isLoggedIn", "true");
+        // Save full doctor object in sessionStorage
+        sessionStorage.setItem(
+          "doctor",
+          JSON.stringify({
+            id: data.doctor.id,
+            name: data.doctor.name,
+            email: data.doctor.email,
+            specialist: data.doctor.specialist,
+            experience: data.doctor.experience
+          })
+        );
 
-      console.log("Doctor saved =", JSON.parse(sessionStorage.getItem("doctor")));
+        sessionStorage.setItem("isLoggedIn", "true");
 
-      setIsLoggedIn(true);
-      setShowLogin(false);
-      setIsDoctorMode(true);
+        setIsLoggedIn(true);
+        setShowLogin(false);
+        setIsDoctorMode(true);
+        setIsAdminMode(false);
 
-      // Redirect doctor to dashboard
-      navigate("/dhome");
-    } 
-    else {
-      alert(data.message || "Login failed");
+        // Redirect doctor to dashboard
+        navigate("/dhome");
+      } 
+      else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Doctor login error:", error);
+      alert("Server error. Try again later.");
     }
-  } catch (error) {
-    console.error("Doctor login error:", error);
-    alert("Server error. Try again later.");
-  }
-};
-
-
+  };
 
   // DOCTOR SIGNUP
   const handleDoctorSignup = async (e) => {
@@ -265,6 +270,36 @@ const handleDoctorLogin = async (e) => {
       alert("Server error. Try again later.");
     }
   };
+
+  // ---------------- ADMIN LOGIN ----------------
+ const handleAdminLogin = async (e) => {
+  e.preventDefault();
+  const email = e.target.email.value;
+  const password = e.target.password.value;
+
+  try {
+    const response = await fetch("http://localhost:5000/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert("Admin Login Successful!");
+
+      sessionStorage.setItem("admin", JSON.stringify(data.admin));
+      sessionStorage.setItem("isLoggedIn", "true");
+
+      navigate("/admin");
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    alert("Server error. Try again later.");
+  }
+};
 
   const handleAddToCart = (product) => {
     if (!isLoggedIn) {
@@ -412,7 +447,7 @@ const handleDoctorLogin = async (e) => {
 
           <nav className="nav-links">
             <Link to="/doctorappointment">DOCTORS</Link>
-            <Link to="/hospitals">HOSPITALS</Link>
+            <Link to="/hospital">HOSPITALS</Link>
             <Link to="/Medicines">MEDICINES</Link>
             <Link to="/Profile">PROFILE</Link>
           </nav>
@@ -444,7 +479,7 @@ const handleDoctorLogin = async (e) => {
               Logout
             </button>
           ) : (
-            <button className="login-btn" onClick={() => { setShowLogin(true); setIsDoctorMode(false); }}>
+            <button className="login-btn" onClick={() => { setShowLogin(true); setIsDoctorMode(false); setIsAdminMode(false); }}>
               Login / Sign Up
             </button>
           )}
@@ -567,7 +602,6 @@ const handleDoctorLogin = async (e) => {
   <img src={Docimg} alt="Doctor Illustration" className="banner-illustration" />
 </div>
 
-
         {/* CeraVe Carousel */}
         <section className="product-carousel-section">
           <div className="carousel-header">
@@ -684,12 +718,6 @@ const handleDoctorLogin = async (e) => {
         </footer>
       </div>
 
-
-
-
-
-
-
       {/* Login/Signup Modal */}
       {showLogin && !isLoggedIn && (
         <>
@@ -703,8 +731,8 @@ const handleDoctorLogin = async (e) => {
               <button className={loginStep === 2 ? "active" : ""} onClick={() => setLoginStep(2)}>Sign Up</button>
             </div>
 
-            {/* --- LOGIN FORM --- */}
-            {loginStep === 1 && !isDoctorMode && (
+            {/* --- LOGIN FORM (User) --- */}
+            {loginStep === 1 && !isDoctorMode && !isAdminMode && (
               <form autoComplete="off" onSubmit={handleLogin}>
                 <label>Email</label>
                 <div className="input-container">
@@ -741,8 +769,27 @@ const handleDoctorLogin = async (e) => {
               </form>
             )}
 
+            {/* --- ADMIN LOGIN FORM --- */}
+            {loginStep === 1 && isAdminMode && (
+              <form autoComplete="off" onSubmit={handleAdminLogin}>
+                <label>Email</label>
+                <div className="input-container">
+                  <i className="fa-solid fa-envelope icon"></i>
+                  <input type="email" name="email" placeholder="Admin email" required />
+                </div>
+
+                <label>Password</label>
+                <div className="input-container">
+                  <i className="fa-solid fa-lock icon"></i>
+                  <input type="password" name="password" placeholder="Password" required />
+                </div>
+
+                <button type="submit" className="primary-btn">Admin Log In</button>
+              </form>
+            )}
+
             {/* --- SIGNUP FORM (USER) --- */}
-            {loginStep === 2 && !isDoctorMode && (
+            {loginStep === 2 && !isDoctorMode && !isAdminMode && (
               <form autoComplete="off" onSubmit={handleSignup}>
                 <label>Username</label>
                 <div className="input-container">
@@ -808,22 +855,44 @@ const handleDoctorLogin = async (e) => {
               <i className="fa-brands fa-google"></i> Sign in with Google
             </button>
 
-            {/* Doctor toggle button(s) */}
-            {!isDoctorMode ? (
-              <button
-                className="doctor-login-toggle"
-                onClick={() => { setIsDoctorMode(true); setLoginStep(1); }}
-              >
-                Login as Doctor ?
-              </button>
-            ) : (
-              <button
-                className="doctor-login-toggle back-btn"
-                onClick={() => { setIsDoctorMode(false); setLoginStep(1); }}
-              >
-                ← Back to User Login
-              </button>
-            )}
+            {/* Role Switching (User → Doctor → Admin) */}
+            <div className="role-switcher">
+              {!isDoctorMode && !isAdminMode && (
+                <>
+                  <button
+                    className="doctor-login-toggle"
+                    onClick={() => { setIsDoctorMode(true); setIsAdminMode(false); setLoginStep(1); }}
+                  >
+                    Login as Doctor ?
+                  </button>
+
+                  <button
+                    className="doctor-login-toggle"
+                    onClick={() => { setIsAdminMode(true); setIsDoctorMode(false); setLoginStep(1); }}
+                  >
+                    Login as Admin ?
+                  </button>
+                </>
+              )}
+
+              {isDoctorMode && (
+                <button
+                  className="doctor-login-toggle back-btn"
+                  onClick={() => { setIsDoctorMode(false); setIsAdminMode(false); setLoginStep(1); }}
+                >
+                  ← Back to User Login
+                </button>
+              )}
+
+              {isAdminMode && (
+                <button
+                  className="doctor-login-toggle back-btn"
+                  onClick={() => { setIsAdminMode(false); setIsDoctorMode(false); setLoginStep(1); }}
+                >
+                  ← Back to User Login
+                </button>
+              )}
+            </div>
 
           </div>
         </>

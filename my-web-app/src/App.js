@@ -17,6 +17,15 @@ import Cart from './components/Cart/Cart';
 import Ayurvedic from './components/AyurvedicCare/AyurvedicCare';
 import SearchResult from './components/Search_Result/SearchResults';
 import Login from "./components/Login/login";
+import HospitalPage from './components/Hospitals/HospitalPage';
+import Admin from "./components/Admin/admin";
+
+import AdminUsers from "./components/Admin/AdminUsers";
+import AdminDoctors from "./components/Admin/AdminDoctors";
+import AdminAppointments from "./components/Admin/AdminAppointments";
+import AdminHospitals from "./components/Admin/AdminHospitals";
+
+
 
 function App() {
   return (
@@ -42,8 +51,15 @@ function App() {
         <Route path="/search" element={<SearchResult />} />
         <Route path="/login" element={<Login />} />
 
-        {/* ⭐ Doctor Home Route */}
         <Route path="/dhome" element={<DHome />} />   {/* ✅ Correct Route */}
+        <Route path="/hospital" element={<HospitalPage />} />
+<Route path="/admin" element={<Admin />} />
+
+<Route path="/admin/users" element={<AdminUsers />} />
+<Route path="/admin/doctors" element={<AdminDoctors />} />
+<Route path="/admin/appointments" element={<AdminAppointments />} />
+<Route path="/admin/hospitals" element={<AdminHospitals />} />
+
 
       </Routes>
     </Router>

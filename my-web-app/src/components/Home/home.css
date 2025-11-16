@@ -229,44 +229,74 @@ body {
     text-align: center;
 }
 
-/* Health Banner */
+/* ===========================
+   FIXED HEALTH BANNER (PERFECT)
+   =========================== */
+/* BANNER */
 .health-banner {
-    width: 90%;
-    margin: 2rem auto;
-    height: 140px;
-    background: linear-gradient(90deg, #92a263 0%, #252323 100%);
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2.5rem 3rem;
-    color: #fff;
-    position: relative;
-    overflow: hidden;
+  width: 100%;
+  margin: 2rem auto;
+  height: 260px;  /* slim like your screenshot */
+  background: linear-gradient(90deg, #9fb36e 0%, #2b2b2b 100%);
+  border-radius: 25px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1.5rem 2rem;
+  color: white;
+  overflow: hidden;
 }
 
+/* LEFT CONTENT */
+.banner-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 10px;  
+}
+
+/* SMALL TITLE (like screenshot) */
 .banner-content h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+  line-height: 0.5;
 }
 
+/* SMALL PARAGRAPH */
+/* Make paragraph smaller */
 .banner-content p {
-    font-size: 1.05rem;
-    margin-bottom: 1.2rem;
-    margin-right: 0; /* Removed fixed margin */
+  font-size: 0.4rem;     /* smaller text */
+  margin-bottom: 0.5rem; /* less spacing */
+  opacity: 0.9;
 }
 
+/* Make button smaller */
 .booking-btn {
-    background: #000;
-    color: #fff;
-    border: none;
-    padding: 0.7rem 2rem;
-    font-size: 1rem;
-    border-radius: 15px;
-    cursor: pointer;
-    margin-right: 0; /* Removed fixed margin */
+  background: #000;
+  color: #fff;
+  padding: 0.4rem 1rem;   /* smaller size */
+  font-size: 0.4rem;     /* smaller text */
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 1.95rem; 
 }
+
+.booking-btn:hover {
+  opacity: 0.85;
+  padding-bottom: 2rem;
+}
+
+/* DOCTOR IMAGE */
+.banner-illustration {
+  height: 150px;
+  object-fit: contain;
+  margin-right: 1rem;
+}
+
 
 /* ============================ Footer Styles ============================ */
 .footer {

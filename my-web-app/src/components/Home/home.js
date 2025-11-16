@@ -508,47 +508,65 @@ const handleDoctorLogin = async (e) => {
           </Link>
         </div>
 
-        {/* Categories */}
-        <h2 className="Categories-h3">Shop By Category</h2>
+       <div className="category-grid">
 
-        <div className="category-grid">
+  <Link to="/healthmonitor" className="category-card">
+    <img src={monitorimg} alt="" />
+    <p>Health Monitors</p>
+  </Link>
 
-          <Link to="/healthmonitor" className="category-card service-card light-green">
-            <img src={monitorimg} alt="Health Monitors" />
-            <p>Health Monitors</p>
-          </Link>
+  <Link to="/ayurvediccare" className="category-card">
+    <img src={ayurvedicimg} alt="" />
+    <p>Ayurvedic Diabetes Care</p>
+  </Link>
 
-          <Link to="/ayurvediccare" className="category-card">
-            <img src={ayurvedicimg} alt="Ayurvedic Care" />
-            <p>Ayurvedic Diabetes Care</p>
-          </Link>
+  <Link to="/painrelief" className="category-card">
+    <img src={painimg} alt="" />
+    <p>Pain Relief</p>
+  </Link>
 
-          <Link to="/painrelief" className="category-card">
-            <img src={painimg} alt="Pain Relief" />
-            <p>Pain Relief</p>
-          </Link>
+  <Link to="/babycare" className="category-card">
+    <img src={babyimg} alt="" />
+    <p>Baby Care</p>
+  </Link>
 
-          <Link to="/babycare" className="category-card">
-            <img src={babyimg} alt="Baby Care" />
-            <p>Baby Care</p>
-          </Link>
+  <Link to="/protein" className="category-card">
+    <img src={proteinimg} alt="" />
+    <p>Protein</p>
+  </Link>
 
-        </div>
+  <Link to="/skincare" className="category-card">
+    <img src={skincareimg} alt="" />
+    <p>Skin Care</p>
+  </Link>
+
+  <Link to="/vitamin" className="category-card">
+    <img src={vitaminimg} alt="" />
+    <p>Vitamin</p>
+  </Link>
+
+  <Link to="/nutritious" className="category-card">
+    <img src={Nutritiousimg} alt="" />
+    <p>Nutritious Drinks</p>
+  </Link>
+
+</div>
 
         {/* Health Banner */}
         <div className="health-banner">
-          <div className="banner-content">
-            <h2>Stay informed about your health at any time..</h2>
-            <p>Get trusted answers directly from Sanjeevani.</p>
-            <button
-              className="booking-btn"
-              onClick={() => navigate("/doctorappointment")}
-            >
-              Book
-            </button>
-          </div>
-          <img src={Docimg} alt="Doctor Illustration" className="banner-illustration" />
-        </div>
+  <div className="banner-content">
+    <h2>Stay informed about your health at any time..</h2>
+    <p>Get trusted answers directly from Sanjeevani.</p>
+    <button
+      className="booking-btn"
+      onClick={() => navigate("/doctorappointment")}
+    >
+      Book
+    </button>
+  </div>
+  <img src={Docimg} alt="Doctor Illustration" className="banner-illustration" />
+</div>
+
 
         {/* CeraVe Carousel */}
         <section className="product-carousel-section">

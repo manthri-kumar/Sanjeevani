@@ -8,13 +8,13 @@ const ProfileRight = ({ selected }) => {
   const [appointments, setAppointments] = useState([]);
   const [doctorList, setDoctorList] = useState([]);
 
-  // Load users
+  // Load logged user
   useEffect(() => {
     const stored = JSON.parse(sessionStorage.getItem("user"));
     if (stored) setUser(stored);
   }, []);
 
-  // Fetch doctor list from backend
+  // Load doctors
   useEffect(() => {
     fetch(`${API}/api/doctors`)
       .then(res => res.json())
@@ -23,21 +23,21 @@ const ProfileRight = ({ selected }) => {
       });
   }, []);
 
-  // Fetch user appointments
+  // Load appointments
   useEffect(() => {
     const stored = JSON.parse(sessionStorage.getItem("user"));
     if (!stored) return;
 
     fetch(`${API}/api/appointments/${stored.id}`)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (data.success) {
-          const enriched = data.appointments.map((app) => {
-            const doc = doctorList.find((d) => d.id === app.doctor_id);
+          const enriched = data.appointments.map(app => {
+            const doc = doctorList.find(d => d.id === app.doctor_id);
 
             return {
               ...app,
-              doctor_name: doc ? doc.name : "Unknown",
+              doctor_name: doc ? doc.name : "Unknown Doctor",
               specialist: doc ? doc.specialist : "General"
             };
           });
@@ -47,6 +47,27 @@ const ProfileRight = ({ selected }) => {
       });
   }, [doctorList]);
 
+  // -------------------- SAFE DATETIME PARSER --------------------
+  const formatDateTime = (dateTimeString) => {
+    if (!dateTimeString) return { date: "--", time: "--" };
+
+    let date = "--", time = "--";
+
+    if (dateTimeString.includes(" ")) {
+      const [d, t] = dateTimeString.split(" ");
+      date = d;
+      time = t?.substring(0, 5) || "--";
+    }
+    else if (dateTimeString.includes("T")) {
+      const [d, t] = dateTimeString.split("T");
+      date = d;
+      time = t?.substring(0, 5) || "--";
+    }
+
+    return { date, time };
+  };
+
+  // -------------------- SELECTED: APPOINTMENTS --------------------
   if (selected === "appointments") {
     return (
       <section className="profile-right">
@@ -57,13 +78,30 @@ const ProfileRight = ({ selected }) => {
             <p>No upcoming appointments.</p>
           ) : (
             appointments.map((app, index) => {
-              const [datePart, timePart] = app.appointment_time.split(" ");
+              const { date, time } = formatDateTime(app.appointment_time);
+
               return (
                 <div key={index} className="appoint-item">
                   <p><strong>Doctor:</strong> {app.doctor_name}</p>
                   <p><strong>Specialization:</strong> {app.specialist}</p>
-                  <p><strong>Date:</strong> {datePart}</p>
-                  <p><strong>Time:</strong> {timePart.slice(0, 5)}</p>
+                  <p><strong>Date:</strong> {date}</p>
+                  <p><strong>Time:</strong> {time}</p>
+
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    <span
+                      className={
+                        app.status === "Accepted"
+                          ? "status accepted"
+                          : app.status === "Rejected"
+                          ? "status rejected"
+                          : "status pending"
+                      }
+                    >
+                      {app.status}
+                    </span>
+                  </p>
+
                   <hr />
                 </div>
               );
@@ -74,7 +112,7 @@ const ProfileRight = ({ selected }) => {
     );
   }
 
-  // Profile section
+  // -------------------- SELECTED: PROFILE --------------------
   if (selected === "profile") {
     return (
       <section className="profile-right">
@@ -105,6 +143,7 @@ const ProfileRight = ({ selected }) => {
     );
   }
 
+  // -------------------- DEFAULT --------------------
   return (
     <section className="profile-right">
       <h1 className="pr-title">Overview</h1>

@@ -20,6 +20,39 @@
   background: var(--bg);
   color: var(--text);
 }
+/* Dashboard top summary cards */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dash-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+.dash-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dash-card h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dash-card p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+}
 
 /* Sidebar */
 .sidebar {
@@ -111,7 +144,7 @@
 
 /* Buttons */
 .btn {
-  appearance: none; border: 1px solid var(--primary);
+  appearance: none; border: 5px solid var(--primary);
   background: var(--primary); color: #fff;
   padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600;
 }
